@@ -35,6 +35,8 @@ export interface Challenge {
   /** Required for code-based modes. STRIDE / risk modes may omit it. */
   readonly code?: string;
   readonly language?: CodeLanguage;
+  /** Display filename shown in the CodeViewer header. Defaults from language. */
+  readonly filename?: string;
   readonly vulnerableLines: readonly number[];
   readonly vulnerabilityType: string;
 

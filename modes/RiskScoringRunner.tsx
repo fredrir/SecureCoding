@@ -82,11 +82,8 @@ export function RiskScoringRunner({ challenges, examMode }: Props) {
           <Paper
             withBorder
             radius="lg"
-            p="md"
-            style={{
-              background: "var(--app-surface-muted)",
-              borderColor: "var(--app-border)",
-            }}
+            p="lg"
+            className="bg-app-surface border-app-border"
           >
             <Stack gap="xs">
               <Text size="xs" tt="uppercase" fw={700} c="dimmed">
@@ -101,8 +98,9 @@ export function RiskScoringRunner({ challenges, examMode }: Props) {
             </Stack>
           </Paper>
           <Text size="xs" c="dimmed">
-            Consider AV, AC, PR, UI, scope, and CIA impact. Treat &quot;critical&quot;
-            as remote, unauthenticated, low complexity, full impact.
+            Consider AV, AC, PR, UI, scope, and CIA impact. Treat
+            &quot;critical&quot; as remote, unauthenticated, low complexity,
+            full impact.
           </Text>
         </Stack>
       }

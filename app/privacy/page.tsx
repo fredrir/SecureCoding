@@ -9,7 +9,6 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { ShieldIcon } from "@/components/common/Icon";
 
 const LAST_UPDATED = "14 May 2026";
 

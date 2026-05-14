@@ -11,6 +11,7 @@ export const webVulnerabilityChallenges: readonly Challenge[] = [
     difficulty: "intro",
     tags: ["xss", "express"],
     language: "javascript",
+    filename: "search.js",
     code: `app.get("/search", (req, res) => {
   const q = req.query.q;
   res.send(
@@ -107,6 +108,7 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
     difficulty: "core",
     tags: ["xss", "react"],
     language: "javascript",
+    filename: "Comment.jsx",
     code: `function Comment({ comment }) {
   return (
     <div className="comment">
@@ -200,6 +202,7 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
     difficulty: "core",
     tags: ["xss", "dom"],
     language: "javascript",
+    filename: "banner.js",
     code: `const banner = document.getElementById("banner");
 const name = decodeURIComponent(location.hash.slice(1));
 banner.innerHTML = "Welcome back, " + name + "!";`,
@@ -254,6 +257,7 @@ banner.innerHTML = "Welcome back, " + name + "!";`,
     difficulty: "intro",
     tags: ["sqli", "java"],
     language: "java",
+    filename: "LoginService.java",
     code: `public User login(String username, String password) {
   String sql = "SELECT * FROM users WHERE username = '" + username +
                "' AND password = '" + password + "'";
@@ -349,6 +353,7 @@ ps.setString(2, hash(password));`,
     difficulty: "advanced",
     tags: ["sqli", "node", "order-by"],
     language: "typescript",
+    filename: "reports.ts",
     code: `app.get("/reports", async (req, res) => {
   const sort = req.query.sort as string;
   const rows = await db.query(
@@ -409,6 +414,7 @@ const col = ALLOWED[req.query.sort as keyof typeof ALLOWED] ?? "id";`,
     difficulty: "intro",
     tags: ["idor", "authz"],
     language: "python",
+    filename: "orders.py",
     code: `@app.get("/orders/<int:order_id>")
 @login_required
 def order_detail(order_id):
@@ -503,6 +509,7 @@ if order is None:
     difficulty: "core",
     tags: ["csrf", "express"],
     language: "javascript",
+    filename: "account_email.js",
     code: `app.post("/account/email", (req, res) => {
   const userId = req.session.userId;
   Users.update(userId, { email: req.body.email });
@@ -557,6 +564,7 @@ if order is None:
     difficulty: "core",
     tags: ["ssrf", "node"],
     language: "typescript",
+    filename: "thumb.ts",
     code: `app.get("/thumb", async (req, res) => {
   const url = req.query.url as string;
   const r = await fetch(url);
@@ -612,6 +620,7 @@ if order is None:
     difficulty: "core",
     tags: ["command-injection", "python"],
     language: "python",
+    filename: "admin_ping.py",
     code: `@app.post("/admin/ping")
 def admin_ping():
     host = request.form["host"]
@@ -696,6 +705,7 @@ def admin_ping():
     difficulty: "core",
     tags: ["file-upload", "php"],
     language: "php",
+    filename: "upload.php",
     code: `<?php
 $name = $_FILES["avatar"]["name"];
 $tmp  = $_FILES["avatar"]["tmp_name"];
@@ -759,6 +769,7 @@ move_uploaded_file($tmp, $dst);`,
     difficulty: "intro",
     tags: ["cookies", "session"],
     language: "javascript",
+    filename: "session_config.js",
     code: `app.use(session({
   name: "sid",
   secret: process.env.SESSION_SECRET,
@@ -848,6 +859,7 @@ move_uploaded_file($tmp, $dst);`,
     difficulty: "core",
     tags: ["cors"],
     language: "javascript",
+    filename: "cors.js",
     code: `app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -904,6 +916,7 @@ if (origin && ALLOWED.has(origin)) {
     difficulty: "core",
     tags: ["clickjacking", "headers"],
     language: "plaintext",
+    filename: "response-headers.txt",
     code: `Response headers (excerpt)
 HTTP/1.1 200 OK
 Content-Type: text/html
@@ -958,6 +971,7 @@ Set-Cookie: sid=...; Secure; HttpOnly; SameSite=Lax
     difficulty: "intro",
     tags: ["logging", "leak"],
     language: "python",
+    filename: "payments.py",
     code: `def handle_payment(req):
     logger.info("incoming payment: %s", req.json())
     process(req)`,
@@ -1007,6 +1021,7 @@ logger.info("incoming payment: %s", safe)`,
     difficulty: "intro",
     tags: ["sql-injection", "authentication", "express"],
     language: "javascript",
+    filename: "login.js",
     code: `app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const sql =
@@ -1111,6 +1126,7 @@ logger.info("incoming payment: %s", safe)`,
     difficulty: "core",
     tags: ["idor", "authorization", "express"],
     language: "javascript",
+    filename: "profile.js",
     code: `app.post("/profile/update", requireLogin, async (req, res) => {
   const { userId, displayName, bio } = req.body;
 
@@ -1210,6 +1226,7 @@ logger.info("incoming payment: %s", safe)`,
     difficulty: "core",
     tags: ["csrf", "session", "express"],
     language: "javascript",
+    filename: "email_change.js",
     code: `app.post("/account/email", requireLogin, async (req, res) => {
   const newEmail = req.body.email;
 
@@ -1306,6 +1323,7 @@ logger.info("incoming payment: %s", safe)`,
     difficulty: "advanced",
     tags: ["ssrf", "url-fetch", "cloud"],
     language: "javascript",
+    filename: "avatar_import.js",
     code: `app.post("/avatar/import", requireLogin, async (req, res) => {
   const imageUrl = req.body.url;
 
@@ -1405,6 +1423,7 @@ const response = await safeFetchExternalImage(url);`,
     difficulty: "core",
     tags: ["path-traversal", "file-download", "express"],
     language: "javascript",
+    filename: "files_download.js",
     code: `app.get("/files/:name", requireLogin, (req, res) => {
   const fileName = req.params.name;
   const filePath = path.join(__dirname, "uploads", fileName);
@@ -1504,6 +1523,7 @@ res.download(requested);`,
     difficulty: "core",
     tags: ["file-upload", "validation", "express"],
     language: "javascript",
+    filename: "upload.js",
     code: `app.post("/upload", requireLogin, upload.single("file"), async (req, res) => {
   const target = path.join(__dirname, "public/uploads", req.file.originalname);
 
@@ -1599,6 +1619,7 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
     difficulty: "advanced",
     tags: ["jwt", "authentication", "authorization"],
     language: "javascript",
+    filename: "auth_middleware.js",
     code: `function authenticate(req, res, next) {
   const token = req.headers.authorization?.replace("Bearer ", "");
   const claims = jwt.decode(token);
@@ -1701,6 +1722,7 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
     difficulty: "intro",
     tags: ["passwords", "hashing", "crypto"],
     language: "javascript",
+    filename: "register.js",
     code: `app.post("/register", async (req, res) => {
   const { username, password } = req.body;
   const passwordHash = crypto
@@ -1799,6 +1821,7 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
     difficulty: "intro",
     tags: ["open-redirect", "phishing", "express"],
     language: "javascript",
+    filename: "login_redirect.js",
     code: `app.post("/login", async (req, res) => {
   const user = await authenticate(req.body.username, req.body.password);
 
@@ -1898,6 +1921,7 @@ res.redirect(next);`,
     difficulty: "core",
     tags: ["nosql-injection", "mongodb", "authentication"],
     language: "javascript",
+    filename: "mongo_login.js",
     code: `app.post("/login", async (req, res) => {
   const user = await users.findOne({
     username: req.body.username,
@@ -2003,6 +2027,7 @@ if (!user || !(await verifyPassword(user.passwordHash, req.body.password))) {
     difficulty: "advanced",
     tags: ["deserialization", "cookies", "session"],
     language: "javascript",
+    filename: "preferences_cookie.js",
     code: `app.use((req, res, next) => {
   const raw = req.cookies.preferences;
 
@@ -2105,6 +2130,7 @@ req.preferences = preferences;`,
     difficulty: "intro",
     tags: ["error-handling", "information-disclosure", "express"],
     language: "javascript",
+    filename: "error_handler.js",
     code: `app.use((err, req, res, next) => {
   res.status(500).json({
     message: err.message,

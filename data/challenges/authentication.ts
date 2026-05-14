@@ -10,6 +10,7 @@ export const authenticationChallenges: readonly Challenge[] = [
     difficulty: "intro",
     tags: ["password-hash", "weak-crypto"],
     language: "python",
+    filename: "create_account.py",
     code: `def create_account(email: str, password: str) -> None:
     digest = hashlib.md5(password.encode()).hexdigest()
     db.users.insert({"email": email, "password_hash": digest})`,
@@ -71,6 +72,7 @@ hash = ph.hash(password)`,
     difficulty: "intro",
     tags: ["lockout", "brute-force"],
     language: "typescript",
+    filename: "login.ts",
     code: `app.post("/login", async (req, res) => {
   const user = await Users.findByEmail(req.body.email);
   if (user && await argon2.verify(user.hash, req.body.password)) {
@@ -122,6 +124,7 @@ hash = ph.hash(password)`,
     difficulty: "core",
     tags: ["enumeration", "ux"],
     language: "typescript",
+    filename: "login_enum.ts",
     code: `if (!user) return res.status(404).json({ error: "no such email" });
 if (!await verify(user.hash, password)) {
   return res.status(401).json({ error: "wrong password" });
@@ -178,6 +181,7 @@ if (!await verify(user.hash, password)) {
     difficulty: "advanced",
     tags: ["session", "fixation"],
     language: "javascript",
+    filename: "session_login.js",
     code: `app.post("/login", async (req, res) => {
   const user = await login(req.body);
   if (user) {
@@ -240,6 +244,7 @@ if (!await verify(user.hash, password)) {
     difficulty: "core",
     tags: ["mfa"],
     language: "typescript",
+    filename: "mfa_login.ts",
     code: `if (await verifyPassword(user, req.body.password)) {
   req.session.userId = user.id;
   return res.json({ requiresMfa: user.mfaEnabled });
@@ -293,6 +298,7 @@ req.session.userId = user.id;`,
     difficulty: "core",
     tags: ["reset", "predictable"],
     language: "python",
+    filename: "password_reset.py",
     code: `def issue_reset_token(user):
     user.reset_counter += 1
     db.save(user)

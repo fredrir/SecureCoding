@@ -79,11 +79,8 @@ export function SecureRequirementRunner({ challenges, examMode }: Props) {
           <Paper
             withBorder
             radius="lg"
-            p="md"
-            style={{
-              background: "var(--app-surface-muted)",
-              borderColor: "var(--app-border)",
-            }}
+            p="lg"
+            className="bg-app-surface border-app-border"
           >
             <Stack gap="xs">
               <Text size="xs" tt="uppercase" fw={700} c="dimmed">

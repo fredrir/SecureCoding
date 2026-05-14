@@ -90,11 +90,8 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
           <Paper
             withBorder
             radius="lg"
-            p="md"
-            style={{
-              background: "var(--app-surface-muted)",
-              borderColor: "var(--app-border)",
-            }}
+            p="lg"
+            className="bg-app-surface border-app-border"
           >
             <Stack gap="xs">
               <Text size="xs" tt="uppercase" fw={700} c="dimmed">
@@ -116,7 +113,8 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
               <Group gap="xs">
                 {(["yes", "no"] as const).map((v) => {
                   const isCorrect = dpiaShown && v === expectedDpia;
-                  const isWrong = dpiaShown && dpiaPick === v && v !== expectedDpia;
+                  const isWrong =
+                    dpiaShown && dpiaPick === v && v !== expectedDpia;
                   return (
                     <Badge
                       key={v}
@@ -126,7 +124,10 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
                         if (state.stage === "feedback") return;
                         setDpiaPick(v);
                       }}
-                      style={{ cursor: state.stage === "feedback" ? "default" : "pointer" }}
+                      style={{
+                        cursor:
+                          state.stage === "feedback" ? "default" : "pointer",
+                      }}
                       color={
                         isCorrect
                           ? "lime"
@@ -137,7 +138,9 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
                               : "gray"
                       }
                       variant={
-                        isCorrect || isWrong || dpiaPick === v ? "filled" : "light"
+                        isCorrect || isWrong || dpiaPick === v
+                          ? "filled"
+                          : "light"
                       }
                     >
                       {v === "yes" ? "DPIA needed" : "No DPIA"}

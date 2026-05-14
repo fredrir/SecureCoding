@@ -44,9 +44,9 @@ export function ChallengeLayout({
       />
       <ChallengeHeader challenge={challenge} prompt={prompt} />
       <Grid gap="lg">
-        <Grid.Col span={{ base: 12, md: 7.2 }}>{workspace}</Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6.8 }}>{workspace}</Grid.Col>
 
-        <Grid.Col span={{ base: 12, md: 4.8 }}>{answer}</Grid.Col>
+        <Grid.Col span={{ base: 12, md: 5.2 }}>{answer}</Grid.Col>
       </Grid>
     </Stack>
   );

@@ -94,6 +94,7 @@ export function FindAndFixRunner({ challenges, examMode }: Props) {
           onChange={setSelectedLines}
           reveal={reveal}
           disabled={state.stage === "feedback"}
+          filename={challenge?.filename}
         />
       }
       answer={

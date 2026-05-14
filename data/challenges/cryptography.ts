@@ -11,6 +11,7 @@ export const cryptographyChallenges: readonly Challenge[] = [
     difficulty: "intro",
     tags: ["aes", "mode"],
     language: "python",
+    filename: "profile_export.py",
     code: `cipher = AES.new(KEY, AES.MODE_ECB)
 return cipher.encrypt(pad(profile_bytes, 16))`,
     vulnerableLines: [1, 2],
@@ -72,6 +73,7 @@ ct, tag = cipher.encrypt_and_digest(profile_bytes)`,
     difficulty: "advanced",
     tags: ["aead", "nonce"],
     language: "go",
+    filename: "audit_encrypt.go",
     code: `var nonce = []byte("000000000000")
 
 func encrypt(pt []byte) []byte {
@@ -126,6 +128,7 @@ ct := aead.Seal(nonce, nonce, pt, nil)`,
     difficulty: "advanced",
     tags: ["otp"],
     language: "python",
+    filename: "otp_cipher.py",
     code: `def encrypt(pt: bytes) -> bytes:
     return bytes(b ^ k for b, k in zip(pt, KEY))
 
@@ -173,6 +176,7 @@ c2 = encrypt(message2)`,
     difficulty: "intro",
     tags: ["randomness"],
     language: "javascript",
+    filename: "signup_token.js",
     code: `function token() {
   return Math.random().toString(36).slice(2, 10);
 }`,
@@ -218,6 +222,7 @@ c2 = encrypt(message2)`,
     difficulty: "core",
     tags: ["jwt"],
     language: "javascript",
+    filename: "jwt_verify.js",
     code: `function verify(token) {
   const header = JSON.parse(atob(token.split(".")[0]));
   return jwt.verify(token, SECRET, { algorithms: [header.alg] });
@@ -267,6 +272,7 @@ c2 = encrypt(message2)`,
     difficulty: "core",
     tags: ["tls"],
     language: "python",
+    filename: "payments_client.py",
     code: `r = requests.get("https://payments.internal/charge", verify=False, timeout=2)`,
     vulnerableLines: [1],
     vulnerabilityType: "TLS Certificate Validation Disabled",
@@ -314,6 +320,7 @@ c2 = encrypt(message2)`,
     difficulty: "advanced",
     tags: ["pki"],
     language: "python",
+    filename: "signing_helper.py",
     code: `def sign(data: bytes, priv: rsa.PrivateKey) -> bytes:
     return rsa.encrypt(data, priv)`,
     vulnerableLines: [1, 2, 3],
@@ -358,6 +365,7 @@ c2 = encrypt(message2)`,
     difficulty: "intro",
     tags: ["secrets"],
     language: "typescript",
+    filename: "crypto_utils.ts",
     code: `const KEY = Buffer.from("d3adb33fcafef00ddeadbeefcafef00d", "hex");
 export function encrypt(pt: Buffer) {
   // ... uses KEY directly

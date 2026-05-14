@@ -33,8 +33,11 @@ export default function QAPage() {
             Questions &amp; Answers
           </Title>
           <Text c="white" className="opacity-90 pt-2" size="sm">
-            Some answers to common questions about PatchQuest. If you have a
-            question that is not answered here, please email:{" "}
+            Here you can find some answers to common questions about PatchQuest.
+            The app is built by Fredrik Carsten Hansteen as a personal practice
+            resource for TDT4237. It is not officially affiliated with NTNU or
+            with the course staff. If you have a question that is not answered
+            here, please email:{" "}
             <Anchor
               href="mailto:fhansteen@gmail.com 
             "

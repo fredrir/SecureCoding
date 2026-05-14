@@ -85,7 +85,7 @@ export function FixOptionCard({
           ) : null}
         </Group>
         {option.code ? (
-          <CodeViewer code={option.code} language={language} />
+          <CodeViewer code={option.code} language={language} showHeader={false} />
         ) : null}
         {reveal ? (
           <Text size="xs" c="dimmed">

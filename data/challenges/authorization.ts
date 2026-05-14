@@ -11,6 +11,7 @@ export const authorizationChallenges: readonly Challenge[] = [
     difficulty: "core",
     tags: ["jwt", "rbac"],
     language: "typescript",
+    filename: "admin_routes.ts",
     code: `app.delete("/admin/users/:id", async (req, res) => {
   const claims = jwt.decode(req.headers.authorization!.slice(7));
   if (claims?.role === "admin") {
@@ -104,6 +105,7 @@ if (!user?.isAdmin) return res.status(403).end();`,
     difficulty: "core",
     tags: ["mass-assignment"],
     language: "javascript",
+    filename: "user_update.js",
     code: `app.put("/users/me", async (req, res) => {
   const updates = req.body;
   await Users.update(req.user.id, updates);
@@ -155,6 +157,7 @@ await Users.update(req.user.id, { displayName, language, timezone });`,
     difficulty: "core",
     tags: ["path-traversal"],
     language: "go",
+    filename: "download.go",
     code: `func download(w http.ResponseWriter, r *http.Request) {
   name := r.URL.Query().Get("file")
   path := filepath.Join("/var/app/uploads", name)
@@ -211,6 +214,7 @@ if rel, err := filepath.Rel(root, abs); err != nil || strings.HasPrefix(rel, "..
     difficulty: "advanced",
     tags: ["bola", "multi-tenant"],
     language: "typescript",
+    filename: "groups_list.ts",
     code: `app.get("/groups", async (req, res) => {
   const all = await Groups.findAll();
   res.json(all);

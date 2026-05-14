@@ -11,6 +11,7 @@ export const microservicesSupplyChainChallenges: readonly Challenge[] = [
     difficulty: "intro",
     tags: ["dependency", "lockfile"],
     language: "json",
+    filename: "package.json",
     code: `{
   "dependencies": {
     "lodash": "^4.17.0",
@@ -76,6 +77,7 @@ export const microservicesSupplyChainChallenges: readonly Challenge[] = [
     difficulty: "core",
     tags: ["secrets", "containers"],
     language: "bash",
+    filename: "Dockerfile",
     code: `FROM node:20-slim
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev

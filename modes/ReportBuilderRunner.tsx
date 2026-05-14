@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Paper,
-  Stack,
-  Text,
-  TextInput,
-  Textarea,
-} from "@mantine/core";
+import { Paper, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { AnswerPanel } from "@/components/challenge/AnswerPanel";
 import { CodeViewer } from "@/components/challenge/CodeViewer";
 import { useChallengeRunner } from "./useChallengeRunner";
@@ -65,7 +59,8 @@ export function ReportBuilderRunner({ challenges, examMode }: Props) {
   const allFilled =
     template !== undefined &&
     template.fields.every(
-      (f) => (fields[f.id] ?? "").trim().split(/\s+/).filter(Boolean).length >= 3,
+      (f) =>
+        (fields[f.id] ?? "").trim().split(/\s+/).filter(Boolean).length >= 3,
     );
 
   const handleSubmit = () => {
@@ -96,16 +91,14 @@ export function ReportBuilderRunner({ challenges, examMode }: Props) {
             <CodeViewer
               code={challenge.code}
               language={challenge.language ?? "plaintext"}
+              filename={challenge.filename}
             />
           ) : (
             <Paper
               withBorder
               radius="lg"
-              p="md"
-              style={{
-                background: "var(--app-surface-muted)",
-                borderColor: "var(--app-border)",
-              }}
+              p="lg"
+              className="bg-app-surface border-app-border"
             >
               <Text size="sm">{challenge?.summary}</Text>
             </Paper>

@@ -25,6 +25,7 @@ export const practiceModeChallenges: readonly Challenge[] = [
     difficulty: "intro",
     tags: ["xss", "attack"],
     language: "javascript",
+    filename: "search.js",
     code: `app.get("/search", (req, res) => {
   res.send("<h1>Results for " + req.query.q + "</h1>");
 });`,
@@ -96,6 +97,7 @@ Host: shop.example.com`,
     difficulty: "intro",
     tags: ["sqli", "attack"],
     language: "sql",
+    filename: "login.sql",
     code: `SELECT * FROM users
 WHERE username = '$user'
   AND password = '$pass'`,
@@ -167,6 +169,7 @@ username=Admin&password=Admin`,
     difficulty: "core",
     tags: ["ssrf", "cloud"],
     language: "typescript",
+    filename: "thumb.ts",
     code: `app.get("/thumb", async (req, res) => {
   const r = await fetch(req.query.url);
   res.send(Buffer.from(await r.arrayBuffer()));
@@ -3406,6 +3409,7 @@ Host: admin.example.com`,
     difficulty: "intro",
     tags: ["aes", "ecb"],
     language: "python",
+    filename: "ecb_encrypt.py",
     code: `KEY = b"d3adb33fcafef00ddeadbeefcafef00d"
 cipher = AES.new(KEY, AES.MODE_ECB)
 ct = cipher.encrypt(pad(profile_bytes, 16))`,
@@ -3465,6 +3469,7 @@ ct = cipher.encrypt(pad(profile_bytes, 16))`,
     difficulty: "intro",
     tags: ["password-hashing"],
     language: "javascript",
+    filename: "password_store.js",
     code: `function storePassword(pw) {
   const hash = crypto.createHash("md5").update(pw).digest("hex");
   users.insert({ pw_md5: hash });
@@ -3526,6 +3531,7 @@ ct = cipher.encrypt(pad(profile_bytes, 16))`,
     difficulty: "core",
     tags: ["aes", "cbc"],
     language: "go",
+    filename: "cbc_encrypt.go",
     code: `iv := make([]byte, aes.BlockSize) // all zero
 mode := cipher.NewCBCEncrypter(block, iv)
 ct := make([]byte, len(pt))
@@ -3580,6 +3586,7 @@ mode.CryptBlocks(ct, pt)`,
     difficulty: "core",
     tags: ["aes", "gcm", "nonce"],
     language: "javascript",
+    filename: "gcm_encrypt.js",
     code: `const key = Buffer.from("00112233445566778899aabbccddeeff", "hex");
 const nonce = Buffer.alloc(12, 0);
 const cipher = crypto.createCipheriv("aes-128-gcm", key, nonce);
@@ -3645,6 +3652,7 @@ return ct.toString("hex");`,
     difficulty: "core",
     tags: ["aes", "ctr", "nonce"],
     language: "go",
+    filename: "ctr_encrypt.go",
     code: `nonce := make([]byte, aes.BlockSize)
 stream := cipher.NewCTR(block, nonce)
 ciphertext := make([]byte, len(plaintext))
@@ -3707,6 +3715,7 @@ stream.XORKeyStream(ciphertext, plaintext)`,
     difficulty: "intro",
     tags: ["randomness", "tokens"],
     language: "javascript",
+    filename: "reset_token.js",
     code: `function makeResetToken(userId) {
   const token = Math.random().toString(36).slice(2);
   db.resetTokens.insert({ userId, token });
@@ -3773,6 +3782,7 @@ stream.XORKeyStream(ciphertext, plaintext)`,
     difficulty: "core",
     tags: ["password-hashing", "pbkdf2"],
     language: "python",
+    filename: "pbkdf2_hash.py",
     code: `SALT = b"company-wide-salt"
 digest = hashlib.pbkdf2_hmac("sha1", password.encode(), SALT, 1000)
 users.insert({"username": username, "pw": digest.hex()})`,
@@ -3833,6 +3843,7 @@ users.insert({"username": username, "pw": digest.hex()})`,
     difficulty: "advanced",
     tags: ["mac", "hashing"],
     language: "python",
+    filename: "mac.py",
     code: `def sign(message: bytes) -> str:
     return hashlib.sha256(SECRET + message).hexdigest()
 
@@ -3891,6 +3902,7 @@ def verify(message: bytes, sig: str) -> bool:
     difficulty: "advanced",
     tags: ["rsa", "padding"],
     language: "java",
+    filename: "RsaCrypto.java",
     code: `Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
 cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 byte[] wrapped = cipher.doFinal(sessionKey);`,
@@ -3946,6 +3958,7 @@ byte[] wrapped = cipher.doFinal(sessionKey);`,
     difficulty: "core",
     tags: ["tls", "certificates"],
     language: "python",
+    filename: "http_client.py",
     code: `resp = requests.post(
     "https://payments.internal/api/charge",
     json=payload,
@@ -4008,6 +4021,7 @@ byte[] wrapped = cipher.doFinal(sessionKey);`,
     difficulty: "core",
     tags: ["otp", "xor"],
     language: "python",
+    filename: "otp.py",
     code: `PAD = load_key("pad.bin")
 
 def encrypt(msg: bytes) -> bytes:
@@ -4062,6 +4076,7 @@ def encrypt(msg: bytes) -> bytes:
     difficulty: "intro",
     tags: ["des", "cbc"],
     language: "java",
+    filename: "DbFieldCrypto.java",
     code: `SecretKeySpec key = new SecretKeySpec(rawKey, "DES");
 Cipher c = Cipher.getInstance("DES/CBC/PKCS5Padding");
 c.init(Cipher.ENCRYPT_MODE, key, iv);
@@ -4125,6 +4140,7 @@ byte[] ct = c.doFinal(nationalId.getBytes(StandardCharsets.UTF_8));`,
     difficulty: "core",
     tags: ["signatures", "sha1"],
     language: "java",
+    filename: "Sign.java",
     code: `Signature sig = Signature.getInstance("SHA1withRSA");
 sig.initSign(privateKey);
 sig.update(documentBytes);
@@ -4182,6 +4198,7 @@ byte[] signature = sig.sign();`,
     difficulty: "core",
     tags: ["chacha20", "nonce", "stream-cipher"],
     language: "python",
+    filename: "chacha_encrypt.py",
     code: `key = base64.b64decode(os.environ["EVENT_KEY"])
 nonce = b"0000000000000000"
 algorithm = algorithms.ChaCha20(key, nonce)
@@ -4240,6 +4257,7 @@ ct = cipher.encryptor().update(event_json)`,
     difficulty: "intro",
     tags: ["md5", "integrity"],
     language: "python",
+    filename: "checksum.py",
     code: `def checksum(path):
     data = open(path, "rb").read()
     return hashlib.md5(data).hexdigest()
@@ -4303,6 +4321,7 @@ published_hash = checksum("installer.exe")`,
     difficulty: "core",
     tags: ["jwt", "hmac", "secrets"],
     language: "javascript",
+    filename: "jwt_config.js",
     code: `const JWT_SECRET = "secret";
 function issueAdminToken(user) {
   return jwt.sign({ sub: user.id, role: "admin" }, JWT_SECRET, {
@@ -4489,6 +4508,7 @@ function issueAdminToken(user) {
     difficulty: "core",
     tags: ["report"],
     language: "java",
+    filename: "LoginService.java",
     code: `public User login(String username, String password) {
   String sql = "SELECT * FROM users WHERE username='" + username +
                "' AND password='" + password + "'";
@@ -4579,6 +4599,7 @@ function issueAdminToken(user) {
     difficulty: "intro",
     tags: ["report"],
     language: "python",
+    filename: "orders.py",
     code: `@app.get("/orders/<int:order_id>")
 @login_required
 def order_detail(order_id):

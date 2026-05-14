@@ -224,6 +224,95 @@ body {
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid var(--app-border-strong);
+  box-shadow: 0 1px 0 var(--app-border), 0 8px 24px -18px rgba(15, 23, 42, 0.45);
+}
+
+/* IDE-style header that surfaces the filename above the snippet. */
+.code-block__header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.85rem;
+  background: var(--app-code-bg-soft);
+  border-bottom: 1px solid var(--app-border);
+  font-size: 0.78rem;
+  line-height: 1;
+  color: var(--app-fg-muted);
+}
+
+.code-block__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.code-block__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  display: inline-block;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.18);
+}
+
+.code-block__dot--red {
+  background: #ff5f57;
+}
+.code-block__dot--amber {
+  background: #febc2e;
+}
+.code-block__dot--green {
+  background: #28c840;
+}
+
+[data-mantine-color-scheme="dark"] .code-block__dot {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+
+.code-block__filename {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: var(--app-bg-elevated);
+  border: 1px solid var(--app-border);
+  color: var(--app-fg);
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  max-width: 75%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.code-block__file-icon {
+  flex-shrink: 0;
+  color: var(--app-fg-subtle);
+}
+
+.code-block__lang {
+  justify-self: end;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--app-fg-subtle);
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  background: var(--app-accent-soft);
+  color: var(--app-blue);
+}
+
+[data-mantine-color-scheme="dark"] .code-block__lang {
+  color: #9ec3ee;
+}
+
+.code-block__body {
+  padding-block: 0.35rem;
 }
 
 .code-block__row {

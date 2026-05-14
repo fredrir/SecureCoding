@@ -90,6 +90,7 @@ export function VulnSearchRunner({ challenges, examMode }: Props) {
           onChange={setSelected}
           reveal={reveal}
           disabled={state.stage === "feedback"}
+          filename={challenge?.filename}
         />
       }
       answer={

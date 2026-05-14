@@ -15,6 +15,7 @@ interface Props {
    */
   reveal?: { correct: readonly number[] };
   disabled?: boolean;
+  filename?: string;
 }
 
 /**
@@ -28,6 +29,7 @@ export function SelectableCodeLines({
   onChange,
   reveal,
   disabled,
+  filename,
 }: Props) {
   const selectedSet = useMemo(() => new Set(selected), [selected]);
   const correctSet = useMemo(
@@ -68,6 +70,7 @@ export function SelectableCodeLines({
       lineStates={lineStates}
       onLineClick={disabled || reveal ? undefined : handleClick}
       ariaLabel="Select vulnerable lines"
+      filename={filename}
     />
   );
 }

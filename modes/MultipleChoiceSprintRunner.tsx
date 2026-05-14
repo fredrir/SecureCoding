@@ -102,16 +102,14 @@ export function MultipleChoiceSprintRunner({
             <CodeViewer
               code={challenge.code}
               language={challenge.language ?? "plaintext"}
+              filename={challenge.filename}
             />
           ) : (
             <Paper
               withBorder
               radius="lg"
-              p="md"
-              style={{
-                background: "var(--app-surface-muted)",
-                borderColor: "var(--app-border)",
-              }}
+              p="lg"
+              className="bg-app-surface border-app-border"
             >
               <Text size="sm">{challenge?.summary}</Text>
             </Paper>

@@ -55,7 +55,9 @@ export function AiReviewRunner({ challenges, examMode }: Props) {
   const { state, controls } = runner;
   const challenge = state.current;
   const ai = challenge?.modeData?.aiReview;
-  const language = (ai?.language ?? challenge?.language ?? "plaintext") as CodeLanguage;
+  const language = (ai?.language ??
+    challenge?.language ??
+    "plaintext") as CodeLanguage;
 
   const handleSubmit = () => {
     if (!challenge) return;
@@ -87,18 +89,19 @@ export function AiReviewRunner({ challenges, examMode }: Props) {
           <Paper
             withBorder
             radius="lg"
-            p="md"
-            style={{
-              background: "var(--app-surface-muted)",
-              borderColor: "var(--app-border)",
-            }}
+            p="lg"
+            className="bg-app-surface border-app-border"
           >
             <Stack gap="xs">
               <Text size="xs" tt="uppercase" fw={700} c="dimmed">
                 Original vulnerable code
               </Text>
               {ai?.originalCode ? (
-                <CodeViewer code={ai.originalCode} language={language} />
+                <CodeViewer
+                  code={ai.originalCode}
+                  language={language}
+                  filename={challenge?.filename}
+                />
               ) : (
                 <Text size="sm">No baseline provided.</Text>
               )}
@@ -128,7 +131,11 @@ export function AiReviewRunner({ challenges, examMode }: Props) {
                 </Text>
               ) : null}
               {ai?.aiPatch ? (
-                <CodeViewer code={ai.aiPatch} language={language} />
+                <CodeViewer
+                  code={ai.aiPatch}
+                  language={language}
+                  filename={challenge?.filename}
+                />
               ) : null}
             </Stack>
           </Paper>
@@ -138,9 +145,7 @@ export function AiReviewRunner({ challenges, examMode }: Props) {
         <AnswerPanel
           title="Your review"
           onSubmit={state.stage === "in-progress" ? handleSubmit : undefined}
-          canSubmit={
-            verdict !== null && reason.trim().split(/\s+/).length >= 6
-          }
+          canSubmit={verdict !== null && reason.trim().split(/\s+/).length >= 6}
           onSkip={state.stage === "in-progress" ? controls.skip : undefined}
           submitLabel="Submit review"
         >
@@ -164,7 +169,8 @@ export function AiReviewRunner({ challenges, examMode }: Props) {
                       setVerdict(v);
                     }}
                     style={{
-                      cursor: state.stage === "feedback" ? "default" : "pointer",
+                      cursor:
+                        state.stage === "feedback" ? "default" : "pointer",
                     }}
                     color={
                       isShownCorrect

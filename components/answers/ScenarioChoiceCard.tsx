@@ -98,7 +98,11 @@ export function ScenarioChoiceCard({
           ) : null}
         </Group>
         {option.code ? (
-          <CodeViewer code={option.code} language={language ?? "plaintext"} />
+          <CodeViewer
+            code={option.code}
+            language={language ?? "plaintext"}
+            showHeader={false}
+          />
         ) : null}
         {reveal && option.rationale ? (
           <Text size="xs" c="dimmed">

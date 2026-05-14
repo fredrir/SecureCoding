@@ -84,7 +84,7 @@ export function FixSuggestionRunner({ challenges, examMode }: Props) {
       }
       workspace={
         <Stack gap="md">
-          <CodeViewer code={code} language={language} />
+          <CodeViewer code={code} language={language} filename={challenge?.filename} />
           <Text size="xs" c="dimmed">
             The vulnerability is already located. Your job is the fix.
           </Text>
