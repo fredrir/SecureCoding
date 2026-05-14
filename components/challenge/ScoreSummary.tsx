@@ -14,10 +14,7 @@ export function ScoreSummary({ summary }: Props) {
       withBorder
       radius="lg"
       p="lg"
-      style={{
-        background: "var(--app-surface)",
-        borderColor: "var(--app-border)",
-      }}
+      className="bg-app-surface border-app-border"
     >
       <Group align="center" wrap="nowrap" gap="xl">
         <RingProgress
@@ -31,7 +28,7 @@ export function ScoreSummary({ summary }: Props) {
             </Text>
           }
         />
-        <Stack gap={4} style={{ flex: 1 }}>
+        <Stack gap={4} className="flex-1">
           <Text size="xs" tt="uppercase" fw={700} c="dimmed">
             Run summary
           </Text>
@@ -65,7 +62,7 @@ function Bar({
 }) {
   const pct = total === 0 ? 0 : Math.round((value / total) * 100);
   return (
-    <Stack gap={2} style={{ flex: 1, minWidth: 80 }}>
+    <Stack gap={2} className="flex-1 min-w-20">
       <Group justify="space-between">
         <Text size="xs" fw={600}>
           {label}

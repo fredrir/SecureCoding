@@ -37,22 +37,11 @@ export function AnswerPanel({
       withBorder
       radius="lg"
       p="lg"
-      style={{
-        background: "var(--app-surface)",
-        borderColor: "var(--app-border)",
-      }}
+      className="bg-app-surface border-app-border"
     >
       <Stack gap="md">
         {title ? (
-          <div
-            style={{
-              fontSize: 12,
-              textTransform: "uppercase",
-              fontWeight: 700,
-              color: "var(--app-fg-muted)",
-              letterSpacing: "0.04em",
-            }}
-          >
+          <div className="text-xs uppercase font-bold text-app-fg-muted tracking-wider">
             {title}
           </div>
         ) : null}

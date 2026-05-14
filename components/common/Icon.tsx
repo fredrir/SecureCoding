@@ -246,6 +246,33 @@ export function ArrowLeftIcon(props: IconProps) {
   );
 }
 
+export function FilterIcon(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <path d="M3 5h18l-7 9v6l-4-2v-4L3 5Z" {...stroke} />
+    </Frame>
+  );
+}
+
+export function GaugeIcon(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <path d="M4 15a8 8 0 1 1 16 0" {...stroke} />
+      <path d="m12 15 4-5" {...stroke} />
+      <circle cx="12" cy="15" r="1.4" fill="currentColor" />
+    </Frame>
+  );
+}
+
+export function TagIcon(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <path d="M3 12V4h8l10 10-8 8L3 12Z" {...stroke} />
+      <circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" />
+    </Frame>
+  );
+}
+
 const ICON_MAP: Record<GameModeIcon, (props: IconProps) => React.ReactElement> = {
   search: SearchIcon,
   wrench: WrenchIcon,

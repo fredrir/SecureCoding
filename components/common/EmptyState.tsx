@@ -14,13 +14,9 @@ export function EmptyState({ title, description, icon, action }: EmptyStateProps
       align="center"
       gap="sm"
       py="xl"
-      style={{
-        border: "1px dashed var(--app-border-strong)",
-        borderRadius: 16,
-        background: "var(--app-surface-muted)",
-      }}
+      className="border border-dashed border-app-border-strong rounded-2xl bg-app-surface-muted"
     >
-      {icon ? <div style={{ color: "var(--app-fg-subtle)" }}>{icon}</div> : null}
+      {icon ? <div className="text-app-fg-subtle">{icon}</div> : null}
       <Title order={4} ta="center">
         {title}
       </Title>

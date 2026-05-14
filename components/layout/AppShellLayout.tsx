@@ -21,32 +21,21 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
       }}
       padding={0}
     >
-      <AppShell.Header
-        style={{ background: "var(--app-bg-elevated)", borderBottom: "1px solid var(--app-border)" }}
-      >
+      <AppShell.Header className="bg-app-bg-elevated border-b border-app-border">
         <Header navOpened={navOpened} onToggleNav={toggleNav} />
       </AppShell.Header>
 
-      <AppShell.Navbar
-        style={{ background: "var(--app-bg-elevated)", borderRight: "1px solid var(--app-border)" }}
-      >
+      <AppShell.Navbar className="bg-app-bg-elevated border-r border-app-border">
         <Sidebar onNavigate={closeNav} />
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <div
-          style={{
-            minHeight: "calc(100vh - 64px - 44px)",
-            padding: "clamp(1rem, 2.5vw, 2rem)",
-          }}
-        >
+        <div className="min-h-[calc(100vh-64px-44px)] p-4 sm:p-6 md:p-8">
           {children}
         </div>
       </AppShell.Main>
 
-      <AppShell.Footer
-        style={{ background: "var(--app-accent)", border: "none" }}
-      >
+      <AppShell.Footer className="bg-app-accent border-0">
         <Footer />
       </AppShell.Footer>
     </AppShell>

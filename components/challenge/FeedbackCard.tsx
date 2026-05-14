@@ -42,13 +42,8 @@ export function FeedbackCard({ feedback, reference }: Props) {
       <Stack gap="sm">
         <Group gap="sm" wrap="nowrap">
           <span
-            style={{
-              color: `var(--mantine-color-${accent}-filled)`,
-              padding: 8,
-              background: "var(--app-surface)",
-              borderRadius: 12,
-              display: "inline-flex",
-            }}
+            className="inline-flex p-2 rounded-xl bg-app-surface"
+            style={{ color: `var(--mantine-color-${accent}-filled)` }}
           >
             <Icon size={20} />
           </span>
@@ -85,7 +80,7 @@ export function FeedbackCard({ feedback, reference }: Props) {
           </Group>
         ) : null}
 
-        <Text size="sm" style={{ whiteSpace: "pre-wrap" }}>
+        <Text size="sm" className="whitespace-pre-wrap">
           {feedback.detail}
         </Text>
 

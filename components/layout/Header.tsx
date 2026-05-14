@@ -24,14 +24,11 @@ export function Header({ navOpened, onToggleNav }: Props) {
         />
         <Link
           href="/"
-          style={{ textDecoration: "none", color: "inherit" }}
+          className="no-underline text-inherit"
           aria-label="Go to dashboard"
         >
           <Group gap={10} wrap="nowrap">
-            <span
-              className="h-6 w-6 md:w-8 md:h-8"
-              style={{ color: "var(--app-accent)" }}
-            >
+            <span className="h-6 w-6 md:w-8 md:h-8 text-app-accent">
               <Image
                 src={"/SecureCoding.svg"}
                 alt="SecureCoding Practice logo"
@@ -40,10 +37,7 @@ export function Header({ navOpened, onToggleNav }: Props) {
               />
             </span>
             <div>
-              <Title
-                order={3}
-                style={{ lineHeight: 1, letterSpacing: "-0.01em" }}
-              >
+              <Title order={3} className="leading-none tracking-tight">
                 SecureCoding Training
               </Title>
               <Text c="dimmed" size="xs" mt={2}>

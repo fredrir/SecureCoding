@@ -33,7 +33,7 @@ export function Dashboard() {
   return (
     <Stack gap="xl" maw={1200} mx="auto" w="100%">
       <Stack gap="xs">
-        <Title order={1} style={{ letterSpacing: "-0.02em" }}>
+        <Title order={1} className="tracking-tight">
           Practice Ground for TDT4237
         </Title>
         <Text c="dimmed" size="md" maw={680}>

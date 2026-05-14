@@ -1,7 +1,7 @@
+import Link from "next/link";
 import { Anchor, Group, Text } from "@mantine/core";
 
 export function Footer() {
-  const year = new Date().getFullYear();
   return (
     <Group
       h="100%"
@@ -9,37 +9,71 @@ export function Footer() {
       justify="space-between"
       wrap="nowrap"
       gap="md"
-      style={{
-        background: "var(--app-accent)",
-        color: "#ffffff",
-      }}
+      className="bg-app-accent text-white"
     >
       <Text size="xs" c="white" fw={500}>
         Fredrik Carsten Hansteen
       </Text>
-      <Group gap="md" wrap="nowrap" visibleFrom="sm">
+
+      <Group gap="lg" wrap="nowrap" visibleFrom="sm">
+        <Anchor
+          component={Link}
+          href="/privacy"
+          c="white"
+          size="xs"
+          fw={600}
+          underline="hover"
+          className="whitespace-nowrap"
+        >
+          Privacy
+        </Anchor>
+        <Anchor
+          component={Link}
+          href="/qa"
+          c="white"
+          size="xs"
+          fw={600}
+          underline="hover"
+          className="whitespace-nowrap"
+        >
+          Q&amp;A
+        </Anchor>
         <Anchor
           href="mailto:fhansteen@gmail.com"
           c="white"
           size="xs"
           fw={600}
           underline="hover"
-          style={{ whiteSpace: "nowrap" }}
+          className="whitespace-nowrap"
         >
           fhansteen@gmail.com
         </Anchor>
       </Group>
-      <Anchor
-        href="mailto:fhansteen@gmail.com"
-        c="white"
-        size="xs"
-        fw={600}
-        underline="hover"
-        hiddenFrom="sm"
-        style={{ whiteSpace: "nowrap" }}
-      >
-        fhansteen@gmail.com
-      </Anchor>
+
+      <Group gap="sm" wrap="nowrap" hiddenFrom="sm">
+        <Anchor
+          component={Link}
+          href="/privacy"
+          c="white"
+          size="xs"
+          fw={600}
+          underline="hover"
+          className="whitespace-nowrap"
+        >
+          Privacy Policy
+        </Anchor>
+        <Anchor
+          component={Link}
+          href="/qa"
+          c="white"
+          size="xs"
+          fw={600}
+          underline="hover"
+          className="whitespace-nowrap"
+        >
+          Q&amp;A
+        </Anchor>
+      </Group>
     </Group>
   );
 }

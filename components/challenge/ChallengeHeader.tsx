@@ -19,7 +19,7 @@ export function ChallengeHeader({ challenge, prompt }: Props) {
         {challenge.owaspTop10 ? <Top10Badge id={challenge.owaspTop10} /> : null}
         {challenge.owaspWstg ? <WstgBadge id={challenge.owaspWstg} /> : null}
       </Group>
-      <Title order={2} style={{ letterSpacing: "-0.01em" }}>
+      <Title order={2} className="tracking-tight">
         {challenge.title}
       </Title>
       {prompt ? (

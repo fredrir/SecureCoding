@@ -19,39 +19,20 @@ export function GameCard({ mode, challengeCount }: Props) {
       padding="lg"
       radius="lg"
       h="100%"
-      style={{
-        background: "var(--app-surface)",
-        borderColor: "var(--app-border)",
-        transition: "transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
-        opacity: ready ? 1 : 0.62,
-        cursor: ready ? "pointer" : "not-allowed",
-        position: "relative",
-        overflow: "hidden",
-      }}
-      className="game-card"
+      className={`game-card hover:shadow-md bg-app-surface border-app-border relative overflow-hidden transition-[transform,box-shadow,border-color] duration-150 ${
+        ready ? "cursor-pointer opacity-100" : "cursor-not-allowed opacity-60"
+      }`}
     >
       <div
         aria-hidden
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: 4,
-          background: accentVar,
-          pointerEvents: "none",
-        }}
+        className="absolute left-0 top-0 bottom-0 w-1 pointer-events-none"
+        style={{ background: accentVar }}
       />
-      <Stack gap="md" style={{ position: "relative", height: "100%" }}>
+      <Stack gap="md" className="relative h-full">
         <Group justify="space-between" align="flex-start" wrap="nowrap">
           <span
-            style={{
-              color: accentVar,
-              background: accentSoftVar,
-              padding: "10px",
-              borderRadius: 12,
-              display: "inline-flex",
-            }}
+            className="inline-flex p-2.5 rounded-xl"
+            style={{ color: accentVar, background: accentSoftVar }}
           >
             <GameModeIconView name={mode.icon} size={24} />
           </span>
@@ -75,7 +56,7 @@ export function GameCard({ mode, challengeCount }: Props) {
           </Text>
         </div>
 
-        <Text size="sm" style={{ flex: 1 }}>
+        <Text size="sm" className="flex-1">
           {mode.description}
         </Text>
       </Stack>
@@ -87,7 +68,7 @@ export function GameCard({ mode, challengeCount }: Props) {
   return (
     <Link
       href={`/practice/${mode.slug}`}
-      style={{ textDecoration: "none", color: "inherit", display: "block", height: "100%" }}
+      className="block h-full no-underline text-inherit"
     >
       {inner}
     </Link>

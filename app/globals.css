@@ -25,6 +25,7 @@
 
   /* NTNU Blue — primary brand colour */
   --app-accent: #00509e;
+  --app-blue: #00509e; 
 
   /* NTNU Blue, transparent tint for subtle emphasis states */
   --app-accent-soft: rgba(0, 80, 158, 0.10);
@@ -83,6 +84,7 @@
 
   /* NTNU Light blue — supporting colour used as the dark-mode accent */
   --app-accent: #6096d0;
+  --app-blue: #00509e;
 
   /* NTNU Light blue, transparent tint for subtle emphasis states */
   --app-accent-soft: rgba(96, 150, 208, 0.18);
@@ -130,15 +132,27 @@
 /* Surface Tailwind tokens for any utilities that want them */
 @theme inline {
   --color-app-bg: var(--app-bg);
+  --color-app-bg-elevated: var(--app-bg-elevated);
   --color-app-surface: var(--app-surface);
   --color-app-surface-muted: var(--app-surface-muted);
   --color-app-border: var(--app-border);
+  --color-app-border-strong: var(--app-border-strong);
   --color-app-fg: var(--app-fg);
   --color-app-fg-muted: var(--app-fg-muted);
+  --color-app-fg-subtle: var(--app-fg-subtle);
   --color-app-accent: var(--app-accent);
+  --color-app-blue: var(--app-blue);
+  --color-app-accent-soft: var(--app-accent-soft);
+  --color-app-success: var(--app-success);
+  --color-app-success-soft: var(--app-success-soft);
+  --color-app-danger: var(--app-danger);
+  --color-app-danger-soft: var(--app-danger-soft);
+  --color-app-warning: var(--app-warning);
+  --color-app-warning-soft: var(--app-warning-soft);
   --font-sans: var(--font-open-sans);
   --font-mono: var(--font-jetbrains-mono);
 }
+
 
 html,
 body {

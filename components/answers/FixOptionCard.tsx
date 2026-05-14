@@ -51,19 +51,18 @@ export function FixOptionCard({
           onSelect();
         }
       }}
+      className={`bg-app-surface transition-[border-color,box-shadow] duration-100 ${
+        disabled ? "cursor-default" : "cursor-pointer"
+      } ${selected ? "shadow-sm" : "shadow-none"}`}
       style={{
-        cursor: disabled ? "default" : "pointer",
-        background: "var(--app-surface)",
         borderColor: selected || isCorrect || isWrongPick
           ? `var(--mantine-color-${accent}-filled)`
           : "var(--app-border)",
-        boxShadow: selected ? "var(--mantine-shadow-sm)" : "none",
-        transition: "border-color 120ms ease, box-shadow 120ms ease",
       }}
     >
       <Stack gap="sm">
         <Group justify="space-between" wrap="nowrap" align="flex-start">
-          <Text fw={600} size="sm" style={{ flex: 1 }}>
+          <Text fw={600} size="sm" className="flex-1">
             {option.label}
           </Text>
           {reveal ? (

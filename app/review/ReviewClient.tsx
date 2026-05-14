@@ -52,13 +52,10 @@ export function ReviewClient() {
               withBorder
               radius="lg"
               p="md"
-              style={{
-                background: "var(--app-surface)",
-                borderColor: "var(--app-border)",
-              }}
+              className="bg-app-surface border-app-border"
             >
               <Group justify="space-between" align="flex-start" wrap="nowrap">
-                <Stack gap={4} style={{ flex: 1 }}>
+                <Stack gap={4} className="flex-1">
                   <Group gap={6}>
                     <TopicBadge topic={challenge.courseTopic} />
                     <DifficultyBadge difficulty={challenge.difficulty} />

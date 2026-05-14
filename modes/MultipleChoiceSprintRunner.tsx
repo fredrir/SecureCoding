@@ -117,7 +117,7 @@ export function MultipleChoiceSprintRunner({
             </Paper>
           )}
           <Text size="xs" c="dimmed">
-            No penalty for wrong answers — pick the most defensible option.
+            No penalty for wrong answers, pick the most justified option.
           </Text>
         </Stack>
       }
