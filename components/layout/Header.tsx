@@ -29,15 +29,15 @@ export function Header({ navOpened, onToggleNav }: Props) {
           <Group gap={10} wrap="nowrap">
             <span className="h-6 w-6 md:w-8 md:h-8 text-app-accent">
               <Image
-                src={"/SecureCoding.svg"}
-                alt="SecureCoding Practice logo"
+                src={"/PatchQuest.svg"}
+                alt="PatchQuest logo"
                 height={150}
                 width={150}
               />
             </span>
             <div>
               <Title order={3} className="leading-none tracking-tight">
-                SecureCoding Training
+                PatchQuest
               </Title>
               <Text c="dimmed" size="xs" mt={2}>
                 TDT4237 practice

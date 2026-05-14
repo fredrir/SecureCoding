@@ -9,40 +9,17 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { modals } from "@mantine/modals";
+
 import { FlameIcon, TargetIcon } from "@/components/common/Icon";
 import { useProgress } from "@/state/useProgress";
 import { useStreak } from "@/state/useStreak";
 import Link from "next/link";
-
-function resetAllProgress() {
-  try {
-    window.localStorage.clear();
-  } catch {
-    // ignore quota/private-mode errors
-  }
-  window.location.reload();
-}
+import ResetProgress from "../common/ResetProgress";
 
 export function ProgressDisplay() {
   const { totals, accuracy } = useProgress();
   const { current, best } = useStreak();
   const accuracyPct = Math.round(accuracy * 100);
-
-  const confirmReset = () =>
-    modals.openConfirmModal({
-      title: "Reset all progress?",
-      centered: true,
-      children: (
-        <Text size="sm">
-          This will clear your attempts, streak, mistakes, and preferences from
-          this browser. This cannot be undone.
-        </Text>
-      ),
-      labels: { confirm: "Reset everything", cancel: "Cancel" },
-      confirmProps: { color: "red" },
-      onConfirm: resetAllProgress,
-    });
 
   return (
     <Paper
@@ -107,9 +84,7 @@ export function ProgressDisplay() {
             Review mistakes
           </Button>
 
-          <Button size="xs" variant="white" color="dark" onClick={confirmReset}>
-            Reset progress
-          </Button>
+          <ResetProgress />
         </Group>
       </Stack>
     </Paper>

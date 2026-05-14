@@ -46,6 +46,7 @@ export function Sidebar({ onNavigate }: Props) {
           onClick={onNavigate}
           active={isActive("/")}
           variant="filled"
+          className="hover:bg-app-accent-soft transition-colors duration-150"
         />
         <NavLink
           component={Link}
@@ -54,6 +55,7 @@ export function Sidebar({ onNavigate }: Props) {
           onClick={onNavigate}
           active={isActive("/review")}
           variant="filled"
+          className="hover:bg-app-accent-soft transition-colors duration-150"
         />
 
         <Text size="xs" tt="uppercase" fw={700} c="dimmed" mt="md" mb={4}>
@@ -73,6 +75,7 @@ export function Sidebar({ onNavigate }: Props) {
               onClick={ready ? onNavigate : (e) => e.preventDefault()}
               active={ready && isActive(href)}
               variant="filled"
+              className="hover:bg-app-accent-soft transition-colors duration-150"
               disabled={!ready}
               leftSection={
                 <span

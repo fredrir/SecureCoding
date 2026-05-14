@@ -46,7 +46,7 @@ export function FiltersBar() {
         align="center"
         px="lg"
         py="sm"
-        className="bg-app-surface-muted border-b border-app-border min-h-8"
+        className="bg-app-bg-elevated border-b border-app-border min-h-8"
       >
         <Group
           gap="xs"
@@ -67,11 +67,12 @@ export function FiltersBar() {
           ) : null}
         </Group>
         <Button
-          size="compact-xs"
+          size={`compact-xs`}
           variant="subtle"
           color="gray"
           onClick={clearAll}
           disabled={!hasAny}
+          className={`${hasAny ? "bg-app-accent text-white hover:bg-app-accent/80" : ""} transition-colors duration-150`}
         >
           Clear all
         </Button>
@@ -178,16 +179,6 @@ function FilterSection({
             {selected === 0 ? `All · ${total}` : `${selected} of ${total}`}
           </Text>
         </Group>
-        {onClear ? (
-          <Button
-            size="compact-xs"
-            variant="subtle"
-            color="gray"
-            onClick={onClear}
-          >
-            Reset
-          </Button>
-        ) : null}
       </Group>
       {children}
     </div>

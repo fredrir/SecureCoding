@@ -16,7 +16,7 @@ import { QaItems } from "./QaItems";
 export const metadata: Metadata = {
   title: "Q&A",
   description:
-    "Common questions about SecureCoding Training, the practice app for TDT4237 Software Security and Data Privacy.",
+    "Common questions about PatchQuest, the practice app for TDT4237 Software Security and Data Privacy.",
 };
 
 export default function QAPage() {
@@ -39,7 +39,7 @@ export default function QAPage() {
             Questions &amp; Answers
           </Title>
           <Text c="white" className="opacity-90" size="sm">
-            What people ask about SecureCoding Training.
+            What people ask about PatchQuest.
           </Text>
         </Stack>
       </Paper>
@@ -53,7 +53,7 @@ export default function QAPage() {
         <Accordion multiple variant="separated" radius="md">
           {QaItems.map((item, i) => (
             <AccordionItem key={i} value={`q-${i}`}>
-              <AccordionControl>
+              <AccordionControl className="hover:bg-app-accent-soft transition-colors duration-150">
                 <Text fw={600} size="sm">
                   {item.q}
                 </Text>

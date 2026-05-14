@@ -1,3 +1,4 @@
+import ResetProgress from "@/components/common/ResetProgress";
 import { Anchor, Stack, Text } from "@mantine/core";
 
 interface QAItem {
@@ -7,7 +8,7 @@ interface QAItem {
 
 export const QaItems: QAItem[] = [
   {
-    q: "What is SecureCoding Training?",
+    q: "What is PatchQuest?",
     a: (
       <Text size="sm">
         A practice app for the NTNU course{" "}
@@ -62,8 +63,10 @@ export const QaItems: QAItem[] = [
     q: "How do I reset my progress?",
     a: (
       <Text size="sm">
-        Clear site data for this site in your browser settings, or use DevTools
-        then Application then Local Storage. That removes every key under{" "}
+        You can reset progress <ResetProgress label="here" variant="link" />,
+        this clears site data for this site in your browser settings, or you can
+        use DevTools then Application then Local Storage. That removes every key
+        under{" "}
         <code className="font-mono text-xs px-1 py-0.5 bg-app-surface-muted rounded">
           sct/v1/*
         </code>{" "}
@@ -170,7 +173,7 @@ export const QaItems: QAItem[] = [
         </Anchor>{" "}
         or just open a PR on{" "}
         <Anchor
-          href="https://github.com/fredrir/SecureCoding"
+          href="https://github.com/fredrir/PatchQuest"
           className="text-app-accent"
         >
           GitHub

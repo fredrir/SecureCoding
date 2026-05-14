@@ -8,7 +8,7 @@ import { GAME_MODE_BY_ID } from "@/domain/gameMode";
 import { TopicBadge } from "@/components/badges/TopicBadge";
 import { DifficultyBadge } from "@/components/badges/DifficultyBadge";
 import { EmptyState } from "@/components/common/EmptyState";
-import { SecureCodingIcon, ShieldIcon } from "@/components/common/Icon";
+import { PatchQuestIcon, ShieldIcon } from "@/components/common/Icon";
 
 export function ReviewClient() {
   const { items, remove } = useMistakes();
@@ -16,7 +16,7 @@ export function ReviewClient() {
   if (items.length === 0) {
     return (
       <EmptyState
-        icon={<SecureCodingIcon size={36} />}
+        icon={<PatchQuestIcon size={36} />}
         title="No mistakes saved"
         description="Submit a few challenges in any mode; the ones you miss will appear here for revisiting."
         action={

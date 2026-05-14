@@ -297,6 +297,18 @@ body {
   color: var(--tok-pun);
 }
 
+/* Tailwind preflight zeros `list-style` on every ul/ol, hiding Mantine List
+   markers. Restore the default marker only on Mantine's List unless the caller
+   opted into `type="none"` or `withIcon`. */
+@layer mantine {
+  ul.mantine-List-root:not([data-type="none"]) {
+    list-style-type: disc;
+  }
+  ol.mantine-List-root:not([data-type="none"]) {
+    list-style-type: decimal;
+  }
+}
+
 /* Focus ring used by Mantine.
    Uses the active scheme accent:
    - Light mode: NTNU Blue

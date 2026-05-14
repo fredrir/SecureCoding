@@ -53,7 +53,7 @@ export function WrenchIcon(props: IconProps) {
   );
 }
 
-export function SecureCodingIcon({
+export function PatchQuestIcon({
   size = 22,
   className,
 }: IconProps) {
@@ -286,6 +286,43 @@ export function GaugeIcon(props: IconProps) {
       <path d="M4 15a8 8 0 1 1 16 0" {...stroke} />
       <path d="m12 15 4-5" {...stroke} />
       <circle cx="12" cy="15" r="1.4" fill="currentColor" />
+    </Frame>
+  );
+}
+
+export function GitHubIcon({ size = 22, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      className={className}
+      aria-hidden
+    >
+      <path
+        fill="currentColor"
+        d="M12 1.5A10.5 10.5 0 0 0 1.5 12c0 4.64 3.01 8.57 7.18 9.96.53.1.72-.23.72-.51 0-.25-.01-1.09-.01-1.98-2.92.54-3.67-.71-3.91-1.36-.13-.34-.71-1.36-1.21-1.64-.42-.22-1.01-.78-.02-.79.93-.01 1.59.86 1.81 1.21 1.06 1.78 2.74 1.28 3.41.97.1-.76.41-1.28.75-1.57-2.59-.29-5.3-1.3-5.3-5.78 0-1.27.45-2.32 1.2-3.14-.12-.29-.52-1.49.11-3.1 0 0 .98-.31 3.21 1.2.93-.26 1.93-.39 2.92-.39.99 0 1.99.13 2.92.39 2.23-1.51 3.21-1.2 3.21-1.2.63 1.61.23 2.81.11 3.1.75.82 1.2 1.86 1.2 3.14 0 4.49-2.72 5.49-5.31 5.78.42.36.78 1.06.78 2.16 0 1.56-.01 2.82-.01 3.2 0 .29.2.62.73.51A10.51 10.51 0 0 0 22.5 12 10.5 10.5 0 0 0 12 1.5Z"
+      />
+    </svg>
+  );
+}
+
+export function MailIcon(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <rect x="3" y="5" width="18" height="14" rx="2" {...stroke} />
+      <path d="m4 7 8 6 8-6" {...stroke} />
+    </Frame>
+  );
+}
+
+export function HeartIcon(props: IconProps) {
+  return (
+    <Frame {...props}>
+      <path
+        d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z"
+        {...stroke}
+      />
     </Frame>
   );
 }

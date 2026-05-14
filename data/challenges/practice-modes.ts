@@ -382,8 +382,7 @@ Host: admin.example.com`,
           {
             id: "athn01",
             code: "WSTG-ATHN-01",
-            label:
-              "Test for Credentials Transported over an Encrypted Channel",
+            label: "Test for Credentials Transported over an Encrypted Channel",
             correct: false,
             rationale:
               "Concerns where credentials travel, not the cert validation itself.",
@@ -432,14 +431,16 @@ Host: admin.example.com`,
             code: "WSTG-SESS-02",
             label: "Test for Cookies Attributes",
             correct: false,
-            rationale: "Cookie attribute checks are related defence in depth but not the primary mapping.",
+            rationale:
+              "Cookie attribute checks are related defence in depth but not the primary mapping.",
           },
           {
             id: "athz02",
             code: "WSTG-ATHZ-02",
             label: "Test for Bypassing Authorization Schema",
             correct: false,
-            rationale: "CSRF abuses authenticated sessions, not bypasses authorisation logic.",
+            rationale:
+              "CSRF abuses authenticated sessions, not bypasses authorisation logic.",
           },
         ],
       },
@@ -488,6 +489,583 @@ Host: admin.example.com`,
       },
     },
   }),
+  buildChallenge({
+    id: "req-password-storage-secure",
+    title: "Requirement: 'Store passwords securely'",
+    summary: "Rewrite a vague password-storage requirement.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["requirements", "passwords", "authentication"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "A good password-storage requirement should specify one-way password hashing, salts, work factors, and protection against offline cracking, without confusing hashing with encryption.",
+    examKeywords: [
+      "password hashing",
+      "salt",
+      "argon2",
+      "bcrypt",
+      "work factor",
+      "no plaintext",
+    ],
+    owaspTop10: "A07",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "Passwords shall be stored securely.",
+        context:
+          "The system stores user accounts for a public web application with ordinary users, business owners, and administrators.",
+        keywords: [
+          "password hashing",
+          "salt",
+          "argon2",
+          "bcrypt",
+          "work factor",
+          "no plaintext",
+        ],
+        goodExample:
+          "User passwords shall never be stored in plaintext or reversible encryption. Passwords shall be stored using an approved password hashing algorithm such as Argon2id or bcrypt with a unique per-password salt and a configurable work factor reviewed at least annually.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-session-cookie-flags",
+    title: "Requirement: 'Secure sessions'",
+    summary: "Rewrite a vague session-management requirement.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["requirements", "sessions", "cookies"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "A session requirement should define how session tokens are protected, when they expire, and how they are invalidated after logout or privilege changes.",
+    examKeywords: [
+      "HttpOnly",
+      "Secure",
+      "SameSite",
+      "expiration",
+      "logout",
+      "session rotation",
+    ],
+    owaspTop10: "A07",
+    owaspWstg: "WSTG-SESS-02",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "The system shall use secure cookies.",
+        context:
+          "The application uses cookie-based session tokens for authenticated users and administrators.",
+        keywords: [
+          "HttpOnly",
+          "Secure",
+          "SameSite",
+          "expiration",
+          "logout",
+          "session rotation",
+        ],
+        goodExample:
+          "Session cookies shall be marked HttpOnly, Secure, and SameSite=Lax or stricter, shall expire after 30 minutes of inactivity, shall be invalidated on logout, and shall be rotated after login and privilege changes.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-admin-mfa-remote-access",
+    title: "Requirement: 'Admins must log in safely'",
+    summary: "Rewrite a vague administrator-authentication requirement.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["requirements", "mfa", "admin"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Privileged accounts require stronger authentication because compromise has high impact. Requirements should mention MFA, remote access restrictions, and logging.",
+    examKeywords: [
+      "MFA",
+      "privileged accounts",
+      "remote access",
+      "least privilege",
+      "logging",
+      "monitoring",
+    ],
+    owaspTop10: "A07",
+    owaspWstg: "WSTG-ATHN-04",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "Administrators shall use strong login.",
+        context:
+          "Administrators can access citizen records and system configuration remotely through a cloud-hosted management portal.",
+        keywords: [
+          "MFA",
+          "privileged accounts",
+          "remote access",
+          "least privilege",
+          "logging",
+          "monitoring",
+        ],
+        goodExample:
+          "All privileged accounts shall require phishing-resistant MFA for interactive login, remote administrative access shall be restricted to approved networks or managed devices, and all privileged login attempts and administrative actions shall be logged and monitored.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-tenant-access-control",
+    title: "Requirement: 'Users only see their own data'",
+    summary: "Rewrite a vague tenant-isolation requirement.",
+    courseTopic: "authorization",
+    difficulty: "intro",
+    tags: ["requirements", "authorization", "multi-tenant"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Authorization requirements should specify object-level checks and tenant isolation. Relying only on hidden fields, URLs, or frontend filtering is not sufficient.",
+    examKeywords: [
+      "authorization",
+      "object-level access control",
+      "tenant isolation",
+      "server-side",
+      "least privilege",
+      "IDOR",
+    ],
+    owaspTop10: "A01",
+    owaspWstg: "WSTG-ATHZ-04",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "Users shall only access data they are allowed to see.",
+        context:
+          "The product is a multi-tenant cloud application where different organizations store confidential assessment reports.",
+        keywords: [
+          "authorization",
+          "object-level access control",
+          "tenant isolation",
+          "server-side",
+          "least privilege",
+          "IDOR",
+        ],
+        goodExample:
+          "Every request for tenant-owned objects shall enforce server-side object-level authorization, verifying that the authenticated user belongs to the owning tenant and has the required role before returning, modifying, or deleting the object.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-sql-injection-inputs",
+    title: "Requirement: 'Prevent SQL injection'",
+    summary: "Rewrite a vague injection-prevention requirement.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["requirements", "sql-injection", "input-validation"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Good injection requirements should be testable and should focus on safe query construction, validation, and least privilege rather than simply saying input must be safe.",
+    examKeywords: [
+      "prepared statements",
+      "parameterized queries",
+      "input validation",
+      "least privilege",
+      "error handling",
+      "SQL injection",
+    ],
+    owaspTop10: "A05",
+    owaspWstg: "WSTG-INPV-05",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "The system shall protect against SQL injection.",
+        context:
+          "The application lets users search, filter, and sort business reviews stored in a relational database.",
+        keywords: [
+          "prepared statements",
+          "parameterized queries",
+          "input validation",
+          "least privilege",
+          "error handling",
+          "SQL injection",
+        ],
+        goodExample:
+          "All database queries using user-controlled input shall be constructed with parameterized queries or safe ORM binding, inputs shall be validated against expected type and length, database accounts shall use least privilege, and SQL errors shall not be exposed to users.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-xss-output-encoding",
+    title: "Requirement: 'No XSS'",
+    summary: "Rewrite a vague XSS-prevention requirement.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["requirements", "xss", "output-encoding"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "XSS requirements should distinguish input validation from context-aware output encoding and should avoid unsafe rendering of user-controlled HTML.",
+    examKeywords: [
+      "context-aware output encoding",
+      "HTML escaping",
+      "stored XSS",
+      "reflected XSS",
+      "sanitization",
+      "CSP",
+    ],
+    owaspTop10: "A05",
+    owaspWstg: "WSTG-INPV-01",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "The website shall not have XSS.",
+        context:
+          "Users can post reviews and comments that are later displayed to other users and business owners.",
+        keywords: [
+          "context-aware output encoding",
+          "HTML escaping",
+          "stored XSS",
+          "reflected XSS",
+          "sanitization",
+          "CSP",
+        ],
+        goodExample:
+          "All user-generated review and comment content shall be rendered using framework-provided context-aware output encoding by default; any permitted rich text shall be sanitized using an approved allowlist, and raw HTML rendering shall be prohibited unless explicitly reviewed.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-file-upload-validation",
+    title: "Requirement: 'Allow safe uploads'",
+    summary: "Rewrite a vague file-upload requirement.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["requirements", "file-upload", "malicious-files"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Secure file-upload requirements should cover type validation, size limits, malware scanning, storage location, authorization, and safe serving of files.",
+    examKeywords: [
+      "allowlist",
+      "content-type",
+      "file extension",
+      "size limit",
+      "malware scanning",
+      "non-executable storage",
+    ],
+    owaspTop10: "A05",
+    owaspWstg: "WSTG-BUSL-09",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "The system shall securely handle uploaded files.",
+        context:
+          "Business owners can upload logo images and PDF documentation that will be shown to customers.",
+        keywords: [
+          "allowlist",
+          "content-type",
+          "file extension",
+          "size limit",
+          "malware scanning",
+          "non-executable storage",
+        ],
+        goodExample:
+          "Uploaded files shall be restricted to an approved allowlist of file types, validated by both extension and content inspection, limited to a configured maximum size, scanned for malware, stored outside executable web paths, and served only through authorization-controlled download endpoints.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-logging-incident-response",
+    title: "Requirement: 'Log security events'",
+    summary: "Rewrite a vague logging and monitoring requirement.",
+    courseTopic: "secure-development",
+    difficulty: "intro",
+    tags: ["requirements", "logging", "monitoring"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Logging requirements should specify which events are logged, what metadata is needed, protection of logs, and how alerts are triggered.",
+    examKeywords: [
+      "audit logs",
+      "authentication events",
+      "authorization failures",
+      "tamper-resistant",
+      "alerting",
+      "retention",
+    ],
+    owaspTop10: "A09",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "The system shall log important events.",
+        context:
+          "The service handles sensitive employee and citizen data and must support investigation after suspicious access.",
+        keywords: [
+          "audit logs",
+          "authentication events",
+          "authorization failures",
+          "tamper-resistant",
+          "alerting",
+          "retention",
+        ],
+        goodExample:
+          "The system shall record tamper-resistant audit logs for login attempts, privilege changes, authorization failures, data export actions, and administrative actions, including timestamp, actor, source IP, target object, and outcome, with alerts for suspicious patterns and retention for at least 12 months.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-error-handling-no-stacktrace",
+    title: "Requirement: 'Handle errors securely'",
+    summary: "Rewrite a vague error-handling requirement.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["requirements", "error-handling", "information-disclosure"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Secure error handling should prevent information leakage while preserving enough internal detail for debugging and incident response.",
+    examKeywords: [
+      "generic errors",
+      "no stack traces",
+      "internal logging",
+      "information disclosure",
+      "correlation ID",
+      "debug disabled",
+    ],
+    owaspTop10: "A02",
+    owaspWstg: "WSTG-ERRH-02",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "The system shall not reveal errors.",
+        context:
+          "The web application is exposed to the Internet and uses a backend database and third-party APIs.",
+        keywords: [
+          "generic errors",
+          "no stack traces",
+          "internal logging",
+          "information disclosure",
+          "correlation ID",
+          "debug disabled",
+        ],
+        goodExample:
+          "External users shall receive generic error messages that do not reveal stack traces, SQL errors, framework versions, secrets, or internal paths; detailed errors shall be logged internally with a correlation ID, and debug mode shall be disabled in production.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-gdpr-data-minimization-retention",
+    title: "Requirement: 'Follow GDPR'",
+    summary: "Rewrite a vague privacy requirement.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "intro",
+    tags: ["requirements", "privacy", "gdpr"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Privacy Requirement",
+    fixOptions: [],
+    explanation:
+      "Privacy requirements should be concrete about purpose limitation, minimization, retention, access rights, and deletion rather than merely saying the system follows GDPR.",
+    examKeywords: [
+      "data minimization",
+      "purpose limitation",
+      "retention",
+      "deletion",
+      "lawful basis",
+      "data subject rights",
+    ],
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "The system shall be GDPR compliant.",
+        context:
+          "The service collects user profile data, reviews, location information, and moderation records.",
+        keywords: [
+          "data minimization",
+          "purpose limitation",
+          "retention",
+          "deletion",
+          "lawful basis",
+          "data subject rights",
+        ],
+        goodExample:
+          "The system shall collect only personal data necessary for the documented service purposes, associate each processing activity with a lawful basis, retain personal data only for defined retention periods, support deletion or anonymization when retention expires, and provide mechanisms for data subject access and erasure requests.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-dpia-high-risk-processing",
+    title: "Requirement: 'Assess privacy risk'",
+    summary: "Rewrite a vague DPIA/privacy-risk requirement.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "intro",
+    tags: ["requirements", "dpia", "privacy-risk"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Privacy Requirement",
+    fixOptions: [],
+    explanation:
+      "For high-risk personal-data processing, a good requirement should trigger privacy risk assessment before deployment and before major changes.",
+    examKeywords: [
+      "DPIA",
+      "high risk",
+      "special category data",
+      "privacy by design",
+      "prior assessment",
+      "mitigations",
+    ],
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "Privacy risks shall be assessed when needed.",
+        context:
+          "The system may process employee data, union membership information, and access logs used for monitoring.",
+        keywords: [
+          "DPIA",
+          "high risk",
+          "special category data",
+          "privacy by design",
+          "prior assessment",
+          "mitigations",
+        ],
+        goodExample:
+          "Before deploying or materially changing processing that involves special-category personal data, large-scale monitoring, or high-risk profiling, the organization shall complete a DPIA documenting processing purposes, risks to data subjects, mitigations, residual risk, and approval before production use.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-supply-chain-sbom-signing",
+    title: "Requirement: 'Secure dependencies'",
+    summary: "Rewrite a vague software supply-chain requirement.",
+    courseTopic: "microservices-supply-chain",
+    difficulty: "intro",
+    tags: ["requirements", "supply-chain", "dependencies"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Supply-chain requirements should cover dependency inventory, vulnerability monitoring, version control, integrity verification, and review of updates.",
+    examKeywords: [
+      "SBOM",
+      "dependency scanning",
+      "version pinning",
+      "signed artifacts",
+      "vulnerability monitoring",
+      "patching",
+    ],
+    owaspTop10: "A03",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "Third-party libraries shall be secure.",
+        context:
+          "The product uses npm and Python packages, container images, and CI/CD pipelines to deploy weekly.",
+        keywords: [
+          "SBOM",
+          "dependency scanning",
+          "version pinning",
+          "signed artifacts",
+          "vulnerability monitoring",
+          "patching",
+        ],
+        goodExample:
+          "The build pipeline shall generate an SBOM for each release, pin dependency versions, verify signed or trusted artifacts where supported, scan dependencies and container images for known vulnerabilities, and require documented risk acceptance or remediation for high-severity findings before production deployment.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-microservice-service-auth",
+    title: "Requirement: 'Secure microservices'",
+    summary: "Rewrite a vague microservice-security requirement.",
+    courseTopic: "microservices-supply-chain",
+    difficulty: "intro",
+    tags: ["requirements", "microservices", "service-auth"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Microservice requirements should specify service identity, authenticated communication, authorization, and rate limiting rather than assuming internal network traffic is trusted.",
+    examKeywords: [
+      "service-to-service authentication",
+      "mTLS",
+      "authorization",
+      "rate limiting",
+      "least privilege",
+      "zero trust",
+    ],
+    owaspTop10: "A01",
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "Internal services shall communicate securely.",
+        context:
+          "The system consists of multiple backend services behind a load balancer, including user, payment, and reporting services.",
+        keywords: [
+          "service-to-service authentication",
+          "mTLS",
+          "authorization",
+          "rate limiting",
+          "least privilege",
+          "zero trust",
+        ],
+        goodExample:
+          "All service-to-service requests shall use authenticated and encrypted communication such as mTLS, each service shall authorize requests based on the caller service identity and least privilege, and externally reachable endpoints shall enforce rate limits at the gateway or load balancer.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "req-ai-code-assistant-review",
+    title: "Requirement: 'Use AI safely'",
+    summary: "Rewrite a vague AI-assisted-development requirement.",
+    courseTopic: "ai-security",
+    difficulty: "intro",
+    tags: ["requirements", "ai", "secure-development"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "AI-assisted development requirements should address review, testing, provenance, and documentation rather than trusting generated code automatically.",
+    examKeywords: [
+      "human review",
+      "security testing",
+      "prompt documentation",
+      "generated code",
+      "vulnerable patterns",
+      "static analysis",
+    ],
+    supportedModes: SECURE_REQ_ONLY,
+    modeData: {
+      secureRequirement: {
+        bad: "Developers may use AI tools if the code looks correct.",
+        context:
+          "Developers use AI coding assistants to generate authentication, authorization, and input-handling code.",
+        keywords: [
+          "human review",
+          "security testing",
+          "prompt documentation",
+          "generated code",
+          "vulnerable patterns",
+          "static analysis",
+        ],
+        goodExample:
+          "AI-generated or AI-modified security-relevant code shall undergo human code review, static analysis, and relevant security tests before merge; developers shall document AI tool usage for security-sensitive changes, including prompts or summaries sufficient to support later review.",
+      },
+    },
+  }),
 
   buildChallenge({
     id: "req-vague-password",
@@ -501,26 +1079,14 @@ Host: admin.example.com`,
     fixOptions: [],
     explanation:
       "A testable password requirement specifies hashing, minimum length, breach-check, rate limiting and MFA. Avoid prescribing composition rules (NIST 800-63B discourages them).",
-    examKeywords: [
-      "length",
-      "argon2",
-      "breach",
-      "mfa",
-      "rate limit",
-    ],
+    examKeywords: ["length", "argon2", "breach", "mfa", "rate limit"],
     supportedModes: SECURE_REQ_ONLY,
     modeData: {
       secureRequirement: {
         bad: "Passwords must be strong.",
         context:
           "The product is a consumer SaaS with self-service sign-up and supports adding MFA.",
-        keywords: [
-          "length",
-          "argon2",
-          "breach",
-          "mfa",
-          "rate limit",
-        ],
+        keywords: ["length", "argon2", "breach", "mfa", "rate limit"],
         goodExample:
           "Passwords shall be at least 12 characters, checked against a known-breach corpus on set, stored using Argon2id with per-user salt, and protected by an exponential rate-limit on authentication. Users with elevated roles must enrol a second factor.",
       },
@@ -665,7 +1231,8 @@ Host: admin.example.com`,
             id: "T",
             label: "Tampering with stored data",
             correct: false,
-            rationale: "Form data is write-once; nothing for the user to tamper with.",
+            rationale:
+              "Form data is write-once; nothing for the user to tamper with.",
           },
           {
             id: "R",
@@ -722,13 +1289,15 @@ Host: admin.example.com`,
             id: "S",
             label: "Spoofing  -  a hostile pod can call svc-b as A",
             correct: true,
-            rationale: "No peer authentication means any pod with network access is treated like A.",
+            rationale:
+              "No peer authentication means any pod with network access is treated like A.",
           },
           {
             id: "T",
             label: "Tampering  -  a man-in-the-middle modifies the body",
             correct: true,
-            rationale: "Plain HTTP is malleable; integrity is not protected on the wire.",
+            rationale:
+              "Plain HTTP is malleable; integrity is not protected on the wire.",
           },
           {
             id: "R",
@@ -741,7 +1310,8 @@ Host: admin.example.com`,
             id: "I",
             label: "Information disclosure on the wire",
             correct: true,
-            rationale: "Plain HTTP means anyone on-path or sniffing can read the payload.",
+            rationale:
+              "Plain HTTP means anyone on-path or sniffing can read the payload.",
           },
           {
             id: "D",
@@ -753,7 +1323,8 @@ Host: admin.example.com`,
             id: "E",
             label: "Elevation of privilege via shared secrets",
             correct: true,
-            rationale: "Shared secret access means compromising A yields B's secrets and vice versa.",
+            rationale:
+              "Shared secret access means compromising A yields B's secrets and vice versa.",
           },
         ],
       },
@@ -797,7 +1368,8 @@ Host: admin.example.com`,
             id: "high",
             label: "High  -  patch in the next release",
             correct: false,
-            rationale: "Understates the severity; unauthenticated RCE is critical.",
+            rationale:
+              "Understates the severity; unauthenticated RCE is critical.",
           },
           {
             id: "medium",
@@ -983,7 +1555,8 @@ Host: admin.example.com`,
             id: "integrity",
             label: "Integrity and confidentiality",
             correct: false,
-            rationale: "Important always but not the principle at the heart of this feature.",
+            rationale:
+              "Important always but not the principle at the heart of this feature.",
           },
         ],
         dpiaRequired: true,
@@ -996,8 +1569,7 @@ Host: admin.example.com`,
   buildChallenge({
     id: "priv-default-marketing",
     title: "Privacy: pre-ticked marketing opt-in",
-    summary:
-      "Sign-up form defaults the marketing-email checkbox to ticked.",
+    summary: "Sign-up form defaults the marketing-email checkbox to ticked.",
     courseTopic: "privacy-gdpr",
     difficulty: "intro",
     tags: ["consent"],
@@ -1038,7 +1610,8 @@ Host: admin.example.com`,
             id: "minimisation",
             label: "Data minimisation",
             correct: false,
-            rationale: "Minimisation is about what fields are collected, not about consent shape.",
+            rationale:
+              "Minimisation is about what fields are collected, not about consent shape.",
           },
           {
             id: "storage",
@@ -1099,13 +1672,15 @@ Host: admin.example.com`,
             id: "transparency",
             label: "Transparency",
             correct: true,
-            rationale: "Customers were not told their support data would be used this way.",
+            rationale:
+              "Customers were not told their support data would be used this way.",
           },
           {
             id: "integrity",
             label: "Integrity and confidentiality",
             correct: false,
-            rationale: "Storage security is a separate axis; this is about reuse.",
+            rationale:
+              "Storage security is a separate axis; this is about reuse.",
           },
         ],
         dpiaRequired: false,
@@ -1219,7 +1794,8 @@ ct = cipher.encrypt(pad(profile_bytes, 16))`,
             id: "no-workfactor",
             label: "No work factor / KDF",
             correct: true,
-            rationale: "Password storage needs a tunable-cost KDF (Argon2id/scrypt/bcrypt).",
+            rationale:
+              "Password storage needs a tunable-cost KDF (Argon2id/scrypt/bcrypt).",
           },
           {
             id: "wrong-encoding",
@@ -1241,8 +1817,7 @@ ct = cipher.encrypt(pad(profile_bytes, 16))`,
   buildChallenge({
     id: "cmis-iv-zero",
     title: "Misuses: AES-CBC with a zero IV",
-    summary:
-      "A library encrypts records with AES-CBC and a zero IV, no MAC.",
+    summary: "A library encrypts records with AES-CBC and a zero IV, no MAC.",
     courseTopic: "cryptography",
     difficulty: "core",
     tags: ["aes", "cbc"],
@@ -1309,12 +1884,7 @@ mode.CryptBlocks(ct, pt)`,
     fixOptions: [],
     explanation:
       "parseInt only narrows integer columns. Anywhere user input lands as a string, identifier, or boolean the bug remains. Parameterised queries are the real fix.",
-    examKeywords: [
-      "parameterised",
-      "string sink",
-      "identifier",
-      "partial",
-    ],
+    examKeywords: ["parameterised", "string sink", "identifier", "partial"],
     supportedModes: AI_REVIEW_ONLY,
     modeData: {
       aiReview: {
@@ -1355,12 +1925,7 @@ mode.CryptBlocks(ct, pt)`,
     fixOptions: [],
     explanation:
       "Substring replacement is bypassed by case folding, attribute payloads (onerror, onload), or other tags like <img>, <svg>, <iframe srcdoc>.",
-    examKeywords: [
-      "blacklist",
-      "encoding",
-      "context",
-      "bypass",
-    ],
+    examKeywords: ["blacklist", "encoding", "context", "bypass"],
     supportedModes: AI_REVIEW_ONLY,
     modeData: {
       aiReview: {
@@ -1399,13 +1964,7 @@ mode.CryptBlocks(ct, pt)`,
     fixOptions: [],
     explanation:
       "The replacement uses an appropriate password-hashing function with a sensible work factor. It is a good fix.",
-    examKeywords: [
-      "bcrypt",
-      "work factor",
-      "salt",
-      "kdf",
-      "argon2",
-    ],
+    examKeywords: ["bcrypt", "work factor", "salt", "kdf", "argon2"],
     supportedModes: AI_REVIEW_ONLY,
     modeData: {
       aiReview: {
@@ -1421,11 +1980,7 @@ mode.CryptBlocks(ct, pt)`,
         aiClaim:
           "I've replaced MD5 with bcrypt at a cost factor of 12, which includes a per-user salt.",
         safe: true,
-        reasonKeywords: [
-          "bcrypt",
-          "salt",
-          "work factor",
-        ],
+        reasonKeywords: ["bcrypt", "salt", "work factor"],
       },
     },
   }),
@@ -1544,13 +2099,7 @@ def order_detail(order_id):
     fixOptions: [],
     explanation:
       "A solid writeup names IDOR / object-level authorisation, demonstrates incrementing order_id to view another user's data, states the impact (cross-tenant data exposure), and prescribes scoping the query by current_user.id. WSTG-ATHZ-04 / A01.",
-    examKeywords: [
-      "idor",
-      "object-level",
-      "wstg-athz-04",
-      "a01",
-      "ownership",
-    ],
+    examKeywords: ["idor", "object-level", "wstg-athz-04", "a01", "ownership"],
     owaspTop10: "A01",
     owaspWstg: "WSTG-ATHZ-04",
     supportedModes: REPORT_ONLY,

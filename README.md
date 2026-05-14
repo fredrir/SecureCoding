@@ -1,4 +1,4 @@
-# SecureCoding Training
+# PatchQuest
 
 Practice app for **TDT4237: Software Security and Data Privacy** at NTNU. It turns the syllabus into short, repeatable drills: spot vulnerabilities in code, pick the right patch, write exam-style answers, and sprint through multiple-choice questions.
 

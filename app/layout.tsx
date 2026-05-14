@@ -35,8 +35,8 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "SecureCode Training",
-    template: "%s · SecureCode Training",
+    default: "PatchQuest",
+    template: "%s · PatchQuest",
   },
   description:
     "Practice secure coding, vulnerability identification, threat modeling, " +

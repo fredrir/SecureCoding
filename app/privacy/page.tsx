@@ -16,7 +16,7 @@ const LAST_UPDATED = "14 May 2026";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "Privacy policy for SecureCoding Training. No personal data is collected.",
+    "Privacy policy for PatchQuest. No personal data is collected.",
 };
 
 export default function PrivacyPage() {
@@ -53,7 +53,7 @@ export default function PrivacyPage() {
         <Stack gap="lg">
           <Text size="sm" className="text-app-fg-muted">
             This privacy policy explains how{" "}
-            <strong>SecureCoding Training</strong> handles personal data. The
+            <strong>PatchQuest</strong> handles personal data. The
             app is built by Fredrik Carsten Hansteen as a personal practice
             resource for TDT4237. It is not officially affiliated with NTNU or
             with the course staff. The app runs entirely in your browser.
@@ -61,7 +61,7 @@ export default function PrivacyPage() {
 
           <Section title="1. In short">
             <Text size="sm">
-              SecureCoding Training does not collect, store, or share personal
+              PatchQuest does not collect, store, or share personal
               data from users. The whole app runs locally in your browser.
               Anything you do in the app is processed on your own device and is
               not sent to us.
@@ -114,7 +114,7 @@ export default function PrivacyPage() {
             <Text size="sm" mt="sm">
               All activity in the app (answers to challenges, choices you make,
               statistics, and settings) happens locally in your browser. That
-              information is not sent to med and I do not have access to it.
+              information is not sent to me, and I do not have access to it.
             </Text>
           </Section>
 
@@ -158,7 +158,7 @@ export default function PrivacyPage() {
 
           <Section title="5. Cookies and local storage">
             <Text size="sm">
-              SecureCoding Training does not use cookies for tracking,
+              PatchQuest does not use cookies for tracking,
               analytics, or marketing.
             </Text>
             <Text size="sm" mt="sm">
@@ -277,7 +277,7 @@ function Section({
 }) {
   return (
     <section>
-      <Title order={3} mb="xs" className="tracking-tight">
+      <Title order={3} m="xs" className="tracking-tight">
         {title}
       </Title>
       {children}
