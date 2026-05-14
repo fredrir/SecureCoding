@@ -67,16 +67,15 @@ export const GAME_MODES: readonly GameModeMeta[] = [
     status: "ready",
   },
   {
-    id: GAME_MODE_IDS.fixSuggestion,
-    key: "fixSuggestion",
-    slug: "fix-suggestion",
-    title: "Fix Suggestion",
-    tagline: "Pick the patch",
-    description:
-      "Choose the safest patch among tempting decoys like blacklists or weak hashes.",
+    id: GAME_MODE_IDS.multipleChoiceSprint,
+    key: "multipleChoiceSprint",
+    slug: "multiple-choice-sprint",
+    title: "Multiple Choice Sprint",
+    tagline: "20 questions, no penalty",
+    description: "Closed-ended exam-style questions with instant feedback.",
     accent: "lightBlue",
-    icon: "wrench",
-    status: "coming-soon",
+    icon: "lightning",
+    status: "ready",
   },
   {
     id: GAME_MODE_IDS.findAndFix,
@@ -102,6 +101,19 @@ export const GAME_MODES: readonly GameModeMeta[] = [
     status: "ready",
   },
   {
+    id: GAME_MODE_IDS.fixSuggestion,
+    key: "fixSuggestion",
+    slug: "fix-suggestion",
+    title: "Fix Suggestion",
+    tagline: "Pick the patch",
+    description:
+      "Choose the safest patch among tempting decoys like blacklists or weak hashes.",
+    accent: "lightBlue",
+    icon: "wrench",
+    status: "coming-soon",
+  },
+
+  {
     id: GAME_MODE_IDS.attackTrace,
     key: "attackTrace",
     slug: "attack-trace",
@@ -118,8 +130,7 @@ export const GAME_MODES: readonly GameModeMeta[] = [
     slug: "wstg-mapping",
     title: "WSTG Mapping",
     tagline: "Tag the standard",
-    description:
-      "Map a finding to the correct OWASP WSTG and Top 10 category.",
+    description: "Map a finding to the correct OWASP WSTG and Top 10 category.",
     accent: "lime",
     icon: "map",
     status: "coming-soon",
@@ -181,17 +192,7 @@ export const GAME_MODES: readonly GameModeMeta[] = [
     icon: "key",
     status: "coming-soon",
   },
-  {
-    id: GAME_MODE_IDS.multipleChoiceSprint,
-    key: "multipleChoiceSprint",
-    slug: "multiple-choice-sprint",
-    title: "Multiple Choice Sprint",
-    tagline: "20 questions, no penalty",
-    description: "Closed-ended exam-style questions with instant feedback.",
-    accent: "lightBlue",
-    icon: "lightning",
-    status: "ready",
-  },
+
   {
     id: GAME_MODE_IDS.aiReview,
     key: "aiReview",

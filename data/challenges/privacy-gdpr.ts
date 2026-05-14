@@ -54,7 +54,7 @@ export const privacyChallenges: readonly Challenge[] = [
     vulnerabilityType: "Purpose Limitation Violation",
     fixOptions: [],
     explanation:
-      "Personal data collected for one purpose (customer support) cannot be re-used for an incompatible purpose (advertising) without a new lawful basis — typically fresh consent or a strong compatibility analysis (Art. 6(4)). The principle of purpose limitation (Art. 5(1)(b)) is a core tenet; minimisation and storage limitation also apply.",
+      "Personal data collected for one purpose (customer support) cannot be re-used for an incompatible purpose (advertising) without a new lawful basis, typically fresh consent or a strong compatibility analysis (Art. 6(4)). The principle of purpose limitation (Art. 5(1)(b)) is a core tenet; minimisation and storage limitation also apply.",
     examKeywords: [
       "purpose limitation",
       "compatible",
@@ -91,7 +91,7 @@ export const privacyChallenges: readonly Challenge[] = [
     vulnerabilityType: "Missing DPIA",
     fixOptions: [],
     explanation:
-      "Article 35 GDPR requires a DPIA whenever processing is likely to result in a high risk — automated decisions with legal or similarly significant effects (such as loan decisions) and large-scale processing of special categories almost always trigger it. The DPIA describes the processing, evaluates necessity and proportionality, and identifies risks and mitigations.",
+      "Article 35 GDPR requires a DPIA whenever processing is likely to result in a high risk. Automated decisions with legal or similarly significant effects (such as loan decisions) and large-scale processing of special categories almost always trigger it. The DPIA describes the processing, evaluates necessity and proportionality, and identifies risks and mitigations.",
     examKeywords: [
       "dpia",
       "automated decision",
@@ -155,7 +155,7 @@ export const privacyChallenges: readonly Challenge[] = [
     vulnerabilityType: "Roles & Responsibilities (GDPR)",
     fixOptions: [],
     explanation:
-      "The customer (the company using the SaaS) decides the purposes and means of processing — they are the controller. The SaaS provider only processes data on instruction — they are a processor and need a Data Processing Agreement (Art. 28). Transparency, data-subject rights, and lawful basis stay with the controller; the processor inherits security and breach-notification duties.",
+      "The customer (the company using the SaaS) decides the purposes and means of processing, so they are the controller. The SaaS provider only processes data on instruction, making it a processor and need a Data Processing Agreement (Art. 28). Transparency, data-subject rights, and lawful basis stay with the controller; the processor inherits security and breach-notification duties.",
     examKeywords: [
       "controller",
       "processor",
@@ -170,7 +170,7 @@ export const privacyChallenges: readonly Challenge[] = [
           { id: "a", text: "Processor, with the customer as controller.", correct: true, rationale: "The customer determines purposes and means." },
           { id: "b", text: "Controller of all data in the tool.", correct: false, rationale: "Only when the SaaS decides purposes (e.g., its own analytics)." },
           { id: "c", text: "Joint controller in every case.", correct: false, rationale: "Joint controllership requires shared determination of purposes/means." },
-          { id: "d", text: "Neither — the data subject is the only data handler.", correct: false, rationale: "Doesn't match GDPR's role model." },
+          { id: "d", text: "Neither; the data subject is the only data handler.", correct: false, rationale: "Doesn't match GDPR's role model." },
         ],
       },
       explainPrompt:

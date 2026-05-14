@@ -29,7 +29,7 @@ export function usePersistentState<T>(
           : next;
       writeJson(name, resolved);
     },
-    // Fallback is intentionally omitted — callers usually pass an inline
+    // Fallback is intentionally omitted because callers usually pass an inline
     // literal that would otherwise change identity each render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [name],

@@ -18,8 +18,8 @@ interface Props {
 }
 
 /**
- * Wraps CodeViewer with line-toggle behaviour. The runner stays simple —
- * it just owns the `selected` array and forwards the change handler.
+ * Wraps CodeViewer with line-toggle behaviour. The runner stays simple
+ * because it just owns the `selected` array and forwards the change handler.
  */
 export function SelectableCodeLines({
   code,

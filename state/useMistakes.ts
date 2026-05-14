@@ -25,7 +25,7 @@ export function useMistakes() {
 
   const add = (record: MistakeRecord) =>
     setState((prev) => {
-      // Deduplicate per (challenge, mode) — keep the most recent.
+      // Deduplicate per (challenge, mode), keeping the most recent.
       const filtered = prev.items.filter(
         (m) => !(m.challengeId === record.challengeId && m.mode === record.mode),
       );

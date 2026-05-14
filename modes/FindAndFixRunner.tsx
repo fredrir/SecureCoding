@@ -85,7 +85,7 @@ export function FindAndFixRunner({ challenges, examMode }: Props) {
       feedback={state.feedback}
       stage={state.stage}
       attempts={state.attempts}
-      prompt="Step 1 — mark the vulnerable line(s). Step 2 — pick the fix you'd ship."
+      prompt="Step 1: mark the vulnerable line(s). Step 2: pick the fix you'd ship."
       workspace={
         <SelectableCodeLines
           code={code}

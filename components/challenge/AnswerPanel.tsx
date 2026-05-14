@@ -7,7 +7,7 @@ import { ArrowRightIcon } from "@/components/common/Icon";
 interface Props {
   title?: string;
   children: ReactNode;
-  /** Footer slot — usually the submit/skip buttons. */
+  /** Footer slot, usually the submit/skip buttons. */
   footer?: ReactNode;
   submitLabel?: string;
   onSubmit?: () => void;

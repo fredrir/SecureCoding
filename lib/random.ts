@@ -1,5 +1,5 @@
 /**
- * Mulberry32 — small, fast, seedable PRNG. Stable enough for shuffling
+ * Mulberry32: small, fast, seedable PRNG. Stable enough for shuffling
  * deterministic-but-random challenge orderings in exam mode.
  */
 export function mulberry32(seed: number): () => number {

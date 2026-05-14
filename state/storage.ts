@@ -14,7 +14,7 @@ function key(name: string): string {
 /**
  * Snapshot cache for `useSyncExternalStore`. The cache holds the most recent
  * raw JSON string we saw together with its parsed value so that repeated reads
- * return a referentially-stable object — React 19 treats reference equality of
+ * return a referentially-stable object. React 19 treats reference equality of
  * the snapshot as "no change" and otherwise bails out with an infinite-loop
  * warning.
  */
@@ -62,7 +62,7 @@ export function writeJson<T>(name: string, value: T): void {
     snapshotCache.set(name, { raw, value });
     notify(name);
   } catch {
-    // Quota or private mode — silently ignore; in-memory state still works.
+    // Quota or private mode: silently ignore; in-memory state still works.
   }
 }
 

@@ -24,7 +24,7 @@ export function Header({ navOpened, onToggleNav }: Props) {
         />
         <Link
           href="/"
-          className="no-underline text-inherit"
+          className="no-underline text-inherit hover:opacity-80 transition-opacity duration-150"
           aria-label="Go to dashboard"
         >
           <Group gap={10} wrap="nowrap">

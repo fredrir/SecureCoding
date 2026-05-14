@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { Open_Sans, JetBrains_Mono } from "next/font/google";
 
-import "@mantine/core/styles.css";
-import "@mantine/notifications/styles.css";
+// globals.css must come first: it declares `@layer theme, base, mantine,
+// components, utilities;`. CSS cascade-layer order is fixed by the first time
+// each name appears, so if Mantine's `@layer mantine { ... }` block loaded
+// first it would claim position #1 and Tailwind's preflight (in `base`) would
+// end up overriding all Mantine padding/border/radius styles.
 import "./globals.css";
+import "@mantine/core/styles.layer.css";
+import "@mantine/notifications/styles.layer.css";
 
 import {
   ColorSchemeScript,

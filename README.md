@@ -1,35 +1,28 @@
 # SecureCoding Training
 
-Practice app for **TDT4237 — Software Security and Data Privacy** at NTNU. A
-client-only Next.js application that turns the course's exam-style learning
-goals into short, repeatable drills: spotting vulnerabilities in code, picking
-safe patches, writing exam answers, mapping findings to OWASP, and reasoning
-about privacy.
-
-Everything runs in the browser. There is no backend and no account — your
-progress, streak, mistakes, and settings live in `localStorage`.
+Practice app for **TDT4237: Software Security and Data Privacy** at NTNU. It turns the syllabus into short, repeatable drills: spot vulnerabilities in code, pick the right patch, write exam-style answers, and sprint through multiple-choice questions.
 
 ## Features
 
-- **Vulnerability Searching** — read a snippet and tag the lines you suspect.
-- **Find & Fix** — locate the vulnerable lines, then pick the correct patch.
-- **Explain Like the Exam** — write a 3-6 sentence answer; the app scores it
+- **Vulnerability Searching**: read a snippet and tag the lines you suspect.
+- **Find & Fix**: locate the vulnerable lines, then pick the correct patch.
+- **Explain Like the Exam**: write a 3-6 sentence answer; the app scores it
   against expected keywords.
-- **Multiple Choice Sprint** — 20 quick exam-style questions with instant
+- **Multiple Choice Sprint**: 20 quick exam-style questions with instant
   feedback.
-- **Exam Mode** — hides per-question feedback until the entire run ends, so you
+- **Exam Mode**: hides per-question feedback until the entire run ends, so you
   can practice the way you'll actually be graded.
-- **Streaks & accuracy** — daily streak tracker plus per-topic and per-mode
+- **Streaks & accuracy**: daily streak tracker plus per-topic and per-mode
   accuracy.
-- **Filter by topic & difficulty** — narrow the pool to the OWASP categories
+- **Filter by topic & difficulty**: narrow the pool to the OWASP categories
   or WSTG sub-topics you want to drill.
-- **Light / dark / system theme** — synced to the OS and persisted across
+- **Light / dark / system theme**: synced to the OS and persisted across
   reloads.
 
 Several additional modes (Attack Trace, STRIDE Threat Modeling, Risk Scoring,
 Crypto Misuse, Privacy/GDPR, AI Code Assistant Review, Report Builder, …) are
 defined in `domain/gameMode.ts` and surfaced in the dashboard as
-*coming soon*.
+_coming soon_.
 
 ## Tech stack
 
@@ -71,8 +64,7 @@ pnpm run lint   # ESLint
 
 All colours, spacing, and surfaces are sourced from CSS custom properties in
 `app/globals.css` and the Mantine theme override in `theme/theme.ts`. The
-palette in `theme/palette.ts` mirrors NTNU's brand colours. **No gradients** —
-solid tokens only.
+palette in `theme/palette.ts` mirrors NTNU's brand colours.
 
 Light/dark scheme variables flip automatically based on
 `data-mantine-color-scheme`; the theme toggle in the header writes the user's
@@ -95,13 +87,6 @@ DevTools resets the app entirely.
 Challenges are plain TypeScript objects grouped by topic under
 `data/challenges/`. Each file exports an array; the aggregate in
 `data/challenges/index.ts` is what the runners pull from. The shape is defined
-in `domain/challenge.ts` — add a snippet, the answer payload for the relevant
+in `domain/challenge.ts`. Add a snippet, the answer payload for the relevant
 mode(s), the expected feedback, and tag the topic, difficulty, and any OWASP /
 WSTG references.
-
-## Not the Next.js you know
-
-This project pins **Next.js 16**, which ships breaking changes versus older
-majors. If you're editing routes, metadata, or file conventions, check
-`node_modules/next/dist/docs/` for the version-correct API before assuming
-what you remember still holds.

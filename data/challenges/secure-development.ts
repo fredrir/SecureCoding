@@ -9,7 +9,7 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
     id: "sdlc-shift-left",
     title: "Where security touches the SDLC",
     summary:
-      "Map a typical SDLC to the seven McGraw touchpoints — what happens during requirements vs. testing?",
+      "Map a typical SDLC to the seven McGraw touchpoints. What happens during requirements vs. testing?",
     courseTopic: "secure-development",
     difficulty: "core",
     tags: ["sdlc", "touchpoints"],
@@ -51,7 +51,7 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
     vulnerabilityType: "Tooling",
     fixOptions: [],
     explanation:
-      "SAST analyses source code statically — best at finding patterns like injection sinks, hardcoded secrets, and unsafe APIs early. DAST runs against a deployed instance — finds runtime configuration issues, missing headers, broken authentication. They are complementary; mature programs use both, plus IAST/SCA for dependency risk.",
+      "SAST analyses source code statically and is best at finding patterns like injection sinks, hardcoded secrets, and unsafe APIs early. DAST runs against a deployed instance and finds runtime configuration issues, missing headers, broken authentication. They are complementary; mature programs use both, plus IAST/SCA for dependency risk.",
     examKeywords: ["sast", "dast", "sca", "false positive", "complementary"],
     supportedModes: EXPLAIN_AND_MC,
     modeData: {
@@ -79,7 +79,7 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
     vulnerabilityType: "Process Maturity Gap",
     fixOptions: [],
     explanation:
-      "Maturity models like BSIMM/SAMM measure security practices across domains (governance, intelligence, SSDL touchpoints, deployment). Informal reviews without a documented standard or training are signs of a low-maturity practice — improvements include publishing a coding standard, security champions per team, and onboarding training. Maturity is climbed in small repeatable steps, not by buying a tool.",
+      "Maturity models like BSIMM/SAMM measure security practices across domains (governance, intelligence, SSDL touchpoints, deployment). Informal reviews without a documented standard or training are signs of a low-maturity practice. Improvements include publishing a coding standard, security champions per team, and onboarding training. Maturity is climbed in small repeatable steps, not by buying a tool.",
     examKeywords: ["bsimm", "samm", "champions", "standard", "training"],
     supportedModes: EXPLAIN_AND_MC,
     modeData: {

@@ -100,8 +100,8 @@ export const aiSecurityChallenges: readonly Challenge[] = [
       multipleChoice: {
         question: "How should a team treat an AI-suggested 'security' patch?",
         options: [
-          { id: "a", text: "Code-review and test it like any junior engineer's patch — and re-verify against the threat model.", correct: true, rationale: "Plausible ≠ correct; verify before merging." },
-          { id: "b", text: "Merge fast — the model is trained on best practice.", correct: false, rationale: "Models hallucinate confidently and follow patterns from buggy training data." },
+          { id: "a", text: "Code-review and test it like any junior engineer's patch, and re-verify against the threat model.", correct: true, rationale: "Plausible ≠ correct; verify before merging." },
+          { id: "b", text: "Merge fast; the model is trained on best practice.", correct: false, rationale: "Models hallucinate confidently and follow patterns from buggy training data." },
           { id: "c", text: "Refuse to use AI for any security work.", correct: false, rationale: "Useful, just not blindly." },
           { id: "d", text: "Trust it if linting passes.", correct: false, rationale: "Linting doesn't catch logic flaws." },
         ],

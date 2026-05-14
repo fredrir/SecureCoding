@@ -50,7 +50,7 @@ export function PracticeClient({ slug }: { slug: string }) {
     return (
       <EmptyState
         icon={<ShieldIcon size={36} />}
-        title={`${mode.title} — coming soon`}
+        title={`${mode.title}: coming soon`}
         description="This mode is still being authored. The data model is ready; only the runner is missing."
         action={
           <Button variant="light" onClick={() => router.push("/")}>

@@ -5,7 +5,7 @@ import type { CodeLanguage } from "@/domain/language";
  * teaching purposes without pulling in Shiki / highlight.js. Each rule emits
  * HTML-escaped output wrapped in a `<span class="tok-*">`.
  *
- * The rules below are deliberately generic — keywords, strings, numbers,
+ * The rules below are deliberately generic: keywords, strings, numbers,
  * comments, function names. They produce an attractive monochrome-with-accents
  * look that reads better than a dimly-lit raw <pre>.
  */

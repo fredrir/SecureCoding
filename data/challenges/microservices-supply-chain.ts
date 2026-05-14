@@ -23,7 +23,7 @@ export const microservicesSupplyChainChallenges: readonly Challenge[] = [
       fix(
         "lockfile-ci",
         "Commit `package-lock.json` and use `npm ci` in pipelines",
-        "`npm ci` installs the exact versions from the lockfile — reproducible and auditable.",
+        "`npm ci` installs the exact versions from the lockfile, making builds reproducible and auditable.",
       ),
       fix(
         "exact-only",

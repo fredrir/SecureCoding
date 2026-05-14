@@ -54,7 +54,7 @@ export function gradeKeywords(
 
 /**
  * Single entry point. Pure: given the challenge and the user's answer, return
- * a `Feedback` value. Each mode handler is local — easy to extend.
+ * a `Feedback` value. Each mode handler is local and easy to extend.
  */
 export function gradeAnswer(challenge: Challenge, answer: Answer): Feedback {
   switch (answer.kind) {
@@ -139,7 +139,7 @@ function gradeFindAndFix(
   const lineScore = jaccard(selectedLines, challenge.vulnerableLines);
   const fixCorrect =
     selectedFixId !== null && selectedFixId === challenge.correctFixId;
-  // 50% lines, 50% fix — both must be right for a perfect score.
+  // 50% lines, 50% fix; both must be right for a perfect score.
   const score = lineScore * 0.5 + (fixCorrect ? 0.5 : 0);
   const verdict = verdictFromScore(score);
   return {
@@ -183,7 +183,7 @@ function gradeText(challenge: Challenge, text: string): Feedback {
     highlights: [
       matched.length
         ? { label: "Mentioned", tone: "positive", value: matched.join(", ") }
-        : { label: "Mentioned", tone: "neutral", value: "—" },
+        : { label: "Mentioned", tone: "neutral", value: "none" },
       missed.length
         ? { label: "Missing", tone: "negative", value: missed.join(", ") }
         : { label: "Missing", tone: "positive", value: "none" },

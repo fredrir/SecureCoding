@@ -18,7 +18,7 @@ export function ReviewClient() {
       <EmptyState
         icon={<ShieldIcon size={36} />}
         title="No mistakes saved"
-        description="Submit a few challenges in any mode — the ones you miss will appear here for revisiting."
+        description="Submit a few challenges in any mode; the ones you miss will appear here for revisiting."
         action={
           <Button component={Link} href="/" variant="light">
             Back to dashboard

@@ -78,7 +78,7 @@ export const securityBasicsChallenges: readonly Challenge[] = [
     vulnerabilityType: "Insecure Failure Mode",
     fixOptions: [],
     explanation:
-      "When a security-critical service fails, the safe default is to deny — `fail-closed`. Returning `true` on timeout opens access during the moments your security infrastructure is weakest (which is exactly when attackers may exploit the situation, e.g. by inducing the timeout).",
+      "When a security-critical service fails, the safe default is to deny (`fail-closed`). Returning `true` on timeout opens access during the moments your security infrastructure is weakest (which is exactly when attackers may exploit the situation, e.g. by inducing the timeout).",
     examKeywords: ["fail securely", "fail closed", "default deny", "timeout"],
     supportedModes: EXPLAIN_AND_MC,
     modeData: {

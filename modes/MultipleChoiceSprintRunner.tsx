@@ -14,7 +14,7 @@ import { mulberry32, shuffle } from "@/lib/random";
 interface Props {
   challenges: readonly Challenge[];
   examMode: boolean;
-  /** Cap the run length — sprint mode is short on purpose. */
+  /** Cap the run length; sprint mode is short on purpose. */
   questionLimit?: number;
 }
 

@@ -2,7 +2,7 @@ import type { ChallengeId, FixOptionId, GameModeId } from "./ids";
 
 /**
  * Discriminated union of every answer shape the app can produce. New game
- * modes add a new variant — runners stay loosely coupled because each variant
+ * modes add a new variant; runners stay loosely coupled because each variant
  * carries its own kind tag.
  */
 export type Answer =

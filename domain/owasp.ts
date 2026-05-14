@@ -18,7 +18,7 @@ export const OWASP_TOP_10 = {
 export type OwaspTop10Id = keyof typeof OWASP_TOP_10;
 
 /**
- * OWASP WSTG mapping (Web Security Testing Guide). Not exhaustive — covers the
+ * OWASP WSTG mapping (Web Security Testing Guide). Not exhaustive; covers the
  * categories used by the seed challenges. Add more as challenges require them.
  */
 export const OWASP_WSTG = {

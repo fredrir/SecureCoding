@@ -13,15 +13,15 @@ interface Props {
   current: number;
   total: number;
   examMode?: boolean;
-  /** Left column — usually CodeViewer / SelectableCodeLines / scenario text. */
+  /** Left column, usually CodeViewer / SelectableCodeLines / scenario text. */
   workspace: ReactNode;
-  /** Right column — AnswerPanel + FeedbackCard. */
+  /** Right column with AnswerPanel + FeedbackCard. */
   answer: ReactNode;
 }
 
 /**
  * Standard two-pane layout used by every mode runner. The runner only
- * declares what goes in `workspace` and `answer` — the layout owns the
+ * declares what goes in `workspace` and `answer`. The layout owns the
  * spacing, the responsive collapse, and the header chrome.
  */
 export function ChallengeLayout({

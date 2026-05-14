@@ -91,7 +91,7 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
             text: "Set HttpOnly on the session cookie.",
             correct: false,
             rationale:
-              "HttpOnly only stops cookie theft via JS — the XSS itself still runs.",
+              "HttpOnly only stops cookie theft via JS; the XSS itself still runs.",
           },
         ],
       },
@@ -171,14 +171,14 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
             text: "Server-side strip of `<script>` tags before persisting.",
             correct: false,
             rationale:
-              "XSS payloads do not require `<script>` tags — `onerror` handlers, `<iframe srcdoc>`, etc. work fine.",
+              "XSS payloads do not require `<script>` tags; `onerror` handlers, `<iframe srcdoc>`, etc. work fine.",
           },
           {
             id: "c",
             text: "Set the body as innerHTML after escaping quotes.",
             correct: false,
             rationale:
-              "Quote escaping is the wrong context — attribute escaping ≠ HTML escaping.",
+              "Quote escaping is the wrong context; attribute escaping ≠ HTML escaping.",
           },
           {
             id: "d",
@@ -285,7 +285,7 @@ ps.setString(2, hash(password));`,
       fix(
         "stored-proc",
         "Wrap the same string concatenation in a stored procedure",
-        "If the procedure body still concatenates, you have moved the injection — not removed it.",
+        "If the procedure body still concatenates, you have moved the injection, not removed it.",
         { tempting: true },
       ),
       fix(
@@ -362,7 +362,7 @@ ps.setString(2, hash(password));`,
       fix(
         "allow-list",
         "Map the `sort` parameter to an allow-list of column names",
-        "Identifiers cannot be parameterised in standard SQL — they must be validated against a fixed set of known-safe columns.",
+        "Identifiers cannot be parameterised in standard SQL; they must be validated against a fixed set of known-safe columns.",
         {
           code: `const ALLOWED = { id: "id", total: "total", date: "created_at" } as const;
 const col = ALLOWED[req.query.sort as keyof typeof ALLOWED] ?? "id";`,
@@ -377,7 +377,7 @@ const col = ALLOWED[req.query.sort as keyof typeof ALLOWED] ?? "id";`,
       fix(
         "param-bind",
         "Bind the column name with `db.query(..., [sort])`",
-        "Parameter binding is for values, not identifiers — most drivers will treat the column name as a literal string.",
+        "Parameter binding is for values, not identifiers; most drivers will treat the column name as a literal string.",
         { tempting: true },
       ),
       fix(
@@ -402,7 +402,7 @@ const col = ALLOWED[req.query.sort as keyof typeof ALLOWED] ?? "id";`,
 
   buildChallenge({
     id: "web-idor-orders",
-    title: "IDOR — orders endpoint trusts the URL id",
+    title: "IDOR: orders endpoint trusts the URL id",
     summary:
       "An order detail endpoint loads any order id passed in the URL without an ownership check.",
     courseTopic: "web-vulnerabilities",
@@ -432,7 +432,7 @@ if order is None:
       fix(
         "uuid",
         "Switch numeric ids to long random UUIDs",
-        "Unguessable ids are defence in depth at best — the access-control bug is unfixed and a leaked link still exposes data.",
+        "Unguessable ids are defence in depth at best; the access-control bug is unfixed and a leaked link still exposes data.",
         { tempting: true },
       ),
       fix(
@@ -449,7 +449,7 @@ if order is None:
     ],
     correctFixId: "ownership",
     explanation:
-      "The handler authenticates the caller (login required) but never authorises the lookup. Anyone with a valid session can iterate `order_id` values and read other users' orders. The fix is to scope the database query by the authenticated user id (object-level authorisation). Long ids are not a substitute — the door is still unlocked, just harder to find.",
+      "The handler authenticates the caller (login required) but never authorises the lookup. Anyone with a valid session can iterate `order_id` values and read other users' orders. The fix is to scope the database query by the authenticated user id (object-level authorisation). Long ids are not a substitute; the door is still unlocked, just harder to find.",
     examKeywords: [
       "object-level",
       "authorisation",
@@ -531,7 +531,7 @@ if order is None:
       fix(
         "post-only",
         "Accept the change only over POST",
-        "CSRF works fine via POST — auto-submitted forms are the standard payload.",
+        "CSRF works fine via POST; auto-submitted forms are the standard payload.",
       ),
     ],
     correctFixId: "samesite-token",
@@ -642,7 +642,7 @@ def admin_ping():
       fix(
         "sudo",
         "Run the subprocess as a non-privileged user",
-        "Reduces blast radius but the injection still happens — the attacker can still scan and execute as that user.",
+        "Reduces blast radius but the injection still happens; the attacker can still scan and execute as that user.",
         { tempting: true },
       ),
     ],
@@ -872,7 +872,7 @@ if (origin && ALLOWED.has(origin)) {
       fix(
         "wildcard-no-creds",
         "Keep `*` but drop the credentials header",
-        "Acceptable for truly public, no-credentials APIs — but the design here clearly intends to use sessions.",
+        "Acceptable for truly public, no-credentials APIs, but the design here clearly intends to use sessions.",
         { tempting: true },
       ),
       fix(

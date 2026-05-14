@@ -124,7 +124,7 @@ await Users.update(req.user.id, { displayName, language, timezone });`,
       fix(
         "deny-role",
         "Delete `req.body.role` before passing it to the update",
-        "Brittle — every new privileged field has to be added. Allow-listing fails closed; deny-listing fails open.",
+        "Brittle: every new privileged field has to be added. Allow-listing fails closed; deny-listing fails open.",
         { tempting: true },
       ),
       fix(
@@ -190,7 +190,7 @@ if rel, err := filepath.Rel(root, abs); err != nil || strings.HasPrefix(rel, "..
       fix(
         "chmod",
         "Make the storage directory world-readable",
-        "Worsens the situation — broader exposure.",
+        "Worsens the situation with broader exposure.",
         { tempting: true },
       ),
     ],

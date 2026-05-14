@@ -1,7 +1,18 @@
+/*
+  Cascade layer order. Tailwind v4 emits its own `theme/base/components/utilities`
+  layers; Mantine's `styles.layer.css` puts every Mantine rule inside `@layer
+  mantine`. Order matters in both directions:
+    - `mantine` must come AFTER `base` so Mantine's padding/border/radius beat
+      Tailwind's preflight reset (which zeroes margin/padding/border on *).
+    - `mantine` must come BEFORE `utilities` so Tailwind utilities like
+      `bg-app-accent` still override Mantine without needing `!`.
+*/
+@layer theme, base, mantine, components, utilities;
+
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/* Design tokens — light scheme defaults                              */
+/* Design tokens: light scheme defaults                               */
 /* ------------------------------------------------------------------ */
 /*
   Colour basis:
@@ -23,7 +34,7 @@
   --app-fg-muted: #4b5468;
   --app-fg-subtle: #717a8c;
 
-  /* NTNU Blue — primary brand colour */
+  /* NTNU Blue: primary brand colour */
   --app-accent: #00509e;
   --app-blue: #00509e; 
 
@@ -69,6 +80,20 @@
   --tok-ty: #0f7a72;
   --tok-op: #4b5468;
   --tok-pun: #4b5468;
+
+  /* Pipe app tokens into Mantine's own CSS variables. Mantine reads these for
+     <Paper>, <Card>, <Divider>, c="dimmed", default borders, etc. Mapping them
+     once removes the need to repeat bg-app-* / text-app-* on every component. */
+  --mantine-color-body: var(--app-bg);
+  --mantine-color-text: var(--app-fg);
+  --mantine-color-dimmed: var(--app-fg-muted);
+  --mantine-color-default: var(--app-surface);
+  --mantine-color-default-hover: var(--app-surface-muted);
+  --mantine-color-default-color: var(--app-fg);
+  --mantine-color-default-border: var(--app-border);
+  --mantine-color-placeholder: var(--app-fg-subtle);
+  --mantine-color-anchor: var(--app-accent);
+  --mantine-color-error: var(--app-danger);
 }
 
 [data-mantine-color-scheme="dark"] {
@@ -82,8 +107,8 @@
   --app-fg-muted: #aab2c4;
   --app-fg-subtle: #7c8499;
 
-  /* NTNU Light blue — supporting colour used as the dark-mode accent */
-  --app-accent: #6096d0;
+  /* NTNU Light blue: supporting colour used as the dark-mode accent */
+  --app-accent: #253a55;
   --app-blue: #00509e;
 
   /* NTNU Light blue, transparent tint for subtle emphasis states */
@@ -127,6 +152,17 @@
   --tok-ty: #79e0c4;
   --tok-op: #d8dde6;
   --tok-pun: #c5cad6;
+
+  --mantine-color-body: var(--app-bg);
+  --mantine-color-text: var(--app-fg);
+  --mantine-color-dimmed: var(--app-fg-muted);
+  --mantine-color-default: var(--app-surface);
+  --mantine-color-default-hover: var(--app-surface-muted);
+  --mantine-color-default-color: var(--app-fg);
+  --mantine-color-default-border: var(--app-border);
+  --mantine-color-placeholder: var(--app-fg-subtle);
+  --mantine-color-anchor: var(--app-accent);
+  --mantine-color-error: var(--app-danger);
 }
 
 /* Surface Tailwind tokens for any utilities that want them */
@@ -167,7 +203,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Solid app shell background — design tokens only, no gradients */
+/* Solid app shell background using design tokens only, no gradients */
 .app-backdrop {
   background: var(--app-bg);
 }
@@ -234,7 +270,7 @@ body {
   background: var(--app-code-line-incorrect);
 }
 
-/* Token colours for the lightweight code highlighter — swap per scheme */
+/* Token colours for the lightweight code highlighter (swap per scheme) */
 .tok-key {
   color: var(--tok-key);
 }

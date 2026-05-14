@@ -9,7 +9,7 @@ export const riskManagementChallenges: readonly Challenge[] = [
     id: "risk-cvss-vector",
     title: "Read this CVSS vector",
     summary:
-      "Interpret CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H — what does it tell you about the vulnerability?",
+      "Interpret CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H. What does it tell you about the vulnerability?",
     courseTopic: "risk-management",
     difficulty: "core",
     tags: ["cvss"],
@@ -17,7 +17,7 @@ export const riskManagementChallenges: readonly Challenge[] = [
     vulnerabilityType: "Risk Scoring",
     fixOptions: [],
     explanation:
-      "AV:N = network-reachable; AC:L = low complexity; PR:N = no privileges required; UI:N = no user interaction; S:U = scope unchanged; C/I/A:H = high impact across the triad. That's a critical, unauthenticated, remotely exploitable vulnerability with full impact — score 9.8. It should be a top patch priority and likely an out-of-band advisory.",
+      "AV:N = network-reachable; AC:L = low complexity; PR:N = no privileges required; UI:N = no user interaction; S:U = scope unchanged; C/I/A:H = high impact across the triad. That's a critical, unauthenticated, remotely exploitable vulnerability with full impact, scoring 9.8. It should be a top patch priority and likely an out-of-band advisory.",
     examKeywords: ["cvss", "av:n", "no privileges", "scope", "critical"],
     supportedModes: EXPLAIN_AND_MC,
     modeData: {

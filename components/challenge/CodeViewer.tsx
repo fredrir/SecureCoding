@@ -14,7 +14,7 @@ export interface CodeLineState {
 export interface CodeViewerProps {
   code: string;
   language: CodeLanguage;
-  /** Per-line visual state — keyed by 1-based line number. */
+  /** Per-line visual state, keyed by 1-based line number. */
   lineStates?: Record<number, CodeLineState>;
   /** Click handler enables interactive line selection. */
   onLineClick?: (lineNumber: number) => void;

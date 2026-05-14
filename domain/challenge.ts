@@ -20,7 +20,7 @@ export interface Reference {
 
 /**
  * Canonical challenge record. A single challenge may be replayed across many
- * game modes — `supportedModes` declares which modes can run it. Keeping the
+ * game modes; `supportedModes` declares which modes can run it. Keeping the
  * shape uniform is what allows the runners and reusable components to stay
  * mode-agnostic.
  */
