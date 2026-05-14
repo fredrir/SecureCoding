@@ -66,19 +66,22 @@ export function FixOptionCard({
             {option.label}
           </Text>
           {reveal ? (
-            isCorrect ? (
-              <Badge color="lime" variant="filled" size="sm" radius="sm">
-                Correct
-              </Badge>
-            ) : isWrongPick ? (
-              <Badge color="magenta" variant="filled" size="sm" radius="sm">
-                Your pick
-              </Badge>
-            ) : null
-          ) : option.tempting ? (
-            <Badge color="orange" variant="light" size="xs" radius="sm">
-              Tempting
-            </Badge>
+            <Group gap={4} wrap="nowrap">
+              {option.tempting && !isCorrect ? (
+                <Badge color="orange" variant="light" size="xs" radius="sm">
+                  Tempting
+                </Badge>
+              ) : null}
+              {isCorrect ? (
+                <Badge color="lime" variant="filled" size="sm" radius="sm">
+                  Correct
+                </Badge>
+              ) : isWrongPick ? (
+                <Badge color="magenta" variant="filled" size="sm" radius="sm">
+                  Your pick
+                </Badge>
+              ) : null}
+            </Group>
           ) : null}
         </Group>
         {option.code ? (

@@ -1,10 +1,19 @@
 "use client";
 
-import { Button, Group, Paper, Progress, Stack, Text, Title } from "@mantine/core";
+import {
+  Button,
+  Group,
+  Paper,
+  Progress,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { FlameIcon, TargetIcon } from "@/components/common/Icon";
 import { useProgress } from "@/state/useProgress";
 import { useStreak } from "@/state/useStreak";
+import Link from "next/link";
 
 function resetAllProgress() {
   try {
@@ -86,13 +95,19 @@ export function ProgressDisplay() {
           />
         </div>
 
-        <Group justify="flex-end">
+        <Group justify="space-between">
           <Button
+            component={Link}
+            href="/review"
             size="xs"
             variant="white"
             color="dark"
-            onClick={confirmReset}
+            aria-label="Review mistakes"
           >
+            Review mistakes
+          </Button>
+
+          <Button size="xs" variant="white" color="dark" onClick={confirmReset}>
             Reset progress
           </Button>
         </Group>

@@ -48,18 +48,38 @@ export function SearchIcon(props: IconProps) {
 export function WrenchIcon(props: IconProps) {
   return (
     <Frame {...props}>
-      <path
-        d="M14 6a4 4 0 1 1 4 4l-9 9a2 2 0 1 1-3-3l9-9Z"
-        {...stroke}
-      />
+      <path d="M14 6a4 4 0 1 1 4 4l-9 9a2 2 0 1 1-3-3l9-9Z" {...stroke} />
     </Frame>
+  );
+}
+
+export function SecureCodingIcon({
+  size = 22,
+  className,
+}: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="120 60 400 500"
+      className={className}
+      aria-hidden
+    >
+      <path
+        fill="currentColor"
+        d="M271.883 75.125C239.18 75.125 219.953 127.504 210.52 175.75H182.938C170.988 175.75 161.375 185.363 161.375 197.312C161.375 209.262 170.988 218.875 182.938 218.875H204.5V247.625C204.5 262.898 207.465 277.453 212.855 290.75H204.5H186.082C172.426 290.75 161.375 301.801 161.375 315.457C161.375 318.152 161.824 320.758 162.633 323.273L188.598 401.078C154.367 430.547 132.625 474.121 132.625 522.816C132.625 537.551 144.574 549.5 159.309 549.5H479.691C494.426 549.5 506.375 537.551 506.375 522.816C506.375 474.121 484.633 430.547 450.402 401.168L476.367 323.363C477.176 320.848 477.625 318.242 477.625 315.547C477.625 301.891 466.574 290.84 452.918 290.84H434.5H426.145C431.535 277.543 434.5 262.988 434.5 247.715V218.965H456.062C468.012 218.965 477.625 209.352 477.625 197.402C477.625 185.453 468.012 175.84 456.062 175.84H428.48C419.137 127.594 399.82 75.2148 367.117 75.2148C358.492 75.2148 350.047 78.7187 342.41 82.582C335.043 86.2656 325.879 89.5898 319.5 89.5898C313.121 89.5898 303.957 86.2656 296.59 82.582C288.953 78.6289 280.508 75.125 271.883 75.125ZM356.066 510.328L333.785 446.629L358.852 417.43C361.277 414.555 362.625 410.961 362.625 407.188C362.625 398.473 355.617 391.465 346.902 391.465H292.098C283.383 391.465 276.375 398.473 276.375 407.188C276.375 410.961 277.723 414.555 280.148 417.43L305.215 446.629L282.934 510.328L231.723 348.25H263.797C280.328 357.414 299.285 362.625 319.5 362.625C339.715 362.625 358.672 357.414 375.203 348.25H407.277L356.066 510.328ZM319.5 319.5C288.324 319.5 261.82 299.645 251.848 271.883C256.969 274.758 262.898 276.375 269.188 276.375H280.328C295.152 276.375 308.27 266.852 312.941 252.836C315.008 246.547 323.902 246.547 325.969 252.836C330.641 266.852 343.848 276.375 358.582 276.375H369.723C376.012 276.375 381.941 274.758 387.063 271.883C377.09 299.645 350.586 319.5 319.41 319.5H319.5Z"
+      />
+    </svg>
   );
 }
 
 export function ShieldIcon(props: IconProps) {
   return (
     <Frame {...props}>
-      <path d="M12 3 4 6v6c0 5 3.6 8.5 8 9 4.4-.5 8-4 8-9V6l-8-3Z" {...stroke} />
+      <path
+        d="M12 3 4 6v6c0 5 3.6 8.5 8 9 4.4-.5 8-4 8-9V6l-8-3Z"
+        {...stroke}
+      />
       <path d="m9 12 2.2 2.2L15 10.5" {...stroke} />
     </Frame>
   );
@@ -79,7 +99,10 @@ export function BugIcon(props: IconProps) {
     <Frame {...props}>
       <rect x="7" y="8" width="10" height="11" rx="5" {...stroke} />
       <path d="M9 6a3 3 0 0 1 6 0" {...stroke} />
-      <path d="M3 12h4M17 12h4M4 6l3 2M20 6l-3 2M4 18l3-2M20 18l-3-2" {...stroke} />
+      <path
+        d="M3 12h4M17 12h4M4 6l3 2M20 6l-3 2M4 18l3-2M20 18l-3-2"
+        {...stroke}
+      />
     </Frame>
   );
 }
@@ -115,7 +138,10 @@ export function DiagramIcon(props: IconProps) {
 export function ScaleIcon(props: IconProps) {
   return (
     <Frame {...props}>
-      <path d="M12 4v16M4 20h16M6 8l-3 6h6L6 8ZM18 8l-3 6h6l-3-6Z" {...stroke} />
+      <path
+        d="M12 4v16M4 20h16M6 8l-3 6h6L6 8ZM18 8l-3 6h6l-3-6Z"
+        {...stroke}
+      />
     </Frame>
   );
 }
@@ -273,22 +299,23 @@ export function TagIcon(props: IconProps) {
   );
 }
 
-const ICON_MAP: Record<GameModeIcon, (props: IconProps) => React.ReactElement> = {
-  search: SearchIcon,
-  wrench: WrenchIcon,
-  shield: ShieldIcon,
-  pencil: PencilIcon,
-  bug: BugIcon,
-  map: MapIcon,
-  flag: FlagIcon,
-  diagram: DiagramIcon,
-  scale: ScaleIcon,
-  lock: LockIcon,
-  key: KeyIcon,
-  lightning: LightningIcon,
-  robot: RobotIcon,
-  report: ReportIcon,
-};
+const ICON_MAP: Record<GameModeIcon, (props: IconProps) => React.ReactElement> =
+  {
+    search: SearchIcon,
+    wrench: WrenchIcon,
+    shield: ShieldIcon,
+    pencil: PencilIcon,
+    bug: BugIcon,
+    map: MapIcon,
+    flag: FlagIcon,
+    diagram: DiagramIcon,
+    scale: ScaleIcon,
+    lock: LockIcon,
+    key: KeyIcon,
+    lightning: LightningIcon,
+    robot: RobotIcon,
+    report: ReportIcon,
+  };
 
 export function GameModeIconView({
   name,

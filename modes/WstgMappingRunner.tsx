@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Paper, SimpleGrid, Stack, Text } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Group,
+  Paper,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { AnswerPanel } from "@/components/challenge/AnswerPanel";
 import { CodeViewer } from "@/components/challenge/CodeViewer";
 import { ScenarioChoiceCard } from "@/components/answers/ScenarioChoiceCard";
@@ -23,11 +31,13 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
   });
 
   const [selected, setSelected] = useState<string | null>(null);
+  const [tipOpen, setTipOpen] = useState(false);
   const currentId = runner?.state.current?.id;
   const [prevId, setPrevId] = useState(currentId);
   if (prevId !== currentId) {
     setPrevId(currentId);
     setSelected(null);
+    setTipOpen(false);
   }
 
   if (!runner) {
@@ -99,9 +109,35 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
             </Paper>
           )}
           {mapping?.top10Hint ? (
-            <Text size="xs" c="dimmed">
-              Hint: aligns with OWASP Top 10 category {mapping.top10Hint}.
-            </Text>
+            tipOpen ? (
+              <Alert
+                color="ntnuBlue"
+                variant="light"
+                radius="md"
+                title="Tip"
+                withCloseButton
+                onClose={() => setTipOpen(false)}
+              >
+                <Text size="sm">
+                  Aligns with OWASP Top 10 category{" "}
+                  <Text span fw={600}>
+                    {mapping.top10Hint}
+                  </Text>
+                  .
+                </Text>
+              </Alert>
+            ) : (
+              <Group justify="flex-start">
+                <Button
+                  size="xs"
+                  variant="subtle"
+                  color="ntnuBlue"
+                  onClick={() => setTipOpen(true)}
+                >
+                  Show tip
+                </Button>
+              </Group>
+            )
           ) : null}
         </Stack>
       }
