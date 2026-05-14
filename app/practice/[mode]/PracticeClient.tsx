@@ -24,22 +24,37 @@ import { CryptoMisuseRunner } from "@/modes/CryptoMisuseRunner";
 import { AiReviewRunner } from "@/modes/AiReviewRunner";
 import { ReportBuilderRunner } from "@/modes/ReportBuilderRunner";
 
-export function PracticeClient({ slug }: { slug: string }) {
+export function PracticeClient({
+  slug,
+  shuffleSeed,
+}: {
+  slug: string;
+  shuffleSeed: number;
+}) {
   const router = useRouter();
   const mode = GAME_MODE_BY_SLUG[slug];
   const { settings } = useSettings();
 
   const challenges = useMemo(() => {
     if (!mode) return [];
-    return challengeRepository.filter(
-      (c) =>
-        c.supportedModes.includes(mode.id) &&
-        (settings.topicFilter.length === 0 ||
-          settings.topicFilter.includes(c.courseTopic)) &&
-        (settings.difficultyFilter.length === 0 ||
-          settings.difficultyFilter.includes(c.difficulty)),
-    );
-  }, [mode, settings.topicFilter, settings.difficultyFilter]);
+    const filtered = [
+      ...challengeRepository.filter(
+        (c) =>
+          c.supportedModes.includes(mode.id) &&
+          (settings.topicFilter.length === 0 ||
+            settings.topicFilter.includes(c.courseTopic)) &&
+          (settings.difficultyFilter.length === 0 ||
+            settings.difficultyFilter.includes(c.difficulty)),
+      ),
+    ];
+    let state = shuffleSeed >>> 0 || 1;
+    for (let i = filtered.length - 1; i > 0; i--) {
+      state = (state * 1664525 + 1013904223) >>> 0;
+      const j = state % (i + 1);
+      [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+    }
+    return filtered;
+  }, [mode, settings.topicFilter, settings.difficultyFilter, shuffleSeed]);
 
   if (!mode) {
     return (
