@@ -9,6 +9,7 @@ import { EmptyState } from "@/components/common/EmptyState";
 import { ShieldIcon } from "@/components/common/Icon";
 import { useSettings } from "@/state/useSettings";
 
+import { ExamSprintRunner } from "@/modes/ExamSprintRunner";
 import { VulnSearchRunner } from "@/modes/VulnSearchRunner";
 import { FindAndFixRunner } from "@/modes/FindAndFixRunner";
 import { ExplainRunner } from "@/modes/ExplainRunner";
@@ -44,7 +45,8 @@ export function PracticeClient({
           (settings.topicFilter.length === 0 ||
             settings.topicFilter.includes(c.courseTopic)) &&
           (settings.difficultyFilter.length === 0 ||
-            settings.difficultyFilter.includes(c.difficulty)),
+            settings.difficultyFilter.includes(c.difficulty)) &&
+          matchesYearFilter(c.sourceLabel, settings.examYearFilter),
       ),
     ];
     let state = shuffleSeed >>> 0 || 1;
@@ -54,7 +56,13 @@ export function PracticeClient({
       [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
     }
     return filtered;
-  }, [mode, settings.topicFilter, settings.difficultyFilter, shuffleSeed]);
+  }, [
+    mode,
+    settings.topicFilter,
+    settings.difficultyFilter,
+    settings.examYearFilter,
+    shuffleSeed,
+  ]);
 
   if (!mode) {
     return (
@@ -108,12 +116,24 @@ export function PracticeClient({
   );
 }
 
+function matchesYearFilter(
+  sourceLabel: string | undefined,
+  yearFilter: readonly string[],
+): boolean {
+  if (yearFilter.length === 0) return true;
+  const year = sourceLabel?.match(/\b(\d{4})\b/)?.[1];
+  if (!year) return true;
+  return yearFilter.includes(year);
+}
+
 function renderRunner(
   modeId: string,
   challenges: ReturnType<typeof challengeRepository.filter>,
   examMode: boolean,
 ) {
   switch (modeId) {
+    case GAME_MODE_IDS.examSprint:
+      return <ExamSprintRunner challenges={challenges} examMode={examMode} />;
     case GAME_MODE_IDS.vulnSearch:
       return <VulnSearchRunner challenges={challenges} examMode={examMode} />;
     case GAME_MODE_IDS.findAndFix:

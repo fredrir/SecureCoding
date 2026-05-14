@@ -8,22 +8,26 @@ import {
   type Difficulty,
 } from "@/domain/difficulty";
 import { useSettings } from "@/state/useSettings";
-import { GaugeIcon, TagIcon } from "@/components/common/Icon";
+import { FlameIcon, GaugeIcon, TagIcon } from "@/components/common/Icon";
 
 const TOPIC_COUNT = Object.keys(COURSE_TOPIC_META).length;
 const DIFFICULTY_COUNT = DIFFICULTIES.length;
+const EXAM_YEARS = ["2023", "2024", "2025"] as const;
 
 export function FiltersBar() {
-  const { settings, setTopicFilter, setDifficultyFilter } = useSettings();
+  const { settings, setTopicFilter, setDifficultyFilter, setExamYearFilter } =
+    useSettings();
 
   const topicSelected = settings.topicFilter.length;
   const difficultySelected = settings.difficultyFilter.length;
-  const totalSelected = topicSelected + difficultySelected;
+  const yearSelected = settings.examYearFilter.length;
+  const totalSelected = topicSelected + difficultySelected + yearSelected;
   const hasAny = totalSelected > 0;
 
   const clearAll = () => {
     setTopicFilter([]);
     setDifficultyFilter([]);
+    setExamYearFilter([]);
   };
 
   return (
@@ -89,29 +93,40 @@ export function FiltersBar() {
         </FilterSection>
 
         <FilterSection
+          icon={<FlameIcon size={14} />}
+          label="Exam year"
+          selected={yearSelected}
+          total={EXAM_YEARS.length}
+          onClear={yearSelected > 0 ? () => setExamYearFilter([]) : undefined}
+        >
+          <Chip.Group
+            multiple
+            value={[...settings.examYearFilter]}
+            onChange={(v) => setExamYearFilter(v)}
+          >
+            <div className="flex flex-wrap gap-2">
+              {EXAM_YEARS.map((year) => (
+                <Chip
+                  key={year}
+                  value={year}
+                  color="red"
+                  variant="light"
+                  size="sm"
+                  radius="sm"
+                >
+                  {year}
+                </Chip>
+              ))}
+            </div>
+          </Chip.Group>
+        </FilterSection>
+        <FilterSection
           icon={<GaugeIcon size={14} />}
           label="Difficulty"
           selected={difficultySelected}
           total={DIFFICULTY_COUNT}
           onClear={
             difficultySelected > 0 ? () => setDifficultyFilter([]) : undefined
-          }
-          trailing={
-            <button
-              type="button"
-              onClick={clearAll}
-              disabled={!hasAny}
-              aria-label="Clear all filters"
-              className={`group inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-wider transition-colors  disabled:pointer-events-none disabled:opacity-50 ${hasAny ? "text-app-danger border-app-danger bg-app-danger-soft hover:border-app-danger/55 hover:bg-app-danger-soft/80 hover:text-app-danger" : "border-app-border bg-app-bg-elevated text-app-fg-muted "}`}
-            >
-              <span
-                aria-hidden
-                className="inline-flex h-4 w-4 items-center justify-center rounded-sm  text-xs leading-none font-bold transition-colors "
-              >
-                ×
-              </span>
-              Reset
-            </button>
           }
         >
           <Chip.Group
@@ -135,6 +150,23 @@ export function FiltersBar() {
             </div>
           </Chip.Group>
         </FilterSection>
+        <div className="flex w-full items-center justify-end">
+          <button
+            type="button"
+            onClick={clearAll}
+            disabled={!hasAny}
+            aria-label="Clear all filters"
+            className={`group  inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-wider transition-colors  disabled:pointer-events-none disabled:opacity-50 ${hasAny ? "text-app-danger border-app-danger bg-app-danger-soft hover:border-app-danger/55 hover:bg-app-danger-soft/80 hover:text-app-danger" : "border-app-border bg-app-bg-elevated text-app-fg-muted "}`}
+          >
+            <span
+              aria-hidden
+              className="inline-flex h-4 w-4 items-center justify-center rounded-sm  text-xs leading-none font-bold transition-colors "
+            >
+              ×
+            </span>
+            Reset
+          </button>
+        </div>
       </div>
     </section>
   );

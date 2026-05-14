@@ -352,6 +352,7 @@ const ICON_MAP: Record<GameModeIcon, (props: IconProps) => React.ReactElement> =
     lightning: LightningIcon,
     robot: RobotIcon,
     report: ReportIcon,
+    flame: FlameIcon,
   };
 
 export function GameModeIconView({

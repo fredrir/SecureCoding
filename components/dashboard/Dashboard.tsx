@@ -9,6 +9,16 @@ import { GAME_MODES } from "@/domain/gameMode";
 import { useSettings } from "@/state/useSettings";
 import { challengeRepository } from "@/data/challenges";
 
+function matchesYearFilter(
+  sourceLabel: string | undefined,
+  yearFilter: readonly string[],
+): boolean {
+  if (yearFilter.length === 0) return true;
+  const year = sourceLabel?.match(/\b(\d{4})\b/)?.[1];
+  if (!year) return true; // non-exam challenges are unaffected
+  return yearFilter.includes(year);
+}
+
 export function Dashboard() {
   const { settings } = useSettings();
 
@@ -23,12 +33,13 @@ export function Dashboard() {
           (settings.topicFilter.length === 0 ||
             settings.topicFilter.includes(c.courseTopic)) &&
           (settings.difficultyFilter.length === 0 ||
-            settings.difficultyFilter.includes(c.difficulty)),
+            settings.difficultyFilter.includes(c.difficulty)) &&
+          matchesYearFilter(c.sourceLabel, settings.examYearFilter),
       );
       counts[mode.id] = filtered.length;
     }
     return counts;
-  }, [settings.topicFilter, settings.difficultyFilter]);
+  }, [settings.topicFilter, settings.difficultyFilter, settings.examYearFilter]);
 
   return (
     <Stack gap="xl" maw={1200} mx="auto" w="100%">

@@ -12,6 +12,7 @@ import { secureDevelopmentChallenges } from "./secure-development";
 import { microservicesSupplyChainChallenges } from "./microservices-supply-chain";
 import { aiSecurityChallenges } from "./ai-security";
 import { practiceModeChallenges } from "./practice-modes";
+import { examQuestionChallenges } from "./exam-questions";
 
 export const allChallenges = [
   ...webVulnerabilityChallenges,
@@ -26,6 +27,7 @@ export const allChallenges = [
   ...microservicesSupplyChainChallenges,
   ...aiSecurityChallenges,
   ...practiceModeChallenges,
+  ...examQuestionChallenges,
 ];
 
 export const challengeRepository = new ChallengeRepository(allChallenges);

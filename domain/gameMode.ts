@@ -2,6 +2,7 @@ import type { GameModeId } from "./ids";
 import { gameModeId } from "./ids";
 
 export const GAME_MODE_IDS = {
+  examSprint: gameModeId("exam-sprint"),
   vulnSearch: gameModeId("vuln-search"),
   fixSuggestion: gameModeId("fix-suggestion"),
   findAndFix: gameModeId("find-and-fix"),
@@ -30,6 +31,7 @@ export interface GameModeMeta {
   readonly accent: string; // Mantine color
   readonly icon: GameModeIcon;
   readonly status: "ready" | "coming-soon";
+  readonly pinned?: boolean;
 }
 
 /**
@@ -51,9 +53,22 @@ export type GameModeIcon =
   | "key"
   | "lightning"
   | "robot"
-  | "report";
+  | "report"
+  | "flame";
 
 export const GAME_MODES: readonly GameModeMeta[] = [
+  {
+    id: GAME_MODE_IDS.examSprint,
+    key: "examSprint",
+    slug: "exam-sprint",
+    title: "Exam Bank",
+    tagline: "Real past-exam questions",
+    description: "Work through every question pulled directly from past exams.",
+    accent: "red",
+    icon: "flame",
+    status: "ready",
+    pinned: true,
+  },
   {
     id: GAME_MODE_IDS.vulnSearch,
     key: "vulnSearch",

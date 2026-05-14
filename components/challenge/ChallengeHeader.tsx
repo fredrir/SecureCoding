@@ -1,4 +1,4 @@
-import { Group, Stack, Text, Title } from "@mantine/core";
+import { Badge, Group, Stack, Text, Title, Tooltip } from "@mantine/core";
 import type { Challenge } from "@/domain/challenge";
 import { TopicBadge } from "@/components/badges/TopicBadge";
 import { DifficultyBadge } from "@/components/badges/DifficultyBadge";
@@ -16,6 +16,22 @@ export function ChallengeHeader({ challenge, prompt }: Props) {
       <Group gap={6} wrap="wrap">
         <TopicBadge topic={challenge.courseTopic} />
         <DifficultyBadge difficulty={challenge.difficulty} />
+        {challenge.sourceLabel ? (
+          <Tooltip
+            withArrow
+            openDelay={250}
+            label={challenge.sourceLabel.split(",")[1]}
+          >
+            <Badge variant="light" color="ntnuBlue">
+              {challenge.sourceLabel.split(",")[0]}
+            </Badge>
+          </Tooltip>
+        ) : null}
+        {challenge.pointsLabel ? (
+          <Badge variant="light" color="green">
+            {challenge.pointsLabel}
+          </Badge>
+        ) : null}
         {challenge.owaspTop10 ? <Top10Badge id={challenge.owaspTop10} /> : null}
         {challenge.owaspWstg ? <WstgBadge id={challenge.owaspWstg} /> : null}
       </Group>
@@ -23,11 +39,11 @@ export function ChallengeHeader({ challenge, prompt }: Props) {
         {challenge.title}
       </Title>
       {prompt ? (
-        <Text size="md" c="dimmed">
+        <Text size="md" c="dimmed" style={{ whiteSpace: "pre-wrap" }}>
           {prompt}
         </Text>
       ) : (
-        <Text size="md" c="dimmed">
+        <Text size="md" c="dimmed" style={{ whiteSpace: "pre-wrap" }}>
           {challenge.summary}
         </Text>
       )}

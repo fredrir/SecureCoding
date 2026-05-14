@@ -28,6 +28,10 @@ export interface Challenge {
   readonly id: ChallengeId;
   readonly title: string;
   readonly summary: string;
+  /** Human-readable source shown as a badge, for example "Exam 2025, Task 4". */
+  readonly sourceLabel?: string;
+  /** Point value shown for exam questions, for example "4 points". */
+  readonly pointsLabel?: string;
   readonly courseTopic: CourseTopic;
   readonly difficulty: Difficulty;
   readonly tags: readonly string[];
@@ -37,6 +41,8 @@ export interface Challenge {
   readonly language?: CodeLanguage;
   /** Display filename shown in the CodeViewer header. Defaults from language. */
   readonly filename?: string;
+  /** Multiple code files shown stacked. When present, takes precedence over `code`. */
+  readonly codeSnippets?: readonly CodeSnippet[];
   readonly vulnerableLines: readonly number[];
   readonly vulnerabilityType: string;
 
@@ -61,6 +67,12 @@ export interface Challenge {
   readonly modeData?: ChallengeModeData;
 }
 
+export interface CodeSnippet {
+  readonly code: string;
+  readonly language: CodeLanguage;
+  readonly filename?: string;
+}
+
 export interface MultipleChoiceOption {
   readonly id: string;
   readonly text: string;
@@ -71,6 +83,8 @@ export interface MultipleChoiceOption {
 export interface MultipleChoiceQuestion {
   readonly question: string;
   readonly options: readonly MultipleChoiceOption[];
+  /** True when an open-ended exam question was converted into practice MC. */
+  readonly modifiedFromOpenQuestion?: boolean;
 }
 
 export interface ChallengeModeData {

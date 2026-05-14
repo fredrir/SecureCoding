@@ -8,9 +8,14 @@ interface Props {
 
 export function GameGrid({ modes, countsByMode }: Props) {
   const sortedModes = [...modes].sort((a, b) => {
-    const countA = countsByMode[a.id] ?? 0;
-    const countB = countsByMode[b.id] ?? 0;
-    return countB - countA;
+    if (a.pinned && !b.pinned) return -1;
+    if (!a.pinned && b.pinned) return 1;
+    // Sort alphabetically by title
+    const titleA = (a.title ?? "").toLowerCase();
+    const titleB = (b.title ?? "").toLowerCase();
+    if (titleA < titleB) return -1;
+    if (titleA > titleB) return 1;
+    return 0;
   });
 
   return (

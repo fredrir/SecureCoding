@@ -1,61 +1,43 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Paper, Stack, Text } from "@mantine/core";
+import { useState } from "react";
+import { Badge, Group, Paper, Stack, Text, Tooltip } from "@mantine/core";
 import { AnswerPanel } from "@/components/challenge/AnswerPanel";
 import { MultipleChoiceOptions } from "@/components/answers/MultipleChoiceOptions";
+import { TextAnswerBox } from "@/components/answers/TextAnswerBox";
 import { CodeViewer } from "@/components/challenge/CodeViewer";
 import { MultiCodeViewer } from "@/components/challenge/MultiCodeViewer";
 import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 import type { Challenge } from "@/domain/challenge";
-import { mulberry32, shuffle } from "@/lib/random";
 
 interface Props {
   challenges: readonly Challenge[];
   examMode: boolean;
-  /** Cap the run length; sprint mode is short on purpose. */
-  questionLimit?: number;
 }
 
-export function MultipleChoiceSprintRunner({
-  challenges,
-  examMode,
-  questionLimit = 20,
-}: Props) {
-  // Restrict to challenges that have a multiple-choice question.
-  const eligible = useMemo(
-    () => challenges.filter((c) => c.modeData?.multipleChoice),
-    [challenges],
-  );
-
-  // Stable per-mount shuffle so refresh gives a different sprint without
-  // re-shuffling between renders.
-  const [seed] = useState(() => Math.floor(Math.random() * 1_000_000));
-  const sprintChallenges = useMemo(() => {
-    const rng = mulberry32(seed);
-    return shuffle(eligible, rng).slice(0, questionLimit);
-  }, [eligible, seed, questionLimit]);
-
+export function ExamSprintRunner({ challenges, examMode }: Props) {
   const runner = useChallengeRunner({
-    challenges: sprintChallenges,
-    mode: GAME_MODE_IDS.multipleChoiceSprint,
+    challenges,
+    mode: GAME_MODE_IDS.examSprint,
     examMode,
   });
 
   const [selected, setSelected] = useState<string | null>(null);
+  const [text, setText] = useState("");
   const currentId = runner?.state.current?.id;
   const [prevId, setPrevId] = useState(currentId);
   if (prevId !== currentId) {
     setPrevId(currentId);
     setSelected(null);
+    setText("");
   }
 
   if (!runner) {
     return (
       <RunnerScaffold
-        modeTitle="Multiple Choice Sprint"
+        modeTitle="Exam Bank"
         examMode={examMode}
         total={0}
         index={0}
@@ -74,21 +56,35 @@ export function MultipleChoiceSprintRunner({
   const { state, controls } = runner;
   const challenge = state.current;
   const mc = challenge?.modeData?.multipleChoice;
+  const isTextMode = mc?.modifiedFromOpenQuestion === true;
+  const questionText =
+    mc?.question ?? challenge?.modeData?.explainPrompt ?? challenge?.summary;
 
-  const handleSubmit = () => {
+  const handleMcSubmit = () => {
     if (!challenge) return;
     controls.submit({
       kind: "multiple-choice",
       challengeId: challenge.id,
-      mode: GAME_MODE_IDS.multipleChoiceSprint,
+      mode: GAME_MODE_IDS.examSprint,
       submittedAt: Date.now(),
       selectedOptionId: selected,
     });
   };
 
+  const handleTextSubmit = () => {
+    if (!challenge) return;
+    controls.submit({
+      kind: "text",
+      challengeId: challenge.id,
+      mode: GAME_MODE_IDS.examSprint,
+      submittedAt: Date.now(),
+      text,
+    });
+  };
+
   return (
     <RunnerScaffold
-      modeTitle="Multiple Choice Sprint"
+      modeTitle="Exam Bank"
       examMode={examMode}
       total={state.total}
       index={state.index}
@@ -96,9 +92,20 @@ export function MultipleChoiceSprintRunner({
       feedback={state.feedback}
       stage={state.stage}
       attempts={state.attempts}
-      prompt={mc?.question}
       workspace={
         <Stack gap="md">
+          {questionText ? (
+            <Paper
+              withBorder
+              radius="lg"
+              p="lg"
+              className="bg-app-surface border-app-border"
+            >
+              <Text size="sm" fw={500} style={{ whiteSpace: "pre-wrap" }}>
+                {questionText}
+              </Text>
+            </Paper>
+          ) : null}
           {challenge?.codeSnippets ? (
             <MultiCodeViewer snippets={challenge.codeSnippets} />
           ) : challenge?.code ? (
@@ -107,25 +114,31 @@ export function MultipleChoiceSprintRunner({
               language={challenge.language ?? "plaintext"}
               filename={challenge.filename}
             />
-          ) : (
-            <Paper
-              withBorder
-              radius="lg"
-              p="lg"
-              className="bg-app-surface border-app-border"
-            >
-              <Text size="sm">{challenge?.summary}</Text>
-            </Paper>
-          )}
-          <Text size="xs" c="dimmed">
-            No penalty for wrong answers, pick the most justified option.
-          </Text>
+          ) : null}
+          <Group gap="xs">
+            <Text size="xs" c="dimmed">
+              {isTextMode
+                ? "Open question from a past exam. Write a concise answer."
+                : "Multiple choice from a past exam. Pick the best answer."}
+            </Text>
+            {mc?.modifiedFromOpenQuestion ? (
+              <Tooltip
+                withArrow
+                openDelay={250}
+                label="This was originally an open-answer exam task. The question text is from the exam, but the multiple-choice answers were added for practice."
+              >
+                <Badge size="xs" variant="light" color="orange">
+                  Modified answers
+                </Badge>
+              </Tooltip>
+            ) : null}
+          </Group>
         </Stack>
       }
       answer={
         <AnswerPanel
           title="Pick one"
-          onSubmit={state.stage === "in-progress" ? handleSubmit : undefined}
+          onSubmit={state.stage === "in-progress" ? handleMcSubmit : undefined}
           canSubmit={selected !== null}
           onSkip={state.stage === "in-progress" ? controls.skip : undefined}
         >
