@@ -77,13 +77,15 @@ if (!user?.isAdmin) return res.status(403).end();`,
             id: "b",
             text: "From a verified JWT issued by another microservice.",
             correct: false,
-            rationale: "Only as trustworthy as the issuer; transitive trust is risky.",
+            rationale:
+              "Only as trustworthy as the issuer; transitive trust is risky.",
           },
           {
             id: "c",
             text: "From a `role` cookie set at login.",
             correct: false,
-            rationale: "Cookies are user-controlled if not signed and stored correctly; still better to look up.",
+            rationale:
+              "Cookies are user-controlled if not signed and stored correctly; still better to look up.",
           },
           {
             id: "d",
@@ -253,5 +255,69 @@ if rel, err := filepath.Rel(root, abs); err != nil || strings.HasPrefix(rel, "..
       "In a multi-tenant system, every query must enforce the tenant boundary in addition to user authorisation. The cleanest pattern is a repository layer that requires a tenant context and refuses queries without one.",
     examKeywords: ["bola", "multi-tenant", "scope", "object-level"],
     owaspTop10: "A01",
+  }),
+  // courseTopic: "authorization"
+
+  buildChallenge({
+    id: "authz-idor-invoice-download",
+    title: "IDOR in invoice download",
+    summary:
+      "A user can download another user's invoice by changing `/invoice/123` to `/invoice/124`.",
+    courseTopic: "authorization",
+    difficulty: "core",
+    tags: ["idor", "broken-access-control"],
+    language: "python",
+    filename: "views.py",
+    code: `@app.get("/invoice/<invoice_id>")
+def invoice(invoice_id):
+    invoice = Invoice.get(invoice_id)
+    return send_file(invoice.pdf_path)`,
+    vulnerableLines: [2, 3],
+    vulnerabilityType: "Insecure Direct Object Reference",
+    fixOptions: [],
+    explanation:
+      "IDOR is a broken access-control flaw where an object identifier can be changed to access another user's resource. The server must check that the authenticated user is allowed to access the requested invoice. Obscure IDs are defence-in-depth, not a replacement for authorization checks.",
+    examKeywords: [
+      "IDOR",
+      "broken access control",
+      "object-level authorization",
+      "server-side check",
+    ],
+    owaspTop10: "A01",
+    owaspWstg: "WSTG-ATHZ-04",
+    modeData: {
+      multipleChoice: {
+        question: "What is the correct fix for this invoice IDOR?",
+        options: [
+          {
+            id: "a",
+            text: "Check server-side that the logged-in user is authorized for the requested invoice.",
+            correct: true,
+            rationale: "Authorization must be enforced for each object.",
+          },
+          {
+            id: "b",
+            text: "Hide the invoice link in the UI.",
+            correct: false,
+            rationale: "Attackers can still request the URL directly.",
+          },
+          {
+            id: "c",
+            text: "Use a larger invoice number.",
+            correct: false,
+            rationale:
+              "Guessing becomes harder, but access control is still missing.",
+          },
+          {
+            id: "d",
+            text: "Return the PDF as base64.",
+            correct: false,
+            rationale: "Encoding does not enforce authorization.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain IDOR and why object-level authorization must be checked on the server.",
+    },
   }),
 ];

@@ -128,7 +128,9 @@ function renderRunner(
         />
       );
     case GAME_MODE_IDS.fixSuggestion:
-      return <FixSuggestionRunner challenges={challenges} examMode={examMode} />;
+      return (
+        <FixSuggestionRunner challenges={challenges} examMode={examMode} />
+      );
     case GAME_MODE_IDS.attackTrace:
       return <AttackTraceRunner challenges={challenges} examMode={examMode} />;
     case GAME_MODE_IDS.wstgMapping:
@@ -148,7 +150,9 @@ function renderRunner(
     case GAME_MODE_IDS.aiReview:
       return <AiReviewRunner challenges={challenges} examMode={examMode} />;
     case GAME_MODE_IDS.reportBuilder:
-      return <ReportBuilderRunner challenges={challenges} examMode={examMode} />;
+      return (
+        <ReportBuilderRunner challenges={challenges} examMode={examMode} />
+      );
     default:
       return (
         <EmptyState

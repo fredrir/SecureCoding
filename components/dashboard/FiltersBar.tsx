@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  Badge,
-  Button,
-  Chip,
-  Divider,
-  Group,
-  Paper,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { Chip } from "@mantine/core";
 import { COURSE_TOPIC_META, type CourseTopic } from "@/domain/topic";
 import {
   DIFFICULTIES,
@@ -17,7 +8,7 @@ import {
   type Difficulty,
 } from "@/domain/difficulty";
 import { useSettings } from "@/state/useSettings";
-import { FilterIcon, GaugeIcon, TagIcon } from "@/components/common/Icon";
+import { GaugeIcon, TagIcon } from "@/components/common/Icon";
 
 const TOPIC_COUNT = Object.keys(COURSE_TOPIC_META).length;
 const DIFFICULTY_COUNT = DIFFICULTIES.length;
@@ -27,7 +18,8 @@ export function FiltersBar() {
 
   const topicSelected = settings.topicFilter.length;
   const difficultySelected = settings.difficultyFilter.length;
-  const hasAny = topicSelected > 0 || difficultySelected > 0;
+  const totalSelected = topicSelected + difficultySelected;
+  const hasAny = totalSelected > 0;
 
   const clearAll = () => {
     setTopicFilter([]);
@@ -35,52 +27,40 @@ export function FiltersBar() {
   };
 
   return (
-    <Paper
-      withBorder
-      radius="lg"
-      className="bg-app-surface border-app-border overflow-hidden"
+    <section
+      data-active={hasAny ? "true" : undefined}
+      aria-label="Filters"
+      className="relative isolate overflow-hidden rounded-2xl border border-app-border bg-app-surface transition-[border-color,box-shadow] duration-200 data-[active=true]:border-app-accent/40 data-[active=true]:shadow-[0_14px_32px_-28px_var(--app-accent)]"
     >
-      <Group
-        justify="space-between"
-        wrap="nowrap"
-        align="center"
-        px="lg"
-        py="sm"
-        className="bg-app-bg-elevated border-b border-app-border min-h-8"
-      >
-        <Group
-          gap="xs"
-          wrap="nowrap"
-          align="center"
-          className="flex items-center"
-        >
-          <span className="text-app-accent inline-flex">
-            <FilterIcon size={18} />
-          </span>
-          <Text fw={650} size="sm">
-            Filters
-          </Text>
-          {hasAny ? (
-            <Badge size="sm" radius="sm" variant="light" color="ntnuBlue">
-              {topicSelected + difficultySelected} active
-            </Badge>
-          ) : null}
-        </Group>
-        <Button
-          size={`compact-xs`}
-          variant="subtle"
-          color="gray"
-          onClick={clearAll}
-          disabled={!hasAny}
-          className={`${hasAny ? "bg-app-accent text-white hover:bg-app-accent/80" : ""} transition-colors duration-150`}
-        >
-          Clear all
-        </Button>
-      </Group>
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-25 [background-image:radial-gradient(circle_at_1px_1px,color-mix(in_srgb,var(--app-accent)_22%,transparent)_1px,transparent_0)] [background-size:16px_16px] [mask-image:linear-gradient(to_bottom_right,black,transparent_70%)] [-webkit-mask-image:linear-gradient(to_bottom_right,black,transparent_70%)]"
+      />
 
-      <Stack gap={0} p="lg">
+      {hasAny ? (
+        <>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute top-1.5 left-1.5 z-20 h-3 w-3 rounded-tl-sm border-t-2 border-l-2 border-app-accent/60"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute top-1.5 right-1.5 z-20 h-3 w-3 rounded-tr-sm border-t-2 border-r-2 border-app-accent/60"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-1.5 left-1.5 z-20 h-3 w-3 rounded-bl-sm border-b-2 border-l-2 border-app-accent/60"
+          />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute bottom-1.5 right-1.5 z-20 h-3 w-3 rounded-br-sm border-b-2 border-r-2 border-app-accent/60"
+          />
+        </>
+      ) : null}
+
+      <div className="relative z-10 flex flex-col gap-5 px-5 py-5">
         <FilterSection
-          icon={<TagIcon size={16} />}
+          icon={<TagIcon size={14} />}
           label="Topic"
           selected={topicSelected}
           total={TOPIC_COUNT}
@@ -91,7 +71,7 @@ export function FiltersBar() {
             value={[...settings.topicFilter]}
             onChange={(v) => setTopicFilter(v as CourseTopic[])}
           >
-            <Group gap={8}>
+            <div className="flex flex-wrap gap-2">
               {Object.values(COURSE_TOPIC_META).map((meta) => (
                 <Chip
                   key={meta.id}
@@ -104,19 +84,34 @@ export function FiltersBar() {
                   {meta.label}
                 </Chip>
               ))}
-            </Group>
+            </div>
           </Chip.Group>
         </FilterSection>
 
-        <Divider my="md" color="var(--app-border)" />
-
         <FilterSection
-          icon={<GaugeIcon size={16} />}
+          icon={<GaugeIcon size={14} />}
           label="Difficulty"
           selected={difficultySelected}
           total={DIFFICULTY_COUNT}
           onClear={
             difficultySelected > 0 ? () => setDifficultyFilter([]) : undefined
+          }
+          trailing={
+            <button
+              type="button"
+              onClick={clearAll}
+              disabled={!hasAny}
+              aria-label="Clear all filters"
+              className={`group inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-wider transition-colors  disabled:pointer-events-none disabled:opacity-50 ${hasAny ? "text-app-danger border-app-danger bg-app-danger-soft hover:border-app-danger/55 hover:bg-app-danger-soft/80 hover:text-app-danger" : "border-app-border bg-app-bg-elevated text-app-fg-muted "}`}
+            >
+              <span
+                aria-hidden
+                className="inline-flex h-4 w-4 items-center justify-center rounded-sm  text-xs leading-none font-bold transition-colors "
+              >
+                ×
+              </span>
+              Reset
+            </button>
           }
         >
           <Chip.Group
@@ -124,7 +119,7 @@ export function FiltersBar() {
             value={[...settings.difficultyFilter]}
             onChange={(v) => setDifficultyFilter(v as Difficulty[])}
           >
-            <Group gap={8}>
+            <div className="flex flex-wrap gap-2">
               {DIFFICULTIES.map((d) => (
                 <Chip
                   key={d}
@@ -137,11 +132,11 @@ export function FiltersBar() {
                   {DIFFICULTY_META[d].label}
                 </Chip>
               ))}
-            </Group>
+            </div>
           </Chip.Group>
         </FilterSection>
-      </Stack>
-    </Paper>
+      </div>
+    </section>
   );
 }
 
@@ -151,6 +146,7 @@ interface FilterSectionProps {
   selected: number;
   total: number;
   onClear?: () => void;
+  trailing?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -160,26 +156,40 @@ function FilterSection({
   selected,
   total,
   onClear,
+  trailing,
   children,
 }: FilterSectionProps) {
+  const countText =
+    selected === 0 ? `all · ${total}` : `${selected} / ${total}`;
+  const countActive = selected > 0;
   return (
-    <div>
-      <Group justify="space-between" align="center" mb="xs" wrap="nowrap">
-        <Group gap={8} wrap="nowrap" align="center">
-          <span className="text-app-fg-muted inline-flex">{icon}</span>
-          <Text
-            size="xs"
-            tt="uppercase"
-            fw={700}
-            className="text-app-fg-muted tracking-wider"
+    <div className="flex flex-col gap-2.5">
+      <div className="flex flex-wrap items-center gap-2.5">
+        <span className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-app-fg-muted">
+          <span
+            aria-hidden
+            className="inline-flex h-5 w-5 items-center justify-center rounded-md  text-app-blue"
           >
-            {label}
-          </Text>
-          <Text size="xs" className="text-app-fg-subtle tabular-nums">
-            {selected === 0 ? `All · ${total}` : `${selected} of ${total}`}
-          </Text>
-        </Group>
-      </Group>
+            {icon}
+          </span>
+          {label}
+        </span>
+        <span
+          className={`rounded border px-2 py-0.5 font-mono text-[0.7rem] tabular-nums tracking-wider ${
+            countActive
+              ? "border-app-accent/30 bg-app-accent-soft text-app-blue"
+              : "border-app-border bg-app-bg-elevated text-app-fg-subtle"
+          }`}
+        >
+          {countText}
+        </span>
+        <span
+          aria-hidden
+          className="flex-1 border-t border-dashed border-app-border"
+        />
+
+        {trailing}
+      </div>
       {children}
     </div>
   );

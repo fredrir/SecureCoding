@@ -55,10 +55,30 @@ ct, tag = cipher.encrypt_and_digest(profile_bytes)`,
       multipleChoice: {
         question: "Why is AES-ECB unsafe even with a strong key?",
         options: [
-          { id: "a", text: "Identical plaintext blocks produce identical ciphertext blocks, leaking structure.", correct: true, rationale: "ECB has no diffusion across blocks." },
-          { id: "b", text: "ECB makes the ciphertext too short.", correct: false, rationale: "Length is not the issue." },
-          { id: "c", text: "ECB requires a 256-bit key.", correct: false, rationale: "Mode is independent of key length." },
-          { id: "d", text: "ECB cannot be hardware-accelerated.", correct: false, rationale: "It usually can be." },
+          {
+            id: "a",
+            text: "Identical plaintext blocks produce identical ciphertext blocks, leaking structure.",
+            correct: true,
+            rationale: "ECB has no diffusion across blocks.",
+          },
+          {
+            id: "b",
+            text: "ECB makes the ciphertext too short.",
+            correct: false,
+            rationale: "Length is not the issue.",
+          },
+          {
+            id: "c",
+            text: "ECB requires a 256-bit key.",
+            correct: false,
+            rationale: "Mode is independent of key length.",
+          },
+          {
+            id: "d",
+            text: "ECB cannot be hardware-accelerated.",
+            correct: false,
+            rationale: "It usually can be.",
+          },
         ],
       },
     },
@@ -122,8 +142,7 @@ ct := aead.Seal(nonce, nonce, pt, nil)`,
   buildChallenge({
     id: "crypto-otp-key-reuse",
     title: "Two-time pad",
-    summary:
-      "Two messages are XORed with the same one-time-pad key.",
+    summary: "Two messages are XORed with the same one-time-pad key.",
     courseTopic: "cryptography",
     difficulty: "advanced",
     tags: ["otp"],
@@ -170,8 +189,7 @@ c2 = encrypt(message2)`,
   buildChallenge({
     id: "crypto-weak-rng",
     title: "Token built from Math.random()",
-    summary:
-      "A signup confirmation token is generated with `Math.random()`.",
+    summary: "A signup confirmation token is generated with `Math.random()`.",
     courseTopic: "cryptography",
     difficulty: "intro",
     tags: ["randomness"],
@@ -216,8 +234,7 @@ c2 = encrypt(message2)`,
   buildChallenge({
     id: "crypto-jwt-none",
     title: "JWT verification accepts the `none` algorithm",
-    summary:
-      "A JWT verifier picks the algorithm from the token header.",
+    summary: "A JWT verifier picks the algorithm from the token header.",
     courseTopic: "cryptography",
     difficulty: "core",
     tags: ["jwt"],
@@ -359,8 +376,7 @@ c2 = encrypt(message2)`,
   buildChallenge({
     id: "crypto-hardcoded-key",
     title: "Hardcoded encryption key in source",
-    summary:
-      "A symmetric key is defined as a constant inside the codebase.",
+    summary: "A symmetric key is defined as a constant inside the codebase.",
     courseTopic: "cryptography",
     difficulty: "intro",
     tags: ["secrets"],
@@ -401,5 +417,118 @@ export function encrypt(pt: Buffer) {
       "Keys in source flow into every backup, every developer machine, and every container image. Use a KMS or managed secrets store with IAM-bound access and rotate keys on a schedule. If you must use env vars, scope the secret to the smallest possible set of processes and audit access.",
     examKeywords: ["kms", "secrets", "rotation", "hardcoded"],
     owaspTop10: "A02",
+  }),
+  // courseTopic: "cryptography"
+
+  buildChallenge({
+    id: "crypto-kerckhoffs-principle",
+    title: "Kerckhoff's principle in cryptographic design",
+    summary:
+      "A team proposes keeping the encryption algorithm secret because 'attackers cannot break what they cannot inspect'.",
+    courseTopic: "cryptography",
+    difficulty: "intro",
+    tags: ["kerckhoffs", "crypto-design"],
+    vulnerableLines: [],
+    vulnerabilityType: "Security Through Obscurity",
+    fixOptions: [],
+    explanation:
+      "Kerckhoff's principle says that a cryptosystem should remain secure even if everything except the secret key is public. Security should rely on strong, well-studied algorithms and protected keys, not on hiding the algorithm. Secret algorithms are hard to review and often fail when reverse engineered or leaked.",
+    examKeywords: [
+      "Kerckhoff",
+      "secret key",
+      "public algorithm",
+      "security through obscurity",
+    ],
+    modeData: {
+      multipleChoice: {
+        question: "Which statement best describes Kerckhoff's principle?",
+        options: [
+          {
+            id: "a",
+            text: "A cryptographic system should remain secure even if everything except the key is public.",
+            correct: true,
+            rationale: "Correct: only the key should need to remain secret.",
+          },
+          {
+            id: "b",
+            text: "A cryptographic system is secure when the algorithm is secret.",
+            correct: false,
+            rationale: "This is security through obscurity.",
+          },
+          {
+            id: "c",
+            text: "The key should be public but the algorithm should be private.",
+            correct: false,
+            rationale: "This reverses the principle.",
+          },
+          {
+            id: "d",
+            text: "The system should use a different algorithm for every user.",
+            correct: false,
+            rationale:
+              "Algorithm uniqueness is not the basis of sound cryptographic security.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain Kerckhoff's principle and why relying on a secret algorithm is poor cryptographic engineering.",
+    },
+  }),
+
+  buildChallenge({
+    id: "crypto-public-key-recipient",
+    title: "Encrypting to the correct public key",
+    summary:
+      "Bob wants to send Alice a confidential message using public-key cryptography.",
+    courseTopic: "cryptography",
+    difficulty: "intro",
+    tags: ["pki", "public-key-crypto"],
+    vulnerableLines: [],
+    vulnerabilityType: "Public Key Misuse",
+    fixOptions: [],
+    explanation:
+      "For confidentiality in public-key encryption, the sender encrypts with the recipient's public key. Only the recipient should have the matching private key needed to decrypt. Signing is different: the sender signs with their own private key and others verify with the sender's public key.",
+    examKeywords: [
+      "public key",
+      "private key",
+      "recipient public key",
+      "confidentiality",
+      "digital signature",
+    ],
+    modeData: {
+      multipleChoice: {
+        question:
+          "Bob wants to encrypt a message so that only Alice can read it. Which key should Bob use?",
+        options: [
+          {
+            id: "a",
+            text: "Bob's private key",
+            correct: false,
+            rationale:
+              "That is used for signing, not encrypting confidentially to Alice.",
+          },
+          {
+            id: "b",
+            text: "Bob's public key",
+            correct: false,
+            rationale: "That would allow only Bob's private key to decrypt.",
+          },
+          {
+            id: "c",
+            text: "Alice's public key",
+            correct: true,
+            rationale: "Correct: Alice decrypts with her matching private key.",
+          },
+          {
+            id: "d",
+            text: "Alice's private key",
+            correct: false,
+            rationale: "Bob should never have Alice's private key.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain the difference between public-key encryption for confidentiality and digital signatures for authenticity.",
+    },
   }),
 ];

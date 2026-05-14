@@ -2,7 +2,10 @@ import type { Challenge } from "@/domain/challenge";
 import { buildChallenge } from "../builder";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 
-const EXPLAIN_AND_MC = [GAME_MODE_IDS.explainExam, GAME_MODE_IDS.multipleChoiceSprint] as const;
+const EXPLAIN_AND_MC = [
+  GAME_MODE_IDS.explainExam,
+  GAME_MODE_IDS.multipleChoiceSprint,
+] as const;
 
 export const secureDevelopmentChallenges: readonly Challenge[] = [
   buildChallenge({
@@ -28,12 +31,33 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
     supportedModes: EXPLAIN_AND_MC,
     modeData: {
       multipleChoice: {
-        question: "Which McGraw touchpoint belongs primarily to the requirements phase?",
+        question:
+          "Which McGraw touchpoint belongs primarily to the requirements phase?",
         options: [
-          { id: "a", text: "Security requirements and abuse cases.", correct: true, rationale: "Both happen alongside functional requirements." },
-          { id: "b", text: "Penetration testing.", correct: false, rationale: "Pen testing is a verification activity." },
-          { id: "c", text: "Security operations.", correct: false, rationale: "Ops is post-deploy." },
-          { id: "d", text: "Code review.", correct: false, rationale: "Code review is implementation phase." },
+          {
+            id: "a",
+            text: "Security requirements and abuse cases.",
+            correct: true,
+            rationale: "Both happen alongside functional requirements.",
+          },
+          {
+            id: "b",
+            text: "Penetration testing.",
+            correct: false,
+            rationale: "Pen testing is a verification activity.",
+          },
+          {
+            id: "c",
+            text: "Security operations.",
+            correct: false,
+            rationale: "Ops is post-deploy.",
+          },
+          {
+            id: "d",
+            text: "Code review.",
+            correct: false,
+            rationale: "Code review is implementation phase.",
+          },
         ],
       },
     },
@@ -42,8 +66,7 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
   buildChallenge({
     id: "sdlc-sast-vs-dast",
     title: "When to use SAST vs. DAST",
-    summary:
-      "A team is choosing between SAST and DAST for their CI pipeline.",
+    summary: "A team is choosing between SAST and DAST for their CI pipeline.",
     courseTopic: "secure-development",
     difficulty: "intro",
     tags: ["sast", "dast"],
@@ -56,12 +79,33 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
     supportedModes: EXPLAIN_AND_MC,
     modeData: {
       multipleChoice: {
-        question: "Which class of issues is DAST better suited to find than SAST?",
+        question:
+          "Which class of issues is DAST better suited to find than SAST?",
         options: [
-          { id: "a", text: "Misconfigured response headers and broken auth in a running app.", correct: true, rationale: "DAST sees runtime behaviour." },
-          { id: "b", text: "Hardcoded secrets in source.", correct: false, rationale: "SAST excels at this." },
-          { id: "c", text: "Insecure use of `eval` in a function.", correct: false, rationale: "SAST again." },
-          { id: "d", text: "Outdated npm packages.", correct: false, rationale: "That's SCA territory." },
+          {
+            id: "a",
+            text: "Misconfigured response headers and broken auth in a running app.",
+            correct: true,
+            rationale: "DAST sees runtime behaviour.",
+          },
+          {
+            id: "b",
+            text: "Hardcoded secrets in source.",
+            correct: false,
+            rationale: "SAST excels at this.",
+          },
+          {
+            id: "c",
+            text: "Insecure use of `eval` in a function.",
+            correct: false,
+            rationale: "SAST again.",
+          },
+          {
+            id: "d",
+            text: "Outdated npm packages.",
+            correct: false,
+            rationale: "That's SCA territory.",
+          },
         ],
       },
     },
@@ -86,12 +130,206 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
       multipleChoice: {
         question: "What is a maturity model good at telling you?",
         options: [
-          { id: "a", text: "Where your security practices stand and a roadmap for improvement.", correct: true, rationale: "BSIMM/SAMM are diagnostic and prescriptive." },
-          { id: "b", text: "Specific CVEs in your codebase.", correct: false, rationale: "That's vulnerability scanning." },
-          { id: "c", text: "Operational latency of your services.", correct: false, rationale: "Unrelated." },
-          { id: "d", text: "GDPR fines you might face.", correct: false, rationale: "Different domain." },
+          {
+            id: "a",
+            text: "Where your security practices stand and a roadmap for improvement.",
+            correct: true,
+            rationale: "BSIMM/SAMM are diagnostic and prescriptive.",
+          },
+          {
+            id: "b",
+            text: "Specific CVEs in your codebase.",
+            correct: false,
+            rationale: "That's vulnerability scanning.",
+          },
+          {
+            id: "c",
+            text: "Operational latency of your services.",
+            correct: false,
+            rationale: "Unrelated.",
+          },
+          {
+            id: "d",
+            text: "GDPR fines you might face.",
+            correct: false,
+            rationale: "Different domain.",
+          },
         ],
       },
+    },
+  }),
+  buildChallenge({
+    id: "static-analysis-trusted-source",
+    title: "Trust boundaries in static analysis",
+    summary:
+      "A static analyser tracks tainted data flowing into security-sensitive operations.",
+    courseTopic: "secure-development",
+    difficulty: "core",
+    tags: ["static-analysis", "taint-analysis", "trust-boundary"],
+    vulnerableLines: [],
+    vulnerabilityType: "Untrusted Input",
+    fixOptions: [],
+    explanation:
+      "Static analysis often treats web parameters, cookies, files, network data, and web service responses as untrusted sources. Hard-coded constants are usually trusted because they are controlled by the program, although secrets should not be hard-coded. Taint analysis follows untrusted data into sinks such as SQL queries, command execution, file paths, redirects, or template rendering.",
+    examKeywords: [
+      "static analysis",
+      "taint analysis",
+      "source",
+      "sink",
+      "trusted data",
+    ],
+    supportedModes: EXPLAIN_AND_MC,
+    modeData: {
+      multipleChoice: {
+        question:
+          "In static security analysis, which data source is usually considered trustworthy?",
+        options: [
+          {
+            id: "a",
+            text: "Web request parameters and cookies",
+            correct: false,
+            rationale: "These are attacker-controllable.",
+          },
+          {
+            id: "b",
+            text: "Data read from a user-uploaded file",
+            correct: false,
+            rationale: "File contents may be controlled by an attacker.",
+          },
+          {
+            id: "c",
+            text: "Data returned by an external web service",
+            correct: false,
+            rationale: "External service data crosses a trust boundary.",
+          },
+          {
+            id: "d",
+            text: "Hard-coded constant data in the program",
+            correct: true,
+            rationale:
+              "Constants are normally controlled by the developer, not the user.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain sources, sinks, and sanitizers in taint analysis, and give one example involving command injection or SQL injection.",
+    },
+  }),
+
+  buildChallenge({
+    id: "requirements-goal-not-mechanism",
+    title: "Writing a good security requirement",
+    summary:
+      "A team mixes vague goals, implementation choices, and testable security requirements.",
+    courseTopic: "secure-development",
+    difficulty: "core",
+    tags: ["security-requirements", "firesmith"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Security Requirement",
+    fixOptions: [],
+    explanation:
+      "Good security requirements should be clear, testable, and state what security property should be achieved. They should usually avoid unnecessarily locking the design to a specific mechanism unless that mechanism is truly required. 'End user data should be encrypted at rest' is more useful than vague statements such as 'the system should be secure'.",
+    examKeywords: [
+      "security requirement",
+      "testable",
+      "what not how",
+      "measurable",
+      "Firesmith",
+    ],
+    supportedModes: EXPLAIN_AND_MC,
+    modeData: {
+      multipleChoice: {
+        question: "Which of these is the best security requirement?",
+        options: [
+          {
+            id: "a",
+            text: "The system should be free from vulnerabilities.",
+            correct: false,
+            rationale: "Too vague and impossible to verify completely.",
+          },
+          {
+            id: "b",
+            text: "The system shall work like the previous version.",
+            correct: false,
+            rationale: "This is not a security requirement.",
+          },
+          {
+            id: "c",
+            text: "End-user data shall be encrypted at rest.",
+            correct: true,
+            rationale: "Clear, security-relevant, and testable.",
+          },
+          {
+            id: "d",
+            text: "The system must use RSA for all confidential data.",
+            correct: false,
+            rationale:
+              "Over-specifies a mechanism and may be technically inappropriate.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Rewrite three vague security goals into testable security requirements.",
+    },
+  }),
+
+  buildChallenge({
+    id: "logging-local-only-no-alerting",
+    title: "Logs stored locally without monitoring",
+    summary:
+      "A production service writes security logs only to local console output and has no alerting for suspicious behaviour.",
+    courseTopic: "secure-development",
+    difficulty: "core",
+    tags: ["logging", "monitoring", "owasp-a09"],
+    vulnerableLines: [],
+    vulnerabilityType: "Security Logging and Monitoring Failure",
+    fixOptions: [],
+    explanation:
+      "Security-relevant events such as login failures, privilege changes, access-control denials, and high-value transactions should be logged, protected from tampering, centrally collected where appropriate, monitored, and connected to alerting/escalation. Local-only logs can be lost when containers restart or destroyed by an attacker who compromises the host.",
+    examKeywords: [
+      "logging",
+      "monitoring",
+      "alerting",
+      "audit trail",
+      "OWASP A09",
+    ],
+    owaspTop10: "A09",
+    supportedModes: EXPLAIN_AND_MC,
+    modeData: {
+      multipleChoice: {
+        question:
+          "Which situation best illustrates an OWASP security logging and monitoring failure?",
+        options: [
+          {
+            id: "a",
+            text: "Failed logins and high-value actions are not logged or alerted on.",
+            correct: true,
+            rationale:
+              "Important security events must be recorded and monitored.",
+          },
+          {
+            id: "b",
+            text: "The application logs both timestamp and severity.",
+            correct: false,
+            rationale: "That is normally good logging practice.",
+          },
+          {
+            id: "c",
+            text: "Logs are protected against ordinary users reading them.",
+            correct: false,
+            rationale: "That protects confidentiality and integrity.",
+          },
+          {
+            id: "d",
+            text: "The system uses centralised log collection.",
+            correct: false,
+            rationale:
+              "Central collection usually improves monitoring and forensics.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Give four examples of security logging and monitoring failures and explain why they matter during incident response.",
     },
   }),
 ];

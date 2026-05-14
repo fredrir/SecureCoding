@@ -2,7 +2,10 @@ import type { Challenge } from "@/domain/challenge";
 import { buildChallenge } from "../builder";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 
-const EXPLAIN_AND_MC = [GAME_MODE_IDS.explainExam, GAME_MODE_IDS.multipleChoiceSprint] as const;
+const EXPLAIN_AND_MC = [
+  GAME_MODE_IDS.explainExam,
+  GAME_MODE_IDS.multipleChoiceSprint,
+] as const;
 
 export const privacyChallenges: readonly Challenge[] = [
   buildChallenge({
@@ -31,10 +34,32 @@ export const privacyChallenges: readonly Challenge[] = [
       multipleChoice: {
         question: "Why is the pre-ticked marketing box not valid GDPR consent?",
         options: [
-          { id: "a", text: "Consent must be a clear affirmative action; pre-ticked boxes don't qualify.", correct: true, rationale: "GDPR Recital 32 explicitly excludes pre-ticked boxes." },
-          { id: "b", text: "Marketing emails are illegal in the EU.", correct: false, rationale: "They are legal with proper consent." },
-          { id: "c", text: "It's fine if the user can unsubscribe later.", correct: false, rationale: "Withdrawal is required but doesn't validate the original consent." },
-          { id: "d", text: "It's fine because it relates to the same product.", correct: false, rationale: "Bundling separate purposes still requires distinct consent." },
+          {
+            id: "a",
+            text: "Consent must be a clear affirmative action; pre-ticked boxes don't qualify.",
+            correct: true,
+            rationale: "GDPR Recital 32 explicitly excludes pre-ticked boxes.",
+          },
+          {
+            id: "b",
+            text: "Marketing emails are illegal in the EU.",
+            correct: false,
+            rationale: "They are legal with proper consent.",
+          },
+          {
+            id: "c",
+            text: "It's fine if the user can unsubscribe later.",
+            correct: false,
+            rationale:
+              "Withdrawal is required but doesn't validate the original consent.",
+          },
+          {
+            id: "d",
+            text: "It's fine because it relates to the same product.",
+            correct: false,
+            rationale:
+              "Bundling separate purposes still requires distinct consent.",
+          },
         ],
       },
       explainPrompt:
@@ -68,10 +93,33 @@ export const privacyChallenges: readonly Challenge[] = [
         question:
           "What principle is most directly violated when the support team's transcripts are reused for ad targeting without notice?",
         options: [
-          { id: "a", text: "Purpose limitation.", correct: true, rationale: "Data collected for support is being reused for an unrelated purpose." },
-          { id: "b", text: "Storage limitation.", correct: false, rationale: "Storage limitation governs how long data is kept, not the reuse." },
-          { id: "c", text: "Right to portability.", correct: false, rationale: "Portability is a data-subject right, not the principle here." },
-          { id: "d", text: "Lawfulness in cookie banners.", correct: false, rationale: "Unrelated to the scenario." },
+          {
+            id: "a",
+            text: "Purpose limitation.",
+            correct: true,
+            rationale:
+              "Data collected for support is being reused for an unrelated purpose.",
+          },
+          {
+            id: "b",
+            text: "Storage limitation.",
+            correct: false,
+            rationale:
+              "Storage limitation governs how long data is kept, not the reuse.",
+          },
+          {
+            id: "c",
+            text: "Right to portability.",
+            correct: false,
+            rationale:
+              "Portability is a data-subject right, not the principle here.",
+          },
+          {
+            id: "d",
+            text: "Lawfulness in cookie banners.",
+            correct: false,
+            rationale: "Unrelated to the scenario.",
+          },
         ],
       },
       explainPrompt:
@@ -104,10 +152,31 @@ export const privacyChallenges: readonly Challenge[] = [
       multipleChoice: {
         question: "Which scenario most clearly mandates a DPIA under Art. 35?",
         options: [
-          { id: "a", text: "Automated loan-eligibility decisions based on profiling.", correct: true, rationale: "Automated decisions with legal/significant effect are explicitly listed." },
-          { id: "b", text: "Sending an internal monthly metrics email.", correct: false, rationale: "Internal aggregate metrics are low-risk." },
-          { id: "c", text: "Storing employee phone numbers in a contact list.", correct: false, rationale: "Limited, expected processing of contact data." },
-          { id: "d", text: "Replacing one CRM tool with another.", correct: false, rationale: "Not a new processing risk by itself." },
+          {
+            id: "a",
+            text: "Automated loan-eligibility decisions based on profiling.",
+            correct: true,
+            rationale:
+              "Automated decisions with legal/significant effect are explicitly listed.",
+          },
+          {
+            id: "b",
+            text: "Sending an internal monthly metrics email.",
+            correct: false,
+            rationale: "Internal aggregate metrics are low-risk.",
+          },
+          {
+            id: "c",
+            text: "Storing employee phone numbers in a contact list.",
+            correct: false,
+            rationale: "Limited, expected processing of contact data.",
+          },
+          {
+            id: "d",
+            text: "Replacing one CRM tool with another.",
+            correct: false,
+            rationale: "Not a new processing risk by itself.",
+          },
         ],
       },
       explainPrompt:
@@ -132,12 +201,33 @@ export const privacyChallenges: readonly Challenge[] = [
     supportedModes: EXPLAIN_AND_MC,
     modeData: {
       multipleChoice: {
-        question: "What's the right action when the newsletter form collects more than necessary?",
+        question:
+          "What's the right action when the newsletter form collects more than necessary?",
         options: [
-          { id: "a", text: "Drop the unnecessary fields and document why each remaining field is needed.", correct: true, rationale: "Minimisation in design and an audit trail." },
-          { id: "b", text: "Keep the fields but encrypt them.", correct: false, rationale: "Encryption doesn't satisfy minimisation." },
-          { id: "c", text: "Show a banner explaining why the data is collected.", correct: false, rationale: "Transparency does not legitimise excess collection." },
-          { id: "d", text: "Move the data to a separate database.", correct: false, rationale: "Storage location is irrelevant." },
+          {
+            id: "a",
+            text: "Drop the unnecessary fields and document why each remaining field is needed.",
+            correct: true,
+            rationale: "Minimisation in design and an audit trail.",
+          },
+          {
+            id: "b",
+            text: "Keep the fields but encrypt them.",
+            correct: false,
+            rationale: "Encryption doesn't satisfy minimisation.",
+          },
+          {
+            id: "c",
+            text: "Show a banner explaining why the data is collected.",
+            correct: false,
+            rationale: "Transparency does not legitimise excess collection.",
+          },
+          {
+            id: "d",
+            text: "Move the data to a separate database.",
+            correct: false,
+            rationale: "Storage location is irrelevant.",
+          },
         ],
       },
     },
@@ -167,14 +257,93 @@ export const privacyChallenges: readonly Challenge[] = [
       multipleChoice: {
         question: "In a SaaS support tool, the SaaS vendor is typically the:",
         options: [
-          { id: "a", text: "Processor, with the customer as controller.", correct: true, rationale: "The customer determines purposes and means." },
-          { id: "b", text: "Controller of all data in the tool.", correct: false, rationale: "Only when the SaaS decides purposes (e.g., its own analytics)." },
-          { id: "c", text: "Joint controller in every case.", correct: false, rationale: "Joint controllership requires shared determination of purposes/means." },
-          { id: "d", text: "Neither; the data subject is the only data handler.", correct: false, rationale: "Doesn't match GDPR's role model." },
+          {
+            id: "a",
+            text: "Processor, with the customer as controller.",
+            correct: true,
+            rationale: "The customer determines purposes and means.",
+          },
+          {
+            id: "b",
+            text: "Controller of all data in the tool.",
+            correct: false,
+            rationale:
+              "Only when the SaaS decides purposes (e.g., its own analytics).",
+          },
+          {
+            id: "c",
+            text: "Joint controller in every case.",
+            correct: false,
+            rationale:
+              "Joint controllership requires shared determination of purposes/means.",
+          },
+          {
+            id: "d",
+            text: "Neither; the data subject is the only data handler.",
+            correct: false,
+            rationale: "Doesn't match GDPR's role model.",
+          },
         ],
       },
       explainPrompt:
         "Explain the difference between controller and processor in a SaaS scenario and what contractual instrument bridges them.",
+    },
+  }),
+  buildChallenge({
+    id: "stride-six-categories",
+    title: "Recognising STRIDE",
+    summary:
+      "A team wants a structured way to brainstorm threats against a data-flow diagram.",
+    courseTopic: "threat-modeling",
+    difficulty: "intro",
+    tags: ["stride", "threat-modeling"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling Gap",
+    fixOptions: [],
+    explanation:
+      "STRIDE is a threat categorisation framework: Spoofing, Tampering, Repudiation, Information disclosure, Denial of service, and Elevation of privilege. It is commonly used with data-flow diagrams to ask systematic questions about assets, trust boundaries, processes, data stores, and data flows.",
+    examKeywords: [
+      "STRIDE",
+      "spoofing",
+      "tampering",
+      "repudiation",
+      "information disclosure",
+      "denial of service",
+      "elevation of privilege",
+    ],
+    supportedModes: EXPLAIN_AND_MC,
+    modeData: {
+      multipleChoice: {
+        question: "Which statement about STRIDE is correct?",
+        options: [
+          {
+            id: "a",
+            text: "STRIDE is used to identify and categorise threats using six threat categories.",
+            correct: true,
+            rationale: "Correct: S, T, R, I, D, and E.",
+          },
+          {
+            id: "b",
+            text: "STRIDE focuses only on physical security.",
+            correct: false,
+            rationale: "STRIDE is used for software/system threat modeling.",
+          },
+          {
+            id: "c",
+            text: "STRIDE is a cryptographic protocol for authenticating users.",
+            correct: false,
+            rationale: "It is not a protocol.",
+          },
+          {
+            id: "d",
+            text: "STRIDE is only used after a system has been compromised.",
+            correct: false,
+            rationale: "It is mainly used during design and review.",
+          },
+        ],
+      },
+      explainPrompt:
+        "List the six STRIDE categories and give a concrete software example for at least three of them.",
     },
   }),
 ];

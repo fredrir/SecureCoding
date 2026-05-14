@@ -5,7 +5,8 @@ export const authenticationChallenges: readonly Challenge[] = [
   buildChallenge({
     id: "authn-md5-passwords",
     title: "Passwords stored with MD5",
-    summary: "Account creation hashes the password with MD5 and stores the hex digest.",
+    summary:
+      "Account creation hashes the password with MD5 and stores the hex digest.",
     courseTopic: "authentication",
     difficulty: "intro",
     tags: ["password-hash", "weak-crypto"],
@@ -52,12 +53,34 @@ hash = ph.hash(password)`,
     owaspTop10: "A02",
     modeData: {
       multipleChoice: {
-        question: "Which password storage strategy follows current OWASP guidance?",
+        question:
+          "Which password storage strategy follows current OWASP guidance?",
         options: [
-          { id: "a", text: "Argon2id with per-user salt and tuned cost.", correct: true, rationale: "Memory-hard and salted by default." },
-          { id: "b", text: "SHA-256 with per-user salt.", correct: false, rationale: "Fast hashes are unsuitable for passwords." },
-          { id: "c", text: "MD5 iterated 10,000 times.", correct: false, rationale: "MD5 is broken; iteration on a fast primitive is still cheap." },
-          { id: "d", text: "AES encryption of the password.", correct: false, rationale: "Encryption is reversible; key leak == password leak." },
+          {
+            id: "a",
+            text: "Argon2id with per-user salt and tuned cost.",
+            correct: true,
+            rationale: "Memory-hard and salted by default.",
+          },
+          {
+            id: "b",
+            text: "SHA-256 with per-user salt.",
+            correct: false,
+            rationale: "Fast hashes are unsuitable for passwords.",
+          },
+          {
+            id: "c",
+            text: "MD5 iterated 10,000 times.",
+            correct: false,
+            rationale:
+              "MD5 is broken; iteration on a fast primitive is still cheap.",
+          },
+          {
+            id: "d",
+            text: "AES encryption of the password.",
+            correct: false,
+            rationale: "Encryption is reversible; key leak == password leak.",
+          },
         ],
       },
     },
@@ -167,7 +190,12 @@ if (!await verify(user.hash, password)) {
     correctFixId: "generic",
     explanation:
       "Distinct errors let an attacker enumerate registered emails, which is useful for credential stuffing, password-reset abuse, and phishing. Always return one generic error and keep timing constant by performing a dummy hash when the email is unknown. The same applies to password-reset and signup endpoints.",
-    examKeywords: ["enumeration", "generic error", "constant time", "dummy hash"],
+    examKeywords: [
+      "enumeration",
+      "generic error",
+      "constant time",
+      "dummy hash",
+    ],
     owaspTop10: "A07",
     owaspWstg: "WSTG-ATHN-09",
   }),
@@ -340,5 +368,242 @@ return token`,
     examKeywords: ["csprng", "entropy", "expire", "hash on store"],
     owaspTop10: "A07",
     owaspWstg: "WSTG-ATHN-09",
+  }),
+  // courseTopic: "microservices-supply-chain"
+
+  buildChallenge({
+    id: "supply-chain-transparency-version-locking",
+    title: "Transparency vs version locking",
+    summary:
+      "A team lists SBOM, Sigstore, dependency audit tools, and version locking as 'transparency controls'.",
+    courseTopic: "microservices-supply-chain",
+    difficulty: "core",
+    tags: ["supply-chain", "sbom", "version-locking"],
+    vulnerableLines: [],
+    vulnerabilityType: "Supply Chain Control Misclassification",
+    fixOptions: [],
+    explanation:
+      "Transparency controls help reveal what software, dependencies, build steps, or provenance are involved. SBOMs, signing/provenance systems, and audit tools support visibility. Version locking is important, but it is mainly a reproducibility/change-control technique: it prevents unexpected dependency drift rather than directly increasing transparency.",
+    examKeywords: [
+      "software supply chain",
+      "transparency",
+      "SBOM",
+      "Sigstore",
+      "version locking",
+      "provenance",
+    ],
+    modeData: {
+      multipleChoice: {
+        question:
+          "Which countermeasure does NOT primarily belong to a supply-chain transparency strategy?",
+        options: [
+          {
+            id: "a",
+            text: "SBOM",
+            correct: false,
+            rationale: "An SBOM makes components visible.",
+          },
+          {
+            id: "b",
+            text: "Sigstore or signed provenance",
+            correct: false,
+            rationale: "Signing/provenance helps trace origin and integrity.",
+          },
+          {
+            id: "c",
+            text: "Dependency audit tooling",
+            correct: false,
+            rationale:
+              "Audit tools improve visibility into known vulnerable dependencies.",
+          },
+          {
+            id: "d",
+            text: "Version locking",
+            correct: true,
+            rationale:
+              "Version locking is mainly about reproducibility and preventing dependency drift.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain the difference between transparency, integrity, and reproducibility controls in software supply-chain security.",
+    },
+  }),
+
+  buildChallenge({
+    id: "microservices-load-balancer-dos",
+    title: "Load balancer targeted by traffic flood",
+    summary:
+      "A microservice deployment has many internal services behind a public load balancer. Attackers flood the public endpoint.",
+    courseTopic: "microservices-supply-chain",
+    difficulty: "core",
+    tags: ["microservices", "load-balancer", "rate-limiting"],
+    vulnerableLines: [],
+    vulnerabilityType: "Denial of Service",
+    fixOptions: [],
+    explanation:
+      "When the load balancer or API gateway is the target of traffic spikes or abusive clients, rate throttling/rate limiting is a direct countermeasure. Service-to-service authentication and authorization protect internal calls, while secure containers protect runtime isolation. Those are useful, but they do not directly limit excessive incoming traffic.",
+    examKeywords: [
+      "microservices",
+      "load balancer",
+      "rate throttling",
+      "API gateway",
+      "denial of service",
+    ],
+    modeData: {
+      multipleChoice: {
+        question:
+          "Which countermeasure most directly helps defend a public load balancer against excessive request traffic?",
+        options: [
+          {
+            id: "a",
+            text: "Rate throttling",
+            correct: true,
+            rationale: "Correct: it limits abusive or excessive request rates.",
+          },
+          {
+            id: "b",
+            text: "Service-to-service authentication",
+            correct: false,
+            rationale:
+              "This protects internal service calls, not public traffic volume.",
+          },
+          {
+            id: "c",
+            text: "Service-level authorization",
+            correct: false,
+            rationale:
+              "Authorization controls access decisions, not traffic floods.",
+          },
+          {
+            id: "d",
+            text: "Using a secure base container image",
+            correct: false,
+            rationale:
+              "Good hardening, but not a direct load-balancer DoS mitigation.",
+          },
+        ],
+      },
+      explainPrompt:
+        "List typical microservice attack areas in cloud deployments and give one countermeasure for each.",
+    },
+  }),
+  // courseTopic: "authentication"
+
+  buildChallenge({
+    id: "auth-default-admin-password",
+    title: "Default admin credentials",
+    summary:
+      "A new appliance ships with `admin/admin` and does not force password change on first login.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["default-password", "authentication"],
+    vulnerableLines: [],
+    vulnerabilityType: "Default Credentials",
+    fixOptions: [],
+    explanation:
+      "Default credentials are widely known and easy to automate against. Systems should ship with unique initial secrets, force password change during setup, or use secure enrollment flows. Default admin passwords are a classic authentication failure.",
+    examKeywords: [
+      "default credentials",
+      "authentication failure",
+      "password change",
+      "secure enrollment",
+    ],
+    owaspTop10: "A07",
+    owaspWstg: "WSTG-ATHN-02",
+    modeData: {
+      multipleChoice: {
+        question:
+          "What is the main risk of shipping a system with `admin/admin` credentials?",
+        options: [
+          {
+            id: "a",
+            text: "Attackers can log in using publicly known credentials.",
+            correct: true,
+            rationale:
+              "Correct: default credentials are easy to guess and automate.",
+          },
+          {
+            id: "b",
+            text: "The password is too hard to remember.",
+            correct: false,
+            rationale: "Memorability is not the issue.",
+          },
+          {
+            id: "c",
+            text: "The username contains lowercase letters.",
+            correct: false,
+            rationale: "Case is irrelevant here.",
+          },
+          {
+            id: "d",
+            text: "It prevents administrators from logging in.",
+            correct: false,
+            rationale: "It does the opposite: it makes login too easy.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain why default credentials are dangerous and how secure first-time setup should work.",
+    },
+  }),
+
+  buildChallenge({
+    id: "auth-weak-lockout-bruteforce",
+    title: "No lockout on login attempts",
+    summary:
+      "A login endpoint allows unlimited password attempts for the same username.",
+    courseTopic: "authentication",
+    difficulty: "core",
+    tags: ["brute-force", "lockout", "rate-limiting"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Lockout Mechanism",
+    fixOptions: [],
+    explanation:
+      "Weak or missing lockout/rate limiting enables online password guessing. Good controls include rate limits per account and IP, progressive delays, credential stuffing detection, MFA, monitoring, and avoiding account enumeration. Lockouts must be designed carefully to avoid easy denial of service against users.",
+    examKeywords: [
+      "weak lockout",
+      "brute force",
+      "rate limiting",
+      "credential stuffing",
+      "MFA",
+    ],
+    owaspTop10: "A07",
+    owaspWstg: "WSTG-ATHN-03",
+    modeData: {
+      multipleChoice: {
+        question:
+          "Which mitigation most directly reduces online password brute forcing?",
+        options: [
+          {
+            id: "a",
+            text: "Rate-limit login attempts and detect repeated failures.",
+            correct: true,
+            rationale: "Correct: this slows or blocks guessing attacks.",
+          },
+          {
+            id: "b",
+            text: "Show detailed stack traces on login errors.",
+            correct: false,
+            rationale: "That leaks information and does not stop brute force.",
+          },
+          {
+            id: "c",
+            text: "Use GET instead of POST for login.",
+            correct: false,
+            rationale: "The HTTP method does not solve brute force.",
+          },
+          {
+            id: "d",
+            text: "Store passwords with reversible encryption.",
+            correct: false,
+            rationale:
+              "Passwords should be hashed with a password hashing function.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain brute force, credential stuffing, and how account lockout can accidentally create denial-of-service risk.",
+    },
   }),
 ];

@@ -2219,4 +2219,256 @@ res.status(500).json({
       },
     },
   }),
+  // courseTopic: "web-vulnerabilities"
+
+  buildChallenge({
+    id: "web-reflected-xss-search",
+    title: "Reflected XSS in search page",
+    summary:
+      "A search page echoes the `q` parameter into HTML without output encoding.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "core",
+    tags: ["xss", "reflected-xss", "output-encoding"],
+    language: "javascript",
+    filename: "search.js",
+    code: `app.get("/search", (req, res) => {
+  const q = req.query.q;
+  res.send("<h1>Search results for " + q + "</h1>");
+});`,
+    vulnerableLines: [3],
+    vulnerabilityType: "Reflected XSS",
+    fixOptions: [],
+    explanation:
+      "Reflected XSS occurs when attacker-controlled input is included in the immediate response without context-appropriate output encoding. Input validation can help, but the core fix is to encode output for the HTML context or use a template engine that escapes by default.",
+    examKeywords: [
+      "XSS",
+      "reflected XSS",
+      "output encoding",
+      "HTML context",
+      "untrusted input",
+    ],
+    owaspTop10: "A05",
+    owaspWstg: "WSTG-INPV-01",
+    modeData: {
+      multipleChoice: {
+        question:
+          "What is the best primary mitigation for this reflected XSS vulnerability?",
+        options: [
+          {
+            id: "a",
+            text: "HTML-encode `q` before inserting it into the response.",
+            correct: true,
+            rationale: "Correct: output must be encoded for the HTML context.",
+          },
+          {
+            id: "b",
+            text: "Block only the string `<script>`.",
+            correct: false,
+            rationale: "This blacklist is incomplete and easily bypassed.",
+          },
+          {
+            id: "c",
+            text: "Use HTTPS.",
+            correct: false,
+            rationale: "HTTPS protects transport but does not stop XSS.",
+          },
+          {
+            id: "d",
+            text: "Make the search box shorter.",
+            correct: false,
+            rationale: "Length limits alone do not fix unsafe output handling.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain reflected XSS and how it differs from stored XSS and DOM-based XSS.",
+    },
+  }),
+
+  buildChallenge({
+    id: "web-stored-xss-comments",
+    title: "Stored XSS in comments",
+    summary:
+      "A comment field stores user input and later renders it to every visitor without escaping.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "core",
+    tags: ["xss", "stored-xss", "comments"],
+    vulnerableLines: [],
+    vulnerabilityType: "Stored XSS",
+    fixOptions: [],
+    explanation:
+      "Stored XSS is dangerous because the malicious payload is saved by the application and served to later users. The correct defence is context-aware output encoding, safe templating, and sanitisation only when rich HTML input is intentionally allowed.",
+    examKeywords: [
+      "stored XSS",
+      "persistent XSS",
+      "output encoding",
+      "sanitization",
+      "cookies",
+    ],
+    owaspTop10: "A05",
+    owaspWstg: "WSTG-INPV-02",
+    modeData: {
+      multipleChoice: {
+        question: "Why is stored XSS often more severe than reflected XSS?",
+        options: [
+          {
+            id: "a",
+            text: "The payload is stored and can execute for many later victims.",
+            correct: true,
+            rationale: "Correct: victims do not need to click a crafted link.",
+          },
+          {
+            id: "b",
+            text: "It only works against the attacker who submitted it.",
+            correct: false,
+            rationale: "Stored XSS affects later viewers.",
+          },
+          {
+            id: "c",
+            text: "It is impossible to fix.",
+            correct: false,
+            rationale:
+              "Output encoding and safe rendering are standard mitigations.",
+          },
+          {
+            id: "d",
+            text: "It requires database administrator privileges.",
+            correct: false,
+            rationale: "It often only requires a normal input field.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain stored XSS, typical impacts, and the difference between escaping and sanitising user content.",
+    },
+  }),
+
+  buildChallenge({
+    id: "web-csrf-bank-transfer",
+    title: "CSRF on bank transfer endpoint",
+    summary:
+      "A transfer endpoint accepts cookie-authenticated POST requests but has no CSRF token.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "core",
+    tags: ["csrf", "cookies", "state-changing-request"],
+    language: "plaintext",
+    filename: "transfer-endpoint.txt",
+    code: `POST /transfer
+Cookie: sid=abc123
+
+to=attacker&amount=1000`,
+    vulnerableLines: [1, 2, 4],
+    vulnerabilityType: "Cross-Site Request Forgery",
+    fixOptions: [],
+    explanation:
+      "CSRF abuses the browser's automatic inclusion of cookies on cross-site requests. For state-changing actions, use unpredictable CSRF tokens tied to the user session, SameSite cookies as defence-in-depth, and require appropriate methods and re-authentication for sensitive actions.",
+    examKeywords: [
+      "CSRF",
+      "anti-CSRF token",
+      "SameSite",
+      "state-changing request",
+      "cookie authentication",
+    ],
+    owaspWstg: "WSTG-SESS-05",
+    modeData: {
+      multipleChoice: {
+        question:
+          "Which control most directly prevents CSRF on a cookie-authenticated transfer form?",
+        options: [
+          {
+            id: "a",
+            text: "A per-session unpredictable CSRF token validated by the server.",
+            correct: true,
+            rationale: "The attacker cannot know or submit the valid token.",
+          },
+          {
+            id: "b",
+            text: "Using a prettier confirmation page.",
+            correct: false,
+            rationale: "Visual design does not prevent forged requests.",
+          },
+          {
+            id: "c",
+            text: "Returning HTTP 200 for every request.",
+            correct: false,
+            rationale: "This hides errors but does not prevent CSRF.",
+          },
+          {
+            id: "d",
+            text: "Only minifying JavaScript.",
+            correct: false,
+            rationale: "Minification is unrelated.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain CSRF and why cookie-based authentication makes CSRF possible.",
+    },
+  }),
+
+  buildChallenge({
+    id: "web-ssrf-cloud-metadata",
+    title: "SSRF against cloud metadata service",
+    summary:
+      "A URL preview feature fetches any URL provided by the user, including internal IP addresses.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "core",
+    tags: ["ssrf", "cloud", "metadata"],
+    language: "python",
+    filename: "preview.py",
+    code: `import requests
+
+@app.get("/preview")
+def preview():
+    url = request.args["url"]
+    return requests.get(url, timeout=3).text`,
+    vulnerableLines: [5, 6],
+    vulnerabilityType: "Server-Side Request Forgery",
+    fixOptions: [],
+    explanation:
+      "SSRF occurs when attackers make the server send requests to attacker-chosen locations. This can expose internal services, cloud metadata endpoints, or admin interfaces. Mitigations include strict allow-lists, blocking private/link-local ranges, disabling redirects or revalidating after redirects, egress filtering, and metadata service hardening.",
+    examKeywords: [
+      "SSRF",
+      "server-side request forgery",
+      "metadata service",
+      "allow-list",
+      "egress filtering",
+    ],
+    owaspTop10: "A05",
+    owaspWstg: "WSTG-INPV-19",
+    modeData: {
+      multipleChoice: {
+        question: "What makes this URL preview feature vulnerable to SSRF?",
+        options: [
+          {
+            id: "a",
+            text: "The server fetches attacker-controlled URLs without restricting internal destinations.",
+            correct: true,
+            rationale:
+              "Correct: the attacker can make the server reach internal resources.",
+          },
+          {
+            id: "b",
+            text: "The timeout is too short.",
+            correct: false,
+            rationale: "Timeouts can limit impact but do not prevent SSRF.",
+          },
+          {
+            id: "c",
+            text: "The response is text instead of JSON.",
+            correct: false,
+            rationale: "The response format is not the core issue.",
+          },
+          {
+            id: "d",
+            text: "The endpoint uses GET.",
+            correct: false,
+            rationale: "SSRF can occur with any HTTP method.",
+          },
+        ],
+      },
+      explainPrompt:
+        "Explain SSRF, why cloud metadata endpoints are attractive targets, and how to design a safe URL preview service.",
+    },
+  }),
 ];
