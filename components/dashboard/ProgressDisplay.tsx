@@ -84,7 +84,7 @@ export function ProgressDisplay() {
             Review mistakes
           </Button>
 
-          <ResetProgress />
+          <ResetProgress hasProgress={totals.total > 0} />
         </Group>
       </Stack>
     </Paper>

@@ -9,15 +9,14 @@ const EMAIL = "fhansteen@gmail.com";
 export function Footer() {
   return (
     <Group
-      h="100%"
       px="lg"
       justify="space-between"
       wrap="nowrap"
       gap="md"
-      className="bg-app-accent"
+      className="bg-app-accent h-full py-3 sm:py-0"
     >
-      <div className="grid w-full grid-cols-1 sm:grid-cols-3 items-center gap-3">
-        <Group gap="xs" wrap="nowrap">
+      <div className="grid w-full grid-cols-1 sm:grid-cols-3 items-center gap-2 sm:gap-3">
+        <Group gap="xs" wrap="nowrap" className="justify-center sm:justify-start">
           <Anchor
             component={Link}
             href="https://hansteen.dev"
@@ -78,7 +77,7 @@ export function Footer() {
               <MailIcon size={18} />
             </Anchor>
           </Tooltip>
-          <ThemeToggle className="bg-inherit text-white rounded-lg text-white transition-all  hover:bg-white/20" />
+          <ThemeToggle className="bg-inherit ring-0 border-0 rounded-lg text-white transition-all  hover:bg-white/20" />
         </Group>
       </div>
     </Group>

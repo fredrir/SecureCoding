@@ -405,3 +405,18 @@ body {
 :where([data-focus-ring]) {
   outline-color: var(--app-accent) !important;
 }
+
+/* On small viewports the AppShell footer flows with the page instead of being
+   pinned to the viewport, so it is reached by scrolling to the bottom.
+   `--app-shell-footer-offset` is set inline on the AppShell root by Mantine,
+   so `!important` is required to override it. */
+@media (max-width: 639.98px) {
+  .app-shell-flow-footer-mobile {
+    --app-shell-footer-offset: 0px !important;
+  }
+  .app-shell-footer-flow-mobile {
+    position: static !important;
+    height: auto !important;
+    inset-inline: auto !important;
+  }
+}

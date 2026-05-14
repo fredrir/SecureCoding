@@ -6,6 +6,7 @@ import { Anchor, Button, Text } from "@mantine/core";
 interface Props {
   variant?: "button" | "link";
   label?: string;
+  hasProgress?: boolean;
 }
 
 function openResetModal() {
@@ -34,6 +35,7 @@ function openResetModal() {
 export default function ResetProgress({
   variant = "button",
   label = "Reset progress",
+  hasProgress = true,
 }: Props) {
   if (variant === "link") {
     return (
@@ -48,7 +50,13 @@ export default function ResetProgress({
     );
   }
   return (
-    <Button size="xs" variant="light" color="red" onClick={openResetModal}>
+    <Button
+      size="xs"
+      variant="light"
+      color="red"
+      disabled={!hasProgress}
+      onClick={openResetModal}
+    >
       {label}
     </Button>
   );

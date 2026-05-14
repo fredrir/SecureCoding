@@ -20,6 +20,7 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
         collapsed: { mobile: !navOpened },
       }}
       padding={0}
+      className="app-shell-flow-footer-mobile"
     >
       <AppShell.Header className="bg-app-bg-elevated border-b border-app-border">
         <Header navOpened={navOpened} onToggleNav={toggleNav} />
@@ -35,7 +36,7 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
         </div>
       </AppShell.Main>
 
-      <AppShell.Footer className="bg-app-accent border-0">
+      <AppShell.Footer className="app-shell-footer-flow-mobile bg-app-accent border-0">
         <Footer />
       </AppShell.Footer>
     </AppShell>
