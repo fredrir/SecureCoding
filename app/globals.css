@@ -136,8 +136,8 @@
   --color-app-fg: var(--app-fg);
   --color-app-fg-muted: var(--app-fg-muted);
   --color-app-accent: var(--app-accent);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-sans: var(--font-open-sans);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 html,
@@ -147,7 +147,7 @@ body {
 }
 
 body {
-  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI",
+  font-family: var(--font-open-sans), system-ui, -apple-system, "Segoe UI",
     Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Open_Sans, JetBrains_Mono } from "next/font/google";
 
-import "./globals.css";
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "./globals.css";
 
 import {
   ColorSchemeScript,
@@ -16,14 +16,14 @@ import { Notifications } from "@mantine/notifications";
 import { themeOverride } from "@/theme/theme";
 import { AppShellLayout } from "@/components/layout/AppShellLayout";
 
-const sans = Inter({
-  variable: "--font-sans",
+const sans = Open_Sans({
+  variable: "--font-open-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
 const mono = JetBrains_Mono({
-  variable: "--font-mono",
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -52,6 +52,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
+
       <body className="min-h-screen app-backdrop">
         <MantineProvider theme={themeOverride} defaultColorScheme="auto">
           <ModalsProvider>
