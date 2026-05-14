@@ -45,7 +45,7 @@ export function AppShellLayout({ children }: { children: React.ReactNode }) {
       </AppShell.Main>
 
       <AppShell.Footer
-        style={{ background: "var(--app-bg-elevated)" }}
+        style={{ background: "var(--app-accent)", border: "none" }}
       >
         <Footer />
       </AppShell.Footer>

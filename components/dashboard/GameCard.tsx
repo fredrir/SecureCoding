@@ -34,8 +34,11 @@ export function GameCard({ mode, challengeCount }: Props) {
         aria-hidden
         style={{
           position: "absolute",
-          inset: 0,
-          background: `linear-gradient(160deg, ${accentSoftVar} 0%, transparent 55%)`,
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: 4,
+          background: accentVar,
           pointerEvents: "none",
         }}
       />

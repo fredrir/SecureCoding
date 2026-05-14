@@ -34,12 +34,11 @@ export function Dashboard() {
     <Stack gap="xl" maw={1200} mx="auto" w="100%">
       <Stack gap="xs">
         <Title order={1} style={{ letterSpacing: "-0.02em" }}>
-          Train for the TDT4237 exam
+          Practice Ground for TDT4237
         </Title>
         <Text c="dimmed" size="md" maw={680}>
           Spot vulnerable lines, choose patches, write exam-style explanations,
-          and sprint through closed-ended questions. All progress is stored
-          locally in your browser.
+          and sprint through closed-ended questions. Progress is stored locally.
         </Text>
       </Stack>
 

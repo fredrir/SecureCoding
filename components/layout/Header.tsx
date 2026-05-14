@@ -29,7 +29,7 @@ export function Header({ navOpened, onToggleNav }: Props) {
         >
           <Group gap={10} wrap="nowrap">
             <span
-              className="h-8 w-8 md:w-10 md:h-10"
+              className="h-6 w-6 md:w-8 md:h-8"
               style={{ color: "var(--app-accent)" }}
             >
               <Image

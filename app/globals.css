@@ -3,6 +3,14 @@
 /* ------------------------------------------------------------------ */
 /* Design tokens — light scheme defaults                              */
 /* ------------------------------------------------------------------ */
+/*
+  Colour basis:
+  - Primary brand colour is NTNU Blue.
+  - NTNU Blue must appear in NTNU communication materials except
+    black-and-white print.
+  - CMYK and RGB values are optically adjusted, not direct conversions.
+  - Supporting colours are drawn from the NTNU supporting palette.
+*/
 :root,
 [data-mantine-color-scheme="light"] {
   --app-bg: #f4f6fb;
@@ -14,22 +22,52 @@
   --app-fg: #0e1116;
   --app-fg-muted: #4b5468;
   --app-fg-subtle: #717a8c;
+
+  /* NTNU Blue — primary brand colour */
   --app-accent: #00509e;
+
+  /* NTNU Blue, transparent tint for subtle emphasis states */
   --app-accent-soft: rgba(0, 80, 158, 0.10);
+
+  /* Semantic success green; not part of the NTNU palette */
   --app-success: #2f8f3a;
   --app-success-soft: rgba(47, 143, 58, 0.12);
+
+  /* Semantic danger red; not part of the NTNU palette */
   --app-danger: #c0341d;
   --app-danger-soft: rgba(192, 52, 29, 0.12);
+
+  /* Warning colour based on NTNU Orange */
   --app-warning: #b56a00;
+
+  /* NTNU Orange, transparent tint for warning backgrounds */
   --app-warning-soft: rgba(239, 129, 20, 0.14);
-  --app-code-bg: #0e1116;
+
+  --app-code-bg: #fbfbfd;
   --app-code-bg-soft: #f3f4f8;
-  --app-code-fg: #e7eaf2;
-  --app-code-line-hover: rgba(96, 150, 208, 0.16);
-  --app-code-line-selected: rgba(239, 129, 20, 0.22);
-  --app-code-line-correct: rgba(47, 143, 58, 0.22);
-  --app-code-line-incorrect: rgba(192, 52, 29, 0.24);
-  --app-code-gutter: #6b7283;
+  --app-code-fg: #1f2430;
+  --app-code-gutter: #8a93a8;
+  --app-code-gutter-border: rgba(15, 23, 42, 0.08);
+
+  /* NTNU Blue tint for hover states */
+  --app-code-line-hover: rgba(0, 80, 158, 0.08);
+
+  /* NTNU Orange tint for selected code lines */
+  --app-code-line-selected: rgba(239, 129, 20, 0.18);
+
+  --app-code-line-correct: rgba(47, 143, 58, 0.18);
+  --app-code-line-incorrect: rgba(192, 52, 29, 0.18);
+
+  /* Token colours for syntax highlighting.
+     These are tuned for readability and are not strict NTNU brand colours. */
+  --tok-key: #a3308a;
+  --tok-str: #1a7a3d;
+  --tok-num: #b56a00;
+  --tok-com: #6b7488;
+  --tok-fn: #0a5cb0;
+  --tok-ty: #0f7a72;
+  --tok-op: #4b5468;
+  --tok-pun: #4b5468;
 }
 
 [data-mantine-color-scheme="dark"] {
@@ -42,22 +80,51 @@
   --app-fg: #eef1f7;
   --app-fg-muted: #aab2c4;
   --app-fg-subtle: #7c8499;
+
+  /* NTNU Light blue — supporting colour used as the dark-mode accent */
   --app-accent: #6096d0;
+
+  /* NTNU Light blue, transparent tint for subtle emphasis states */
   --app-accent-soft: rgba(96, 150, 208, 0.18);
+
+  /* Semantic success green; not part of the NTNU palette */
   --app-success: #61c46f;
   --app-success-soft: rgba(97, 196, 111, 0.16);
+
+  /* Semantic danger red; not part of the NTNU palette */
   --app-danger: #ff7766;
   --app-danger-soft: rgba(255, 119, 102, 0.18);
+
+  /* Warm warning tint derived from NTNU Orange for dark backgrounds */
   --app-warning: #f7c87a;
   --app-warning-soft: rgba(247, 200, 122, 0.18);
+
   --app-code-bg: #0a0d14;
   --app-code-bg-soft: #131822;
   --app-code-fg: #e7eaf2;
+  --app-code-gutter: #8a93a8;
+  --app-code-gutter-border: rgba(255, 255, 255, 0.06);
+
+  /* NTNU Light blue tint for hover states */
   --app-code-line-hover: rgba(96, 150, 208, 0.18);
+
+  /* NTNU Yellow tint for selected code lines */
   --app-code-line-selected: rgba(247, 208, 25, 0.22);
+
   --app-code-line-correct: rgba(97, 196, 111, 0.22);
   --app-code-line-incorrect: rgba(255, 119, 102, 0.26);
-  --app-code-gutter: #8a93a8;
+
+  /* Token colours for syntax highlighting.
+     These are tuned for contrast on dark surfaces and are not strict
+     NTNU brand colours. */
+  --tok-key: #f0a8e1;
+  --tok-str: #b9e4a4;
+  --tok-num: #f7c87a;
+  --tok-com: #6f7a8c;
+  --tok-fn: #80c8ff;
+  --tok-ty: #79e0c4;
+  --tok-op: #d8dde6;
+  --tok-pun: #c5cad6;
 }
 
 /* Surface Tailwind tokens for any utilities that want them */
@@ -86,20 +153,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Subtle animated gradient backdrop on app shell — purely decorative */
+/* Solid app shell background — design tokens only, no gradients */
 .app-backdrop {
-  background:
-    radial-gradient(
-      1100px 520px at 12% -10%,
-      var(--app-accent-soft) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      900px 420px at 92% 6%,
-      rgba(188, 208, 37, 0.10) 0%,
-      transparent 60%
-    ),
-    var(--app-bg);
+  background: var(--app-bg);
 }
 
 /* Typography helpers used outside Mantine */
@@ -134,7 +190,7 @@ body {
   text-align: right;
   padding: 0 0.75rem;
   user-select: none;
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  border-right: 1px solid var(--app-code-gutter-border);
   font-variant-numeric: tabular-nums;
 }
 
@@ -164,34 +220,37 @@ body {
   background: var(--app-code-line-incorrect);
 }
 
-/* Token colours for the lightweight code highlighter */
+/* Token colours for the lightweight code highlighter — swap per scheme */
 .tok-key {
-  color: #f0a8e1;
+  color: var(--tok-key);
 }
 .tok-str {
-  color: #b9e4a4;
+  color: var(--tok-str);
 }
 .tok-num {
-  color: #f7c87a;
+  color: var(--tok-num);
 }
 .tok-com {
-  color: #6f7a8c;
+  color: var(--tok-com);
   font-style: italic;
 }
 .tok-fn {
-  color: #80c8ff;
+  color: var(--tok-fn);
 }
 .tok-ty {
-  color: #79e0c4;
+  color: var(--tok-ty);
 }
 .tok-op {
-  color: #d8dde6;
+  color: var(--tok-op);
 }
 .tok-pun {
-  color: #c5cad6;
+  color: var(--tok-pun);
 }
 
-/* Focus ring used by Mantine */
+/* Focus ring used by Mantine.
+   Uses the active scheme accent:
+   - Light mode: NTNU Blue
+   - Dark mode: NTNU Light blue */
 :where([data-focus-ring]) {
   outline-color: var(--app-accent) !important;
 }

@@ -16,8 +16,7 @@ export function ProgressDisplay() {
       radius="lg"
       p="lg"
       style={{
-        background:
-          "linear-gradient(135deg, var(--mantine-color-ntnuBlue-6) 0%, var(--mantine-color-purple-6) 100%)",
+        background: "var(--mantine-color-ntnuBlue-6)",
         color: "white",
         borderColor: "transparent",
       }}
