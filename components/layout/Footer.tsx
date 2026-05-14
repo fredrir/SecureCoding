@@ -1,6 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
-import { Anchor, Group, Stack, Text, Tooltip } from "@mantine/core";
+import { Anchor, Group, Tooltip } from "@mantine/core";
 import { GitHubIcon, MailIcon } from "@/components/common/Icon";
 
 const GITHUB_URL = "https://github.com/fredrir/PatchQuest";

@@ -29,17 +29,19 @@ export default function QAPage() {
         className="bg-app-accent border-transparent text-white"
       >
         <Stack gap={4}>
-          <div className="inline-flex items-center gap-2 opacity-90">
-            <TargetIcon size={20} />
-            <Text size="xs" tt="uppercase" fw={700} className="tracking-wider">
-              Help
-            </Text>
-          </div>
           <Title order={1} c="white" className="tracking-tight">
             Questions &amp; Answers
           </Title>
-          <Text c="white" className="opacity-90" size="sm">
-            What people ask about PatchQuest.
+          <Text c="white" className="opacity-90 pt-2" size="sm">
+            Some answers to common questions about PatchQuest. If you have a
+            question that is not answered here, please email:{" "}
+            <Anchor
+              href="mailto:fhansteen@gmail.com 
+            "
+              className="text-white underline"
+            >
+              fhansteen@gmail.com
+            </Anchor>
           </Text>
         </Stack>
       </Paper>

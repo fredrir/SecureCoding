@@ -15,8 +15,7 @@ const LAST_UPDATED = "14 May 2026";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description:
-    "Privacy policy for PatchQuest. No personal data is collected.",
+  description: "Privacy policy for PatchQuest. No personal data is collected.",
 };
 
 export default function PrivacyPage() {
@@ -29,16 +28,10 @@ export default function PrivacyPage() {
         className="bg-app-accent border-transparent text-white"
       >
         <Stack gap={4}>
-          <div className="inline-flex items-center gap-2 opacity-90">
-            <ShieldIcon size={20} />
-            <Text size="xs" tt="uppercase" fw={700} className="tracking-wider">
-              Privacy
-            </Text>
-          </div>
           <Title order={1} c="white" className="tracking-tight">
             Privacy Policy
           </Title>
-          <Text c="white" className="opacity-90" size="sm">
+          <Text c="white" className="opacity-90 pt-2" size="sm">
             Last updated: {LAST_UPDATED}
           </Text>
         </Stack>
@@ -52,19 +45,18 @@ export default function PrivacyPage() {
       >
         <Stack gap="lg">
           <Text size="sm" className="text-app-fg-muted">
-            This privacy policy explains how{" "}
-            <strong>PatchQuest</strong> handles personal data. The
-            app is built by Fredrik Carsten Hansteen as a personal practice
-            resource for TDT4237. It is not officially affiliated with NTNU or
-            with the course staff. The app runs entirely in your browser.
+            This privacy policy explains how <strong>PatchQuest</strong> handles
+            personal data. The app is built by Fredrik Carsten Hansteen as a
+            personal practice resource for TDT4237. It is not officially
+            affiliated with NTNU or with the course staff. The app runs entirely
+            in your browser.
           </Text>
 
           <Section title="1. In short">
             <Text size="sm">
-              PatchQuest does not collect, store, or share personal
-              data from users. The whole app runs locally in your browser.
-              Anything you do in the app is processed on your own device and is
-              not sent to us.
+              PatchQuest does not collect, store, or share personal data from
+              users. The whole app runs locally in your browser. Anything you do
+              in the app is processed on your own device and is not sent to us.
             </Text>
             <Text size="sm" mt="sm">
               The page does not use:
@@ -158,8 +150,8 @@ export default function PrivacyPage() {
 
           <Section title="5. Cookies and local storage">
             <Text size="sm">
-              PatchQuest does not use cookies for tracking,
-              analytics, or marketing.
+              PatchQuest does not use cookies for tracking, analytics, or
+              marketing.
             </Text>
             <Text size="sm" mt="sm">
               The app uses{" "}

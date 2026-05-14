@@ -1,6 +1,6 @@
 "use client";
 
-import { SimpleGrid, Stack } from "@mantine/core";
+import { Grid, Stack } from "@mantine/core";
 import type { ReactNode } from "react";
 import { ChallengeHeader } from "./ChallengeHeader";
 import { ProgressHeader } from "./ProgressHeader";
@@ -43,10 +43,11 @@ export function ChallengeLayout({
         examMode={examMode}
       />
       <ChallengeHeader challenge={challenge} prompt={prompt} />
-      <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
-        <div>{workspace}</div>
-        <div>{answer}</div>
-      </SimpleGrid>
+      <Grid gap="lg">
+        <Grid.Col span={{ base: 12, md: 7.2 }}>{workspace}</Grid.Col>
+
+        <Grid.Col span={{ base: 12, md: 4.8 }}>{answer}</Grid.Col>
+      </Grid>
     </Stack>
   );
 }

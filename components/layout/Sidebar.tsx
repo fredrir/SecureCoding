@@ -46,7 +46,7 @@ export function Sidebar({ onNavigate }: Props) {
           onClick={onNavigate}
           active={isActive("/")}
           variant="filled"
-          className="hover:bg-app-accent-soft transition-colors duration-150"
+          className={` transition-colors duration-150 ${isActive("/") ? "hover:bg-app-accent text-white" : "hover:bg-app-accent-soft"}`}
         />
         <NavLink
           component={Link}
@@ -55,7 +55,7 @@ export function Sidebar({ onNavigate }: Props) {
           onClick={onNavigate}
           active={isActive("/review")}
           variant="filled"
-          className="hover:bg-app-accent-soft transition-colors duration-150"
+          className={` transition-colors duration-150 ${isActive("/review") ? "hover:bg-app-accent text-white" : "hover:bg-app-accent-soft"}`}
         />
 
         <Text size="xs" tt="uppercase" fw={700} c="dimmed" mt="md" mb={4}>
@@ -75,13 +75,17 @@ export function Sidebar({ onNavigate }: Props) {
               onClick={ready ? onNavigate : (e) => e.preventDefault()}
               active={ready && isActive(href)}
               variant="filled"
-              className="hover:bg-app-accent-soft transition-colors duration-150"
+              className={`transition-colors duration-150 ${isActive(href) ? "hover:bg-app-accent text-white" : "hover:bg-app-accent-soft"} ${!ready ? "cursor-not-allowed" : "cursor-pointer"}`}
               disabled={!ready}
               leftSection={
                 <span
                   style={{ color: `var(--mantine-color-${mode.accent}-6)` }}
                 >
-                  <GameModeIconView name={mode.icon} size={18} />
+                  <GameModeIconView
+                    className={`${isActive(href) ? "text-white" : ""}`}
+                    name={mode.icon}
+                    size={18}
+                  />
                 </span>
               }
               rightSection={

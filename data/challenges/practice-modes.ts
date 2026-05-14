@@ -284,6 +284,759 @@ Host: admin.example.com`,
   }),
 
   buildChallenge({
+    id: "wstg-map-reflected-xss",
+    title: "Map: search term is echoed into the page",
+    summary:
+      "A search endpoint reflects the query parameter directly into the HTML response.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Reflected XSS",
+    fixOptions: [],
+    explanation:
+      "Reflected XSS occurs when a request parameter is immediately echoed into the response and executed by the browser. In WSTG this maps to WSTG-INPV-01.",
+    examKeywords: ["reflected", "xss", "wstg", "inpv-01"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category best describes a payload reflected from a URL parameter into the response?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "reflected",
+            code: "WSTG-INPV-01",
+            label: "Test for Reflected Cross Site Scripting",
+            correct: true,
+            rationale:
+              "The payload comes from the current request and is reflected in the response without being stored.",
+          },
+          {
+            id: "stored",
+            code: "WSTG-INPV-02",
+            label: "Test for Stored Cross Site Scripting",
+            correct: false,
+            rationale:
+              "Stored XSS requires server-side persistence and later rendering.",
+          },
+          {
+            id: "sqli",
+            code: "WSTG-INPV-05",
+            label: "Test for SQL Injection",
+            correct: false,
+            rationale:
+              "This is browser-side script execution, not database query manipulation.",
+          },
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Test for Cross Site Request Forgery",
+            correct: false,
+            rationale:
+              "CSRF tricks a browser into sending a request; it is not about reflected script execution.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-sqli-login",
+    title: "Map: login query concatenates username",
+    summary:
+      "The login code builds a SQL query by concatenating username and password parameters.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "SQL Injection",
+    fixOptions: [],
+    explanation:
+      "User input that changes the structure of a SQL query is SQL injection. In WSTG this maps to WSTG-INPV-05.",
+    examKeywords: ["sql injection", "sqli", "prepared statements", "inpv-05"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers user input that is concatenated into a SQL query?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "sqli",
+            code: "WSTG-INPV-05",
+            label: "Test for SQL Injection",
+            correct: true,
+            rationale:
+              "The attacker can alter the SQL query structure through untrusted input.",
+          },
+          {
+            id: "cmdi",
+            code: "WSTG-INPV-12",
+            label: "Test for Command Injection",
+            correct: false,
+            rationale:
+              "Command injection targets OS commands, not SQL statements.",
+          },
+          {
+            id: "weak-encryption",
+            code: "WSTG-CRYP-04",
+            label: "Test for Weak Encryption",
+            correct: false,
+            rationale:
+              "The issue is query construction, not cryptographic strength.",
+          },
+          {
+            id: "auth-bypass",
+            code: "WSTG-ATHN-04",
+            label: "Testing for Bypassing Authentication Schema",
+            correct: false,
+            rationale:
+              "SQL injection may lead to login bypass, but the vulnerability family is SQL injection.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-command-injection",
+    title: "Map: ping tool passes host to shell",
+    summary:
+      "A diagnostics endpoint runs `ping ${host}` with unsanitised user input.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Command Injection",
+    fixOptions: [],
+    explanation:
+      "When attacker-controlled input is interpreted by the operating system shell, the WSTG category is WSTG-INPV-12.",
+    examKeywords: ["command injection", "shell", "inpv-12"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers attacker input appended to an operating system command?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "cmdi",
+            code: "WSTG-INPV-12",
+            label: "Test for Command Injection",
+            correct: true,
+            rationale:
+              "The user-controlled `host` value can become part of an OS command.",
+          },
+          {
+            id: "sqli",
+            code: "WSTG-INPV-05",
+            label: "Test for SQL Injection",
+            correct: false,
+            rationale: "No database query is being manipulated.",
+          },
+          {
+            id: "ssrf",
+            code: "WSTG-INPV-19",
+            label: "Test for SSRF",
+            correct: false,
+            rationale:
+              "SSRF makes the server issue network requests; this scenario executes shell commands.",
+          },
+          {
+            id: "upload",
+            code: "WSTG-BUSL-09",
+            label: "Test Upload of Malicious Files",
+            correct: false,
+            rationale: "No file upload is involved.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-ssrf-avatar-fetcher",
+    title: "Map: avatar importer fetches arbitrary URLs",
+    summary:
+      "Users can submit an image URL, and the server fetches it without restricting internal addresses.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "core",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "SSRF",
+    fixOptions: [],
+    explanation:
+      "Server-Side Request Forgery occurs when an attacker can make the server send requests to attacker-chosen destinations. In WSTG this maps to WSTG-INPV-19.",
+    examKeywords: ["ssrf", "internal services", "metadata", "inpv-19"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers a server fetching attacker-controlled URLs, including internal hosts?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "ssrf",
+            code: "WSTG-INPV-19",
+            label: "Test for SSRF",
+            correct: true,
+            rationale:
+              "The attacker controls where the server sends outbound requests.",
+          },
+          {
+            id: "cors",
+            code: "WSTG-CLNT-07",
+            label: "Test for Cross Origin Resource Sharing",
+            correct: false,
+            rationale:
+              "CORS is a browser-enforced cross-origin access control issue, not a server-side fetch issue.",
+          },
+          {
+            id: "redirect",
+            code: "WSTG-CLNT-04",
+            label: "Testing for Client Side URL Redirect",
+            correct: false,
+            rationale:
+              "The server is fetching the URL; the browser is not merely redirected.",
+          },
+          {
+            id: "tls",
+            code: "WSTG-CRYP-01",
+            label: "Test for Weak Transport Layer Security",
+            correct: false,
+            rationale: "Transport encryption is not the central weakness here.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-csrf-email-change",
+    title: "Map: email change form has no CSRF token",
+    summary:
+      "A logged-in user's email address can be changed by submitting a cross-site POST request.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "CSRF",
+    fixOptions: [],
+    explanation:
+      "Cross-Site Request Forgery abuses the victim's authenticated browser session to perform an unintended action. In WSTG this maps to WSTG-SESS-05.",
+    examKeywords: ["csrf", "xsrf", "session", "sess-05"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers a state-changing request that lacks CSRF protection?",
+        top10Hint: "A01",
+        options: [
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Test for Cross Site Request Forgery",
+            correct: true,
+            rationale:
+              "The attack causes the victim's authenticated browser to submit an unwanted state-changing request.",
+          },
+          {
+            id: "cookie-attrs",
+            code: "WSTG-SESS-02",
+            label: "Test for Cookies Attributes",
+            correct: false,
+            rationale:
+              "Cookie attributes may help, but the specific missing control is CSRF protection.",
+          },
+          {
+            id: "auth-bypass",
+            code: "WSTG-ATHN-04",
+            label: "Testing for Bypassing Authentication Schema",
+            correct: false,
+            rationale:
+              "The victim is already authenticated; the issue is request forgery.",
+          },
+          {
+            id: "idor",
+            code: "WSTG-ATHZ-04",
+            label: "Test for Insecure Direct Object References",
+            correct: false,
+            rationale:
+              "No direct object identifier is being accessed without authorization.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-missing-cookie-flags",
+    title: "Map: session cookie lacks Secure and HttpOnly",
+    summary:
+      "The application sets a session cookie without the Secure, HttpOnly, or SameSite attributes.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Insecure Cookie Attributes",
+    fixOptions: [],
+    explanation:
+      "Session cookie configuration is tested under WSTG-SESS-02. Missing Secure, HttpOnly, and SameSite attributes can increase session theft or request forgery risk.",
+    examKeywords: ["cookie", "secure", "httponly", "samesite", "sess-02"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers missing Secure, HttpOnly, or SameSite attributes on session cookies?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "cookie-attrs",
+            code: "WSTG-SESS-02",
+            label: "Test for Cookies Attributes",
+            correct: true,
+            rationale:
+              "This category specifically covers whether cookies have appropriate security attributes.",
+          },
+          {
+            id: "exposed-session-vars",
+            code: "WSTG-SESS-04",
+            label: "Testing for Exposed Session Variables",
+            correct: false,
+            rationale:
+              "Exposed session variables are about session identifiers or tokens being leaked, not cookie flag configuration.",
+          },
+          {
+            id: "weak-tls",
+            code: "WSTG-CRYP-01",
+            label: "Test for Weak Transport Layer Security",
+            correct: false,
+            rationale:
+              "TLS is related to transport security, but the finding is cookie attribute configuration.",
+          },
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Test for Cross Site Request Forgery",
+            correct: false,
+            rationale:
+              "SameSite can reduce CSRF risk, but the test category for cookie flags is WSTG-SESS-02.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-weak-password-policy",
+    title: "Map: users may choose password '123456'",
+    summary:
+      "Registration accepts very short and common passwords without complexity or blocklist checks.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Password Policy",
+    fixOptions: [],
+    explanation:
+      "Weak or unenforced password rules are authentication weaknesses covered by WSTG-ATHN-07.",
+    examKeywords: ["password policy", "weak password", "athn-07"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers acceptance of trivial passwords such as '123456'?",
+        top10Hint: "A07",
+        options: [
+          {
+            id: "weak-password-policy",
+            code: "WSTG-ATHN-07",
+            label: "Test for Weak Password Policy",
+            correct: true,
+            rationale:
+              "The weakness is that the application allows easily guessed passwords.",
+          },
+          {
+            id: "weak-lockout",
+            code: "WSTG-ATHN-03",
+            label: "Test for Weak Lockout Mechanism",
+            correct: false,
+            rationale:
+              "Lockout controls repeated guessing attempts; they do not define password strength.",
+          },
+          {
+            id: "default-creds",
+            code: "WSTG-ATHN-02",
+            label: "Test for Default Credentials",
+            correct: false,
+            rationale:
+              "Default credentials are vendor or preconfigured accounts, not user-selected weak passwords.",
+          },
+          {
+            id: "reset",
+            code: "WSTG-ATHN-09",
+            label: "Test for Weak Password Change or Reset Functionalities",
+            correct: false,
+            rationale:
+              "The scenario concerns password creation policy, not reset flow weaknesses.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-weak-lockout",
+    title: "Map: unlimited login guesses",
+    summary:
+      "The login form allows unlimited password attempts without throttling, lockout, or monitoring.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Lockout Mechanism",
+    fixOptions: [],
+    explanation:
+      "When repeated authentication attempts are not limited, the relevant WSTG category is WSTG-ATHN-03.",
+    examKeywords: ["lockout", "brute force", "rate limit", "athn-03"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers missing throttling or lockout on repeated login attempts?",
+        top10Hint: "A07",
+        options: [
+          {
+            id: "weak-lockout",
+            code: "WSTG-ATHN-03",
+            label: "Test for Weak Lockout Mechanism",
+            correct: true,
+            rationale:
+              "The issue is that attackers can repeatedly guess credentials without effective limits.",
+          },
+          {
+            id: "weak-password-policy",
+            code: "WSTG-ATHN-07",
+            label: "Test for Weak Password Policy",
+            correct: false,
+            rationale:
+              "Password policy concerns password quality, not repeated guessing controls.",
+          },
+          {
+            id: "default-creds",
+            code: "WSTG-ATHN-02",
+            label: "Test for Default Credentials",
+            correct: false,
+            rationale: "No vendor default account is described.",
+          },
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Test for Cross Site Request Forgery",
+            correct: false,
+            rationale:
+              "CSRF is about forged authenticated requests, not brute-force login attempts.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-default-admin-password",
+    title: "Map: admin/admin still works",
+    summary:
+      "A deployed admin interface still accepts the default username and password.",
+    courseTopic: "authentication",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Default Credentials",
+    fixOptions: [],
+    explanation:
+      "Default or unchanged credentials are tested under WSTG-ATHN-02.",
+    examKeywords: ["default credentials", "admin admin", "athn-02"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers an application deployed with unchanged default credentials?",
+        top10Hint: "A07",
+        options: [
+          {
+            id: "default-creds",
+            code: "WSTG-ATHN-02",
+            label: "Test for Default Credentials",
+            correct: true,
+            rationale:
+              "The weakness is the use of known default login credentials.",
+          },
+          {
+            id: "weak-lockout",
+            code: "WSTG-ATHN-03",
+            label: "Test for Weak Lockout Mechanism",
+            correct: false,
+            rationale:
+              "Lockout mechanisms limit guessing attempts; here the credentials are already known defaults.",
+          },
+          {
+            id: "auth-bypass",
+            code: "WSTG-ATHN-04",
+            label: "Testing for Bypassing Authentication Schema",
+            correct: false,
+            rationale:
+              "The attacker logs in with valid credentials rather than bypassing authentication logic.",
+          },
+          {
+            id: "admin-interface",
+            code: "WSTG-CONF-05",
+            label: "Enumerate Infrastructure and Application Admin Interfaces",
+            correct: false,
+            rationale:
+              "Finding an admin interface is configuration enumeration; the described issue is default credentials.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-missing-hsts",
+    title: "Map: HTTPS site does not set HSTS",
+    summary:
+      "The application supports HTTPS but does not send a Strict-Transport-Security header.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "core",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Missing HSTS",
+    fixOptions: [],
+    explanation:
+      "Missing or invalid HTTP Strict Transport Security is tested under WSTG-CONF-07.",
+    examKeywords: ["hsts", "strict-transport-security", "conf-07"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers checking whether an HTTPS site sets a valid HSTS header?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "hsts",
+            code: "WSTG-CONF-07",
+            label: "Test HTTP Strict Transport Security",
+            correct: true,
+            rationale:
+              "HSTS is configured through the Strict-Transport-Security response header.",
+          },
+          {
+            id: "weak-tls",
+            code: "WSTG-CRYP-01",
+            label: "Test for Weak Transport Layer Security",
+            correct: false,
+            rationale:
+              "Weak TLS covers protocol and cipher strength; HSTS is an HTTP security header.",
+          },
+          {
+            id: "unencrypted-channel",
+            code: "WSTG-CRYP-03",
+            label:
+              "Test for Sensitive Information Sent via Unencrypted Channels",
+            correct: false,
+            rationale:
+              "That category concerns sensitive data sent over HTTP or another unencrypted channel.",
+          },
+          {
+            id: "cookie-attrs",
+            code: "WSTG-SESS-02",
+            label: "Test for Cookies Attributes",
+            correct: false,
+            rationale:
+              "Cookie flags are separate from the HSTS response header.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-stack-trace",
+    title: "Map: debug stack trace shown to users",
+    summary:
+      "A production error page exposes framework versions, file paths, and a full stack trace.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Information Disclosure via Stack Trace",
+    fixOptions: [],
+    explanation:
+      "Verbose stack traces in production are an error handling weakness covered by WSTG-ERRH-02.",
+    examKeywords: [
+      "stack trace",
+      "error handling",
+      "information disclosure",
+      "errh-02",
+    ],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers production error pages that expose stack traces?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "stack-traces",
+            code: "WSTG-ERRH-02",
+            label: "Testing for Stack Traces",
+            correct: true,
+            rationale:
+              "The issue is verbose error output exposing internal implementation details.",
+          },
+          {
+            id: "hsts",
+            code: "WSTG-CONF-07",
+            label: "Test HTTP Strict Transport Security",
+            correct: false,
+            rationale: "HSTS is unrelated to error page disclosure.",
+          },
+          {
+            id: "exposed-session-vars",
+            code: "WSTG-SESS-04",
+            label: "Testing for Exposed Session Variables",
+            correct: false,
+            rationale:
+              "Session variables are not the main exposed item in this scenario.",
+          },
+          {
+            id: "weak-encryption",
+            code: "WSTG-CRYP-04",
+            label: "Test for Weak Encryption",
+            correct: false,
+            rationale:
+              "The vulnerability is information disclosure through errors, not weak cryptography.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-cors-wildcard-credentials",
+    title: "Map: API trusts every Origin",
+    summary:
+      "An API reflects arbitrary Origin headers and allows credentialed cross-origin requests.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "core",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Insecure CORS Configuration",
+    fixOptions: [],
+    explanation:
+      "Overly permissive Cross-Origin Resource Sharing policy is tested under WSTG-CLNT-07.",
+    examKeywords: ["cors", "origin", "credentials", "clnt-07"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers overly permissive CORS policies that expose authenticated API responses?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "cors",
+            code: "WSTG-CLNT-07",
+            label: "Test for Cross Origin Resource Sharing",
+            correct: true,
+            rationale:
+              "CORS controls whether browsers may expose cross-origin responses to scripts.",
+          },
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Test for Cross Site Request Forgery",
+            correct: false,
+            rationale:
+              "CSRF sends unwanted requests; CORS controls whether responses can be read cross-origin.",
+          },
+          {
+            id: "ssrf",
+            code: "WSTG-INPV-19",
+            label: "Test for SSRF",
+            correct: false,
+            rationale:
+              "SSRF is server-side request forgery, not browser cross-origin access.",
+          },
+          {
+            id: "client-redirect",
+            code: "WSTG-CLNT-04",
+            label: "Testing for Client Side URL Redirect",
+            correct: false,
+            rationale: "No client-side redirect is described.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-clickjacking",
+    title: "Map: account page can be framed",
+    summary:
+      "Sensitive account actions can be loaded inside an attacker-controlled iframe.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "intro",
+    tags: ["mapping"],
+    vulnerableLines: [],
+    vulnerabilityType: "Clickjacking",
+    fixOptions: [],
+    explanation:
+      "Clickjacking tests whether pages can be framed and abused for UI redress attacks. In WSTG this maps to WSTG-CLNT-09.",
+    examKeywords: ["clickjacking", "iframe", "x-frame-options", "clnt-09"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers sensitive pages that can be embedded in an attacker iframe?",
+        top10Hint: "A01",
+        options: [
+          {
+            id: "clickjacking",
+            code: "WSTG-CLNT-09",
+            label: "Test for Clickjacking",
+            correct: true,
+            rationale:
+              "The attack overlays or frames a legitimate page to trick the user into clicking.",
+          },
+          {
+            id: "cors",
+            code: "WSTG-CLNT-07",
+            label: "Test for Cross Origin Resource Sharing",
+            correct: false,
+            rationale:
+              "CORS controls script access to cross-origin responses, not whether a page can be framed.",
+          },
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Test for Cross Site Request Forgery",
+            correct: false,
+            rationale:
+              "CSRF and clickjacking can both trigger actions, but framing/UI redress is clickjacking.",
+          },
+          {
+            id: "client-redirect",
+            code: "WSTG-CLNT-04",
+            label: "Testing for Client Side URL Redirect",
+            correct: false,
+            rationale: "No redirect behavior is involved.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
     id: "wstg-map-idor",
     title: "Map: orders endpoint trusts the URL id",
     summary:
@@ -1202,6 +1955,957 @@ Host: admin.example.com`,
   }),
 
   buildChallenge({
+    id: "stride-reset-token-reuse",
+    title: "STRIDE on reusable password reset links",
+    summary:
+      "Password reset links contain a long random token but never expire and are not invalidated after use.",
+    courseTopic: "threat-modeling",
+    difficulty: "core",
+    tags: ["stride", "authentication", "password-reset"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "A reset link is effectively a bearer credential. If it leaks through email forwarding, browser history, logs, or referrers, anyone can use it to act as the user. Because the token never expires and remains valid after use, it also enables repeated account takeover attempts.",
+    examKeywords: [
+      "stride",
+      "spoofing",
+      "password reset",
+      "bearer token",
+      "expiry",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A web application sends password reset links like /reset?token=<128-bit-random>. The token is stored in the database, but it has no expiry time and is not deleted after a successful password reset. Links are sometimes forwarded to IT support during troubleshooting.",
+        options: [
+          {
+            id: "S",
+            label:
+              "Spoofing  -  leaked reset link lets attacker act as the user",
+            correct: true,
+            rationale:
+              "Possession of the reset URL is enough to reset the account password.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  attacker modifies protected state",
+            correct: true,
+            rationale:
+              "The attacker can change the victim's password, modifying security-critical account state.",
+          },
+          {
+            id: "R",
+            label: "Repudiation  -  no evidence of who used the token",
+            correct: true,
+            rationale:
+              "If reset-token use is not tied to authenticated identity, IP, timestamp, or audit logs, the real actor may be hard to prove.",
+          },
+          {
+            id: "I",
+            label:
+              "Information disclosure  -  token may leak via support workflows",
+            correct: true,
+            rationale:
+              "Forwarded emails, logs, browser history, and referrer headers can expose the bearer token.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale:
+              "The main issue is account takeover, not exhausting system resources.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "The attacker gains the victim's account, but the scenario does not show escalation to a higher role.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-admin-feature-flag",
+    title: "STRIDE on client-side admin feature flags",
+    summary:
+      "The frontend hides admin actions unless localStorage.isAdmin is true, but the backend trusts the submitted action.",
+    courseTopic: "threat-modeling",
+    difficulty: "core",
+    tags: ["stride", "authorization", "access-control"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "Client-side checks are not authorization. A user can tamper with local storage or send requests directly. If the server accepts admin operations without verifying the user's role server-side, this becomes elevation of privilege and may also create repudiation problems if admin actions are not audited.",
+    examKeywords: [
+      "stride",
+      "tampering",
+      "elevation of privilege",
+      "authorization",
+      "server-side checks",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A React frontend shows the 'Delete user' button only when localStorage.isAdmin === 'true'. The API endpoint DELETE /users/:id only checks that the request has a valid session cookie, not whether the user has an admin role.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing  -  pretending to be an administrator",
+            correct: true,
+            rationale:
+              "The attacker can make the system treat them as an admin by manipulating client-controlled state.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  changing localStorage or direct API requests",
+            correct: true,
+            rationale:
+              "The attacker can alter client-side state or bypass the UI and send the request directly.",
+          },
+          {
+            id: "R",
+            label: "Repudiation  -  destructive admin action may be disputed",
+            correct: true,
+            rationale:
+              "Without strong audit logging, a user may deny having performed the deletion.",
+          },
+          {
+            id: "I",
+            label: "Information disclosure",
+            correct: false,
+            rationale:
+              "The scenario focuses on unauthorized destructive actions, not reading confidential data.",
+          },
+          {
+            id: "D",
+            label: "Denial of service  -  deleting users disrupts access",
+            correct: true,
+            rationale:
+              "Unauthorized deletion of accounts can deny legitimate users access to the service.",
+          },
+          {
+            id: "E",
+            label:
+              "Elevation of privilege  -  normal user performs admin action",
+            correct: true,
+            rationale:
+              "A regular authenticated user obtains administrative capability.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-webhook-no-signature",
+    title: "STRIDE on unsigned payment webhooks",
+    summary:
+      "The order service marks invoices as paid whenever it receives a POST /payment-webhook request.",
+    courseTopic: "threat-modeling",
+    difficulty: "core",
+    tags: ["stride", "webhook", "integrity"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "A webhook endpoint must authenticate the sender and verify message integrity. Without a shared-secret HMAC, public key signature, nonce, timestamp, and replay protection, attackers can forge payment events or replay old ones.",
+    examKeywords: [
+      "stride",
+      "spoofing",
+      "tampering",
+      "webhook",
+      "signature",
+      "replay",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "An e-commerce backend exposes POST /payment-webhook. If the JSON body contains { orderId, status: 'paid' }, the order is shipped. The endpoint has no source authentication, no HMAC/signature verification, and no replay protection.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing  -  attacker impersonates the payment provider",
+            correct: true,
+            rationale:
+              "The server has no reliable way to know whether the request really came from the payment provider.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  attacker forges payment status",
+            correct: true,
+            rationale:
+              "The attacker can submit or modify the JSON body to mark an unpaid order as paid.",
+          },
+          {
+            id: "R",
+            label: "Repudiation  -  weak audit trail for payment events",
+            correct: true,
+            rationale:
+              "Without signed events and logs, it is difficult to prove which party produced a payment message.",
+          },
+          {
+            id: "I",
+            label: "Information disclosure",
+            correct: false,
+            rationale:
+              "The described failure is about forged state changes, not leaking data.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale:
+              "The scenario does not describe resource exhaustion or service disruption.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "The attacker is not gaining a higher application role; they are forging trusted external input.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-public-s3-backups",
+    title: "STRIDE on public backup bucket",
+    summary:
+      "Nightly database backups are uploaded to a cloud bucket with public-read permissions.",
+    courseTopic: "threat-modeling",
+    difficulty: "core",
+    tags: ["stride", "cloud", "misconfiguration", "privacy"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "A public backup bucket is mainly an information disclosure risk. If the bucket also allows writes or overwrites, tampering and denial of service become relevant. Missing access logs can also make investigation and attribution difficult.",
+    examKeywords: [
+      "stride",
+      "information disclosure",
+      "cloud storage",
+      "least privilege",
+      "logging",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A government service exports nightly database backups to object storage. The bucket policy accidentally allows public read access. Access logging is disabled. In a later review, engineers also discover that any authenticated cloud account in the organization can overwrite backup objects.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing",
+            correct: false,
+            rationale:
+              "The scenario does not depend on pretending to be another identity.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  backups can be overwritten",
+            correct: true,
+            rationale:
+              "Overwriting backup objects compromises the integrity of recovery data.",
+          },
+          {
+            id: "R",
+            label: "Repudiation  -  access logging is disabled",
+            correct: true,
+            rationale:
+              "Without logs, it is hard to determine who accessed or modified backups.",
+          },
+          {
+            id: "I",
+            label:
+              "Information disclosure  -  public backups expose sensitive data",
+            correct: true,
+            rationale:
+              "Database backups often contain personal data, secrets, internal records, and historical data.",
+          },
+          {
+            id: "D",
+            label: "Denial of service  -  corrupted backups can block recovery",
+            correct: true,
+            rationale:
+              "If attackers overwrite backups, the organization may be unable to recover after an incident.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "Reading or overwriting the bucket is serious, but no higher application role is obtained.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-jwt-none-alg",
+    title: "STRIDE on JWT alg=none acceptance",
+    summary:
+      "The API accepts JWTs where the header says alg='none' and trusts the role claim.",
+    courseTopic: "threat-modeling",
+    difficulty: "advanced",
+    tags: ["stride", "jwt", "authentication", "authorization"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "Accepting unsigned JWTs lets attackers tamper with claims such as userId or role. This can spoof another identity and elevate privileges if the backend trusts role='admin'. It may also cause repudiation if logs record only the forged subject claim.",
+    examKeywords: [
+      "stride",
+      "jwt",
+      "alg none",
+      "tampering",
+      "elevation of privilege",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A microservice validates JWTs by decoding the header and payload, but it does not require a specific signing algorithm. Tokens with { alg: 'none' } are accepted. The service trusts the role claim to authorize admin endpoints.",
+        options: [
+          {
+            id: "S",
+            label:
+              "Spoofing  -  forged subject claim impersonates another user",
+            correct: true,
+            rationale:
+              "The attacker can set sub or userId to another identity without a valid signature.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  JWT claims can be modified",
+            correct: true,
+            rationale:
+              "Changing role, userId, or expiry in an unsigned token changes trusted authorization data.",
+          },
+          {
+            id: "R",
+            label:
+              "Repudiation  -  logs may attribute actions to forged userId",
+            correct: true,
+            rationale:
+              "If logs trust the token subject, actions may be falsely attributed to the victim.",
+          },
+          {
+            id: "I",
+            label: "Information disclosure  -  admin data may become readable",
+            correct: true,
+            rationale:
+              "Forged admin claims can expose data restricted to privileged users.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale:
+              "The core issue is trust in unsigned identity and authorization claims.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege  -  attacker sets role='admin'",
+            correct: true,
+            rationale:
+              "A normal user can gain administrator privileges by editing the token.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-csrf-email-change",
+    title: "STRIDE on CSRF email change",
+    summary:
+      "Changing account email only requires a session cookie and accepts cross-site POSTs.",
+    courseTopic: "threat-modeling",
+    difficulty: "core",
+    tags: ["stride", "csrf", "session-management"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "CSRF abuses the browser's automatic cookie attachment. The attacker cannot read the response, but can cause a victim to perform a state-changing action. Changing the account email can enable later password reset takeover.",
+    examKeywords: ["stride", "csrf", "tampering", "session cookie", "sameSite"],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A logged-in user visits an attacker-controlled page. The page auto-submits a form to https://bank.example/change-email with email=attacker@example.com. The bank accepts the request because the browser includes the victim's session cookie. There is no CSRF token or SameSite protection.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing  -  request is sent under victim's session",
+            correct: true,
+            rationale:
+              "The server treats the forged request as if the victim intentionally sent it.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  account email is changed",
+            correct: true,
+            rationale: "The attack modifies security-relevant account data.",
+          },
+          {
+            id: "R",
+            label: "Repudiation  -  victim can deny intentional action",
+            correct: true,
+            rationale:
+              "The request came from the victim's browser, but not from the victim's intention.",
+          },
+          {
+            id: "I",
+            label: "Information disclosure",
+            correct: false,
+            rationale:
+              "Classic CSRF causes actions; it usually does not let the attacker read the response due to same-origin policy.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale:
+              "The scenario does not describe making the service unavailable.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege  -  may lead to account takeover",
+            correct: true,
+            rationale:
+              "Changing the email may allow password reset takeover, effectively giving the attacker control of the account.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-ssrf-metadata-service",
+    title: "STRIDE on SSRF to cloud metadata",
+    summary:
+      "A URL preview feature fetches arbitrary URLs, including cloud metadata endpoints.",
+    courseTopic: "threat-modeling",
+    difficulty: "advanced",
+    tags: ["stride", "ssrf", "cloud", "metadata"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "SSRF can cross a trust boundary because the server makes the request from inside the network. Access to cloud metadata may reveal temporary credentials, which can cause information disclosure and possibly elevation of privilege in the cloud account.",
+    examKeywords: [
+      "stride",
+      "ssrf",
+      "metadata service",
+      "information disclosure",
+      "cloud credentials",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A chat application generates link previews by fetching any URL posted by users. An attacker posts http://169.254.169.254/latest/meta-data/iam/security-credentials/. The server runs in a cloud VM with an instance role that can read private storage objects.",
+        options: [
+          {
+            id: "S",
+            label:
+              "Spoofing  -  attacker causes requests from trusted server identity",
+            correct: true,
+            rationale:
+              "The metadata service sees the request as coming from the trusted VM, not the external attacker.",
+          },
+          {
+            id: "T",
+            label: "Tampering",
+            correct: false,
+            rationale:
+              "The described request mainly reads metadata and credentials, not modifies data.",
+          },
+          {
+            id: "R",
+            label: "Repudiation",
+            correct: false,
+            rationale: "Auditability is not the central issue in the scenario.",
+          },
+          {
+            id: "I",
+            label: "Information disclosure  -  metadata credentials may leak",
+            correct: true,
+            rationale:
+              "The attacker may read instance role credentials or internal-only service responses.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale:
+              "The scenario is not about exhausting resources or crashing services.",
+          },
+          {
+            id: "E",
+            label:
+              "Elevation of privilege  -  stolen role credentials grant cloud access",
+            correct: true,
+            rationale:
+              "Temporary cloud credentials may allow the attacker to access resources beyond normal user permissions.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-debug-stacktrace",
+    title: "STRIDE on production debug stack traces",
+    summary:
+      "Production errors return stack traces, environment variables, SQL queries, and internal paths.",
+    courseTopic: "threat-modeling",
+    difficulty: "core",
+    tags: ["stride", "error-handling", "information-disclosure"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "Verbose production errors leak implementation details. They may reveal secrets, framework versions, database schema, internal paths, and query structure. This primarily supports information disclosure and can help later tampering or injection attacks.",
+    examKeywords: [
+      "stride",
+      "information disclosure",
+      "stack trace",
+      "error handling",
+      "debug mode",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A production API runs with debug mode enabled. Invalid input sometimes returns a full stack trace including file paths, SQL queries, framework versions, and selected environment variables.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing",
+            correct: false,
+            rationale:
+              "The error output does not by itself let the attacker impersonate another identity.",
+          },
+          {
+            id: "T",
+            label: "Tampering",
+            correct: false,
+            rationale:
+              "The stack trace leaks information; it does not directly modify server state.",
+          },
+          {
+            id: "R",
+            label: "Repudiation",
+            correct: false,
+            rationale:
+              "The issue is not primarily about denying actions or missing audit evidence.",
+          },
+          {
+            id: "I",
+            label: "Information disclosure  -  internals and secrets may leak",
+            correct: true,
+            rationale:
+              "Stack traces and environment data can reveal sensitive implementation details or credentials.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale: "The scenario does not describe resource exhaustion.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "Leaked details may help future attacks, but no privilege escalation is directly shown.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-missing-audit-admin",
+    title: "STRIDE on missing admin audit logs",
+    summary:
+      "Administrators can export, modify, and delete user records, but actions are not logged.",
+    courseTopic: "threat-modeling",
+    difficulty: "core",
+    tags: ["stride", "logging", "admin", "accountability"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "Missing audit logs are a classic repudiation issue. When privileged users can perform sensitive actions without tamper-resistant logs, the organization cannot reliably investigate abuse, prove what happened, or detect policy violations.",
+    examKeywords: [
+      "stride",
+      "repudiation",
+      "audit logging",
+      "accountability",
+      "admin actions",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A customer-support admin panel lets support agents view personal data, export CSV files, edit user records, and delete accounts. The system stores no audit log of who performed each action.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing",
+            correct: false,
+            rationale:
+              "The scenario does not say users can impersonate each other.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  user records can be edited",
+            correct: true,
+            rationale:
+              "Admins can modify records, so integrity of user data is in scope.",
+          },
+          {
+            id: "R",
+            label: "Repudiation  -  admins can deny sensitive actions",
+            correct: true,
+            rationale:
+              "Without audit logs, it is hard to prove who exported, changed, or deleted data.",
+          },
+          {
+            id: "I",
+            label:
+              "Information disclosure  -  personal data exports are untracked",
+            correct: true,
+            rationale:
+              "Exporting personal data without traceability increases the impact of unauthorized disclosure.",
+          },
+          {
+            id: "D",
+            label: "Denial of service  -  account deletion can remove access",
+            correct: true,
+            rationale: "Deleting accounts can deny service to affected users.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "The users already have admin privileges; the problem is lack of accountability.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-rate-limit-login",
+    title: "STRIDE on login without rate limiting",
+    summary:
+      "The login endpoint allows unlimited password guesses and returns distinct error messages.",
+    courseTopic: "authentication",
+    difficulty: "core",
+    tags: ["stride", "authentication", "brute-force"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "Unlimited login attempts enable brute-force or credential-stuffing attacks. Distinct messages such as 'unknown email' and 'wrong password' also help enumerate valid accounts. Successful guessing causes spoofing because the attacker logs in as the victim.",
+    examKeywords: [
+      "stride",
+      "spoofing",
+      "rate limiting",
+      "account enumeration",
+      "brute force",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "A login endpoint has no rate limit, lockout, CAPTCHA, or anomaly detection. It returns 'email not found' for unknown addresses and 'wrong password' for valid addresses with an incorrect password.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing  -  attacker may log in as a victim",
+            correct: true,
+            rationale:
+              "Credential guessing or stuffing can let the attacker authenticate as another user.",
+          },
+          {
+            id: "T",
+            label: "Tampering",
+            correct: false,
+            rationale:
+              "The login flow does not directly modify application data.",
+          },
+          {
+            id: "R",
+            label: "Repudiation",
+            correct: false,
+            rationale:
+              "The primary problem is authentication abuse, not denying performed actions.",
+          },
+          {
+            id: "I",
+            label:
+              "Information disclosure  -  valid accounts can be enumerated",
+            correct: true,
+            rationale:
+              "Different error messages reveal whether an email address is registered.",
+          },
+          {
+            id: "D",
+            label: "Denial of service  -  lockouts are abused",
+            correct: false,
+            rationale:
+              "No lockout exists in this scenario, so lockout-based DoS is not the issue.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "Logging in as a victim is spoofing; no higher role is necessarily gained.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-oauth-open-redirect",
+    title: "STRIDE on OAuth open redirect",
+    summary:
+      "The authorization server accepts arbitrary redirect_uri values during OAuth login.",
+    courseTopic: "authentication",
+    difficulty: "advanced",
+    tags: ["stride", "oauth", "openid-connect", "redirect"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "OAuth and OpenID Connect flows depend on strict redirect URI validation. If an attacker can register or inject an arbitrary redirect_uri, authorization codes or tokens may be sent to an attacker-controlled domain.",
+    examKeywords: [
+      "stride",
+      "oauth",
+      "redirect_uri",
+      "authorization code",
+      "spoofing",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "An OAuth authorization server starts login with /authorize?client_id=public-client&redirect_uri=https://evil.example/callback. The server only checks that client_id exists and does not require an exact redirect_uri match.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing  -  attacker abuses a trusted client identity",
+            correct: true,
+            rationale:
+              "The attacker can make the authorization server treat their redirect endpoint as belonging to the legitimate client.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  redirect_uri is attacker-controlled",
+            correct: true,
+            rationale:
+              "The attacker changes a security-critical protocol parameter.",
+          },
+          {
+            id: "R",
+            label: "Repudiation",
+            correct: false,
+            rationale:
+              "The main issue is token/code leakage, not denial of responsibility.",
+          },
+          {
+            id: "I",
+            label:
+              "Information disclosure  -  authorization code or token leaks",
+            correct: true,
+            rationale:
+              "The authorization response may be delivered to the attacker's callback URL.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale:
+              "The attack is not primarily about preventing service availability.",
+          },
+          {
+            id: "E",
+            label:
+              "Elevation of privilege  -  stolen token may grant user access",
+            correct: true,
+            rationale:
+              "If the attacker redeems the code or receives a token, they may gain access as the victim.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-log-injection",
+    title: "STRIDE on log injection",
+    summary:
+      "User-controlled username values are written directly into security logs without escaping.",
+    courseTopic: "secure-development",
+    difficulty: "core",
+    tags: ["stride", "logging", "injection"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "Logs are security-relevant records. If attackers can inject newlines or fake fields, they can tamper with evidence, hide attacks, or create misleading audit entries. This mainly affects tampering and repudiation.",
+    examKeywords: [
+      "stride",
+      "repudiation",
+      "log injection",
+      "audit integrity",
+      "tampering",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "The login service writes `failed login for ${username}` to a text log. The username is not escaped. An attacker submits a username containing newline characters and fake log fields such as `admin login successful`.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing",
+            correct: false,
+            rationale:
+              "The attacker is not successfully authenticating as another user in this scenario.",
+          },
+          {
+            id: "T",
+            label: "Tampering  -  attacker modifies the meaning of logs",
+            correct: true,
+            rationale:
+              "Injected newline characters and fake fields alter the integrity of the log record.",
+          },
+          {
+            id: "R",
+            label: "Repudiation  -  audit trail becomes unreliable",
+            correct: true,
+            rationale:
+              "Manipulated logs make it harder to prove what actually happened.",
+          },
+          {
+            id: "I",
+            label: "Information disclosure",
+            correct: false,
+            rationale:
+              "The issue is corrupting logs, not leaking confidential data.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale:
+              "The scenario does not describe filling disks or crashing logging systems.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "Fake log entries do not directly grant higher privileges.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "stride-cors-wildcard-credentials",
+    title: "STRIDE on permissive CORS with credentials",
+    summary:
+      "The API reflects Origin and allows credentialed cross-origin requests.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["stride", "cors", "browser-security"],
+    vulnerableLines: [],
+    vulnerabilityType: "Threat Modeling  -  STRIDE",
+    fixOptions: [],
+    explanation:
+      "Permissive CORS with credentials can let an attacker-controlled website read authenticated API responses from a victim's browser. Unlike CSRF, the attacker may get the response body, making information disclosure central.",
+    examKeywords: [
+      "stride",
+      "cors",
+      "credentials",
+      "same-origin policy",
+      "information disclosure",
+    ],
+    supportedModes: STRIDE_ONLY,
+    modeData: {
+      stride: {
+        scenario:
+          "An API reflects any Origin header into Access-Control-Allow-Origin and also sets Access-Control-Allow-Credentials: true. A victim logged into the service visits attacker.example, whose JavaScript fetches https://api.example/profile with credentials included.",
+        options: [
+          {
+            id: "S",
+            label: "Spoofing",
+            correct: false,
+            rationale:
+              "The attacker is not impersonating the victim to the server; the victim's browser sends the real session.",
+          },
+          {
+            id: "T",
+            label: "Tampering",
+            correct: false,
+            rationale:
+              "The scenario focuses on reading authenticated responses, not modifying data.",
+          },
+          {
+            id: "R",
+            label: "Repudiation",
+            correct: false,
+            rationale: "Audit denial is not the central failure.",
+          },
+          {
+            id: "I",
+            label:
+              "Information disclosure  -  attacker reads authenticated API data",
+            correct: true,
+            rationale:
+              "Credentialed CORS allows the attacker's origin to read responses meant only for the trusted frontend.",
+          },
+          {
+            id: "D",
+            label: "Denial of service",
+            correct: false,
+            rationale: "No service disruption is described.",
+          },
+          {
+            id: "E",
+            label: "Elevation of privilege",
+            correct: false,
+            rationale:
+              "The attacker reads victim data but does not gain a higher role.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
     id: "stride-feedback-form",
     title: "STRIDE on a public feedback form",
     summary:
@@ -1862,6 +3566,794 @@ mode.CryptBlocks(ct, pt)`,
             label: "Block size mismatch",
             correct: false,
             rationale: "aes.BlockSize is correct for an AES IV.",
+          },
+        ],
+      },
+    },
+  }),
+  buildChallenge({
+    id: "cmis-aes-gcm-static-nonce",
+    title: "Misuses: AES-GCM with a static nonce",
+    summary:
+      "An API encrypts secrets with AES-GCM but reuses the same nonce every time.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["aes", "gcm", "nonce"],
+    language: "javascript",
+    code: `const key = Buffer.from("00112233445566778899aabbccddeeff", "hex");
+const nonce = Buffer.alloc(12, 0);
+const cipher = crypto.createCipheriv("aes-128-gcm", key, nonce);
+const ct = Buffer.concat([cipher.update(secret), cipher.final()]);
+return ct.toString("hex");`,
+    vulnerableLines: [1, 2, 3, 5],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "GCM requires a unique nonce for each encryption under the same key. Reusing a nonce can reveal plaintext relationships and break authentication. The key is also hardcoded, and the authentication tag is not returned.",
+    examKeywords: ["gcm", "nonce reuse", "hardcoded key", "authentication tag"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "static-nonce",
+            label: "AES-GCM nonce is static and reused",
+            correct: true,
+            rationale:
+              "GCM security depends on never reusing the same nonce with the same key.",
+          },
+          {
+            id: "hardcoded-key",
+            label: "Encryption key is hardcoded",
+            correct: true,
+            rationale:
+              "Keys in source code can leak through repositories, logs, backups, and builds.",
+          },
+          {
+            id: "missing-tag",
+            label: "Authentication tag is not stored or returned",
+            correct: true,
+            rationale:
+              "Without the GCM tag, the receiver cannot verify ciphertext integrity.",
+          },
+          {
+            id: "nonce-length",
+            label: "The nonce length is invalid for GCM",
+            correct: false,
+            rationale:
+              "A 12-byte nonce is the recommended size for GCM; reuse is the problem.",
+          },
+          {
+            id: "aes-128",
+            label: "AES-128 is automatically insecure",
+            correct: false,
+            rationale:
+              "AES-128 is still considered secure when used correctly.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-aes-ctr-reused-nonce",
+    title: "Misuses: AES-CTR with a reused nonce",
+    summary:
+      "A file encryption helper uses AES-CTR with a zero nonce and no integrity check.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["aes", "ctr", "nonce"],
+    language: "go",
+    code: `nonce := make([]byte, aes.BlockSize)
+stream := cipher.NewCTR(block, nonce)
+ciphertext := make([]byte, len(plaintext))
+stream.XORKeyStream(ciphertext, plaintext)`,
+    vulnerableLines: [1, 2, 4],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "CTR mode turns a block cipher into a stream cipher. Reusing the nonce/key pair reuses the keystream, so XORing ciphertexts can reveal plaintext relationships. CTR also provides no integrity protection by itself.",
+    examKeywords: [
+      "ctr",
+      "nonce reuse",
+      "stream cipher",
+      "integrity",
+      "malleability",
+    ],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "reused-nonce",
+            label: "CTR nonce/counter value is reused",
+            correct: true,
+            rationale:
+              "Reusing a CTR keystream leaks information about the plaintexts.",
+          },
+          {
+            id: "no-integrity",
+            label: "No MAC or AEAD integrity protection",
+            correct: true,
+            rationale:
+              "CTR encryption is malleable unless combined with authentication.",
+          },
+          {
+            id: "wrong-block-size",
+            label: "AES block size is wrong",
+            correct: false,
+            rationale: "aes.BlockSize is the correct block size constant.",
+          },
+          {
+            id: "wrong-api",
+            label: "XORKeyStream is never used with CTR",
+            correct: false,
+            rationale:
+              "XORKeyStream is the normal API for stream-style encryption in Go.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-reset-token-math-random",
+    title: "Misuses: Predictable password reset token",
+    summary:
+      "A password reset flow generates security tokens using Math.random().",
+    courseTopic: "cryptography",
+    difficulty: "intro",
+    tags: ["randomness", "tokens"],
+    language: "javascript",
+    code: `function makeResetToken(userId) {
+  const token = Math.random().toString(36).slice(2);
+  db.resetTokens.insert({ userId, token });
+  return token;
+}`,
+    vulnerableLines: [2, 3],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "Password reset tokens must be generated with a cryptographically secure random number generator, have sufficient entropy, and should expire after a short time.",
+    examKeywords: ["secure randomness", "entropy", "reset token", "expiration"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "math-random",
+            label: "Uses non-cryptographic randomness",
+            correct: true,
+            rationale:
+              "Math.random() is not suitable for secrets such as reset tokens.",
+          },
+          {
+            id: "low-entropy",
+            label: "Token may have insufficient entropy",
+            correct: true,
+            rationale:
+              "Short random-looking strings can be brute-forced if the entropy is too low.",
+          },
+          {
+            id: "no-expiry",
+            label: "No expiry time is stored",
+            correct: true,
+            rationale:
+              "Reset tokens should be short-lived to limit damage if leaked.",
+          },
+          {
+            id: "base36",
+            label: "Base36 encoding is always insecure",
+            correct: false,
+            rationale:
+              "Encoding is not the main issue; the randomness source and lifecycle are.",
+          },
+          {
+            id: "userid",
+            label:
+              "Including userId in the database row is the cryptographic flaw",
+            correct: false,
+            rationale:
+              "The token needs to be associated with a user; the weak token generation is the flaw.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-pbkdf2-weak-params",
+    title: "Misuses: PBKDF2 with weak parameters",
+    summary:
+      "A login service hashes passwords with PBKDF2 but uses a fixed salt and tiny work factor.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["password-hashing", "pbkdf2"],
+    language: "python",
+    code: `SALT = b"company-wide-salt"
+digest = hashlib.pbkdf2_hmac("sha1", password.encode(), SALT, 1000)
+users.insert({"username": username, "pw": digest.hex()})`,
+    vulnerableLines: [1, 2, 3],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "PBKDF2 is a password KDF, but it must use a unique per-password salt and a sufficiently high work factor. SHA-1 inside PBKDF2 is not the main issue here; the fixed salt and low iterations are.",
+    examKeywords: ["pbkdf2", "salt", "work factor", "password hashing"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "fixed-salt",
+            label: "Uses one fixed salt for all users",
+            correct: true,
+            rationale: "Each password hash should have its own random salt.",
+          },
+          {
+            id: "low-iterations",
+            label: "Work factor is too low",
+            correct: true,
+            rationale: "A low iteration count makes offline guessing cheaper.",
+          },
+          {
+            id: "no-memory-hardness",
+            label: "Does not use a memory-hard password hash",
+            correct: true,
+            rationale:
+              "Argon2id or scrypt is usually preferred for password storage.",
+          },
+          {
+            id: "hex-storage",
+            label: "Storing the digest as hex is the vulnerability",
+            correct: false,
+            rationale:
+              "Hex encoding is acceptable; the KDF parameters are weak.",
+          },
+          {
+            id: "pbkdf2-always-broken",
+            label: "PBKDF2 can never be used for passwords",
+            correct: false,
+            rationale:
+              "PBKDF2 can be acceptable with strong parameters, although Argon2id is preferred.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-sha256-secret-prefix-mac",
+    title: "Misuses: Homemade MAC with SHA-256",
+    summary: "An API signs payment parameters using SHA256(secret || message).",
+    courseTopic: "cryptography",
+    difficulty: "advanced",
+    tags: ["mac", "hashing"],
+    language: "python",
+    code: `def sign(message: bytes) -> str:
+    return hashlib.sha256(SECRET + message).hexdigest()
+
+def verify(message: bytes, sig: str) -> bool:
+    return sign(message) == sig`,
+    vulnerableLines: [2, 5],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "Do not build a MAC by concatenating a secret and hashing. Use HMAC. The comparison may also leak timing information; use a constant-time comparison function.",
+    examKeywords: ["hmac", "length extension", "constant-time compare"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "homemade-mac",
+            label: "Uses a homemade MAC instead of HMAC",
+            correct: true,
+            rationale:
+              "Hashing SECRET || message is not a safe substitute for HMAC.",
+          },
+          {
+            id: "timing-compare",
+            label: "Signature comparison may leak timing information",
+            correct: true,
+            rationale:
+              "Use a constant-time comparison such as hmac.compare_digest.",
+          },
+          {
+            id: "sha256-broken",
+            label: "SHA-256 is collision-broken",
+            correct: false,
+            rationale:
+              "SHA-256 is not considered collision-broken; the construction is wrong.",
+          },
+          {
+            id: "hex-wrong",
+            label: "Hex signatures are invalid",
+            correct: false,
+            rationale:
+              "Hex encoding is fine; the MAC construction and comparison are the issues.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-rsa-no-padding",
+    title: "Misuses: RSA encryption without padding",
+    summary:
+      "A service encrypts session keys using raw RSA without OAEP padding.",
+    courseTopic: "cryptography",
+    difficulty: "advanced",
+    tags: ["rsa", "padding"],
+    language: "java",
+    code: `Cipher cipher = Cipher.getInstance("RSA/ECB/NoPadding");
+cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+byte[] wrapped = cipher.doFinal(sessionKey);`,
+    vulnerableLines: [1, 2, 3],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "Raw RSA is deterministic and lacks the padding needed for secure public-key encryption. Use RSA-OAEP or, preferably, a well-reviewed hybrid encryption scheme.",
+    examKeywords: ["rsa", "padding", "oaep", "deterministic encryption"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "no-padding",
+            label: "RSA is used without secure padding",
+            correct: true,
+            rationale:
+              "Raw RSA encryption is deterministic and vulnerable to several attacks.",
+          },
+          {
+            id: "not-oaep",
+            label: "Does not use OAEP for RSA encryption",
+            correct: true,
+            rationale: "OAEP is the standard padding mode for RSA encryption.",
+          },
+          {
+            id: "public-key-encrypt",
+            label: "Encrypting with the recipient public key is always wrong",
+            correct: false,
+            rationale:
+              "Public-key encryption normally encrypts with the recipient's public key.",
+          },
+          {
+            id: "ecb-name",
+            label: "The string contains ECB, so this is AES-ECB",
+            correct: false,
+            rationale:
+              "For RSA in Java, the ECB part is a historical provider naming artifact.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-tls-disable-verification",
+    title: "Misuses: TLS certificate verification disabled",
+    summary:
+      "A microservice client disables TLS verification to fix a staging error.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["tls", "certificates"],
+    language: "python",
+    code: `resp = requests.post(
+    "https://payments.internal/api/charge",
+    json=payload,
+    verify=False,
+)`,
+    vulnerableLines: [1, 2, 4],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "Disabling certificate verification removes server authentication and enables man-in-the-middle attacks. The fix is to configure trusted certificates correctly, not to disable verification.",
+    examKeywords: [
+      "tls",
+      "certificate validation",
+      "mitm",
+      "server authentication",
+    ],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "verify-false",
+            label: "TLS certificate verification is disabled",
+            correct: true,
+            rationale:
+              "The client no longer verifies that it is talking to the real server.",
+          },
+          {
+            id: "mitm",
+            label: "Enables man-in-the-middle attacks",
+            correct: true,
+            rationale:
+              "An attacker with network position can present their own certificate.",
+          },
+          {
+            id: "https",
+            label: "HTTPS is always insecure for internal services",
+            correct: false,
+            rationale:
+              "HTTPS is appropriate; disabling verification is the problem.",
+          },
+          {
+            id: "json",
+            label: "Sending JSON over TLS is a cryptographic misuse",
+            correct: false,
+            rationale: "The payload format is not the issue.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-otp-key-reuse",
+    title: "Misuses: One-time pad key reuse",
+    summary:
+      "A toy messaging app XORs messages with the same one-time pad key.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["otp", "xor"],
+    language: "python",
+    code: `PAD = load_key("pad.bin")
+
+def encrypt(msg: bytes) -> bytes:
+    return bytes(m ^ PAD[i] for i, m in enumerate(msg))`,
+    vulnerableLines: [1, 4],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "A one-time pad is only secure if the key is truly random, as long as the message, and never reused. Reusing the pad lets attackers XOR ciphertexts to obtain the XOR of plaintexts. OTP also does not provide integrity.",
+    examKeywords: ["one-time pad", "xor", "key reuse", "integrity"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "pad-reuse",
+            label: "The one-time pad key is reused",
+            correct: true,
+            rationale: "The same PAD is loaded and used for multiple messages.",
+          },
+          {
+            id: "no-integrity",
+            label: "No integrity protection",
+            correct: true,
+            rationale:
+              "An attacker can flip ciphertext bits and predictably alter plaintext bits.",
+          },
+          {
+            id: "xor-never-used",
+            label: "XOR is not part of OTP encryption",
+            correct: false,
+            rationale: "OTP encryption is normally implemented with XOR.",
+          },
+          {
+            id: "private-key-needed",
+            label: "OTP requires a public/private key pair",
+            correct: false,
+            rationale:
+              "OTP is symmetric; sender and receiver share the same pad.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-des-legacy-cipher",
+    title: "Misuses: DES for database field encryption",
+    summary: "A legacy service encrypts national ID numbers using DES-CBC.",
+    courseTopic: "cryptography",
+    difficulty: "intro",
+    tags: ["des", "cbc"],
+    language: "java",
+    code: `SecretKeySpec key = new SecretKeySpec(rawKey, "DES");
+Cipher c = Cipher.getInstance("DES/CBC/PKCS5Padding");
+c.init(Cipher.ENCRYPT_MODE, key, iv);
+byte[] ct = c.doFinal(nationalId.getBytes(StandardCharsets.UTF_8));`,
+    vulnerableLines: [1, 2, 3],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "DES has an obsolete 56-bit key size and should not be used. CBC also needs unpredictable IVs and separate integrity protection. Prefer an AEAD mode such as AES-GCM or ChaCha20-Poly1305.",
+    examKeywords: ["des", "key length", "cbc", "aead", "integrity"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "des",
+            label: "DES is obsolete and has a too-small key",
+            correct: true,
+            rationale:
+              "DES has only a 56-bit effective key and is not suitable for modern systems.",
+          },
+          {
+            id: "cbc-no-integrity",
+            label: "CBC provides no integrity by itself",
+            correct: true,
+            rationale:
+              "CBC encryption should be authenticated or replaced by an AEAD mode.",
+          },
+          {
+            id: "iv-requirements",
+            label: "CBC requires correct IV handling",
+            correct: true,
+            rationale:
+              "CBC IVs must be unpredictable and unique for secure encryption.",
+          },
+          {
+            id: "pkcs5",
+            label: "PKCS5Padding is the main vulnerability",
+            correct: false,
+            rationale:
+              "Padding is not the main issue; DES and unauthenticated CBC are.",
+          },
+          {
+            id: "utf8",
+            label: "UTF-8 encoding makes encryption insecure",
+            correct: false,
+            rationale: "UTF-8 encoding is not a cryptographic vulnerability.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-sha1-signatures",
+    title: "Misuses: SHA-1 in digital signatures",
+    summary:
+      "A document signing service still signs contracts using SHA1withRSA.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["signatures", "sha1"],
+    language: "java",
+    code: `Signature sig = Signature.getInstance("SHA1withRSA");
+sig.initSign(privateKey);
+sig.update(documentBytes);
+byte[] signature = sig.sign();`,
+    vulnerableLines: [1, 4],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "SHA-1 is collision-broken and should not be used for digital signatures. Use modern signature schemes or hash functions, such as RSA-PSS with SHA-256 or Ed25519.",
+    examKeywords: ["digital signature", "sha1", "collision", "rsa-pss"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "sha1",
+            label: "SHA-1 is inappropriate for signatures",
+            correct: true,
+            rationale:
+              "Collision attacks undermine the security expected from document signatures.",
+          },
+          {
+            id: "legacy-padding",
+            label: "Uses legacy RSA signature construction instead of RSA-PSS",
+            correct: true,
+            rationale:
+              "RSA-PSS with SHA-256 is preferred over older PKCS#1 v1.5-style signatures.",
+          },
+          {
+            id: "private-sign",
+            label: "Signing with a private key is wrong",
+            correct: false,
+            rationale:
+              "Digital signatures are created with the private key and verified with the public key.",
+          },
+          {
+            id: "update-call",
+            label: "Calling update before sign is invalid",
+            correct: false,
+            rationale:
+              "The update-then-sign flow is normal for Java Signature.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-chacha20-fixed-nonce",
+    title: "Misuses: ChaCha20 with a fixed nonce",
+    summary:
+      "A service encrypts event payloads with ChaCha20 but hardcodes the nonce.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["chacha20", "nonce", "stream-cipher"],
+    language: "python",
+    code: `key = base64.b64decode(os.environ["EVENT_KEY"])
+nonce = b"0000000000000000"
+algorithm = algorithms.ChaCha20(key, nonce)
+cipher = Cipher(algorithm, mode=None)
+ct = cipher.encryptor().update(event_json)`,
+    vulnerableLines: [2, 3, 5],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "ChaCha20 is a stream cipher. Reusing a nonce with the same key reuses the keystream. Plain ChaCha20 also does not authenticate the ciphertext; use ChaCha20-Poly1305.",
+    examKeywords: ["chacha20", "nonce reuse", "stream cipher", "aead"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "fixed-nonce",
+            label: "Nonce is fixed and reused",
+            correct: true,
+            rationale:
+              "Stream ciphers must never reuse the same keystream under the same key.",
+          },
+          {
+            id: "no-authentication",
+            label: "Plain ChaCha20 provides no authentication",
+            correct: true,
+            rationale:
+              "Use ChaCha20-Poly1305 to get confidentiality and integrity.",
+          },
+          {
+            id: "env-key",
+            label: "Loading a key from an environment variable is always wrong",
+            correct: false,
+            rationale:
+              "Environment-based key loading can be acceptable depending on deployment; the nonce and lack of AEAD are the main issues.",
+          },
+          {
+            id: "base64",
+            label: "Base64 decoding weakens the key",
+            correct: false,
+            rationale:
+              "Base64 is only an encoding, not a cryptographic transformation.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-md5-file-integrity",
+    title: "Misuses: MD5 for file integrity",
+    summary:
+      "A download service publishes MD5 hashes as the only integrity protection.",
+    courseTopic: "cryptography",
+    difficulty: "intro",
+    tags: ["md5", "integrity"],
+    language: "python",
+    code: `def checksum(path):
+    data = open(path, "rb").read()
+    return hashlib.md5(data).hexdigest()
+
+published_hash = checksum("installer.exe")`,
+    vulnerableLines: [3, 5],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "MD5 is collision-broken and should not be used for security integrity checks. A plain hash also does not prove authenticity; use a digital signature or authenticated update mechanism.",
+    examKeywords: [
+      "md5",
+      "collision",
+      "integrity",
+      "authenticity",
+      "signature",
+    ],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "md5",
+            label: "MD5 is collision-broken",
+            correct: true,
+            rationale:
+              "Attackers may be able to craft different files with the same MD5 hash.",
+          },
+          {
+            id: "no-authenticity",
+            label: "A plain hash does not authenticate the publisher",
+            correct: true,
+            rationale:
+              "Anyone who can replace the file may also replace the hash.",
+          },
+          {
+            id: "read-binary",
+            label: "Reading the file in binary mode is insecure",
+            correct: false,
+            rationale: "Binary mode is correct for hashing files.",
+          },
+          {
+            id: "hex",
+            label: "Digest output should not be hex encoded",
+            correct: false,
+            rationale:
+              "Hex encoding is fine; the algorithm and trust model are wrong.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "cmis-jwt-hardcoded-hmac-secret",
+    title: "Misuses: JWT signed with hardcoded weak secret",
+    summary:
+      "An API signs admin JWTs using HS256 with a short hardcoded secret.",
+    courseTopic: "cryptography",
+    difficulty: "core",
+    tags: ["jwt", "hmac", "secrets"],
+    language: "javascript",
+    code: `const JWT_SECRET = "secret";
+function issueAdminToken(user) {
+  return jwt.sign({ sub: user.id, role: "admin" }, JWT_SECRET, {
+    algorithm: "HS256",
+  });
+}`,
+    vulnerableLines: [1, 3, 4],
+    vulnerabilityType: "Multiple crypto misuses",
+    fixOptions: [],
+    explanation:
+      "HS256 requires a strong unpredictable secret. A short hardcoded secret can be guessed or leaked from source code, allowing attackers to forge tokens.",
+    examKeywords: ["jwt", "hmac", "hardcoded secret", "token forgery"],
+    supportedModes: CRYPTO_MISUSE_ONLY,
+    modeData: {
+      cryptoMisuse: {
+        question: "Select every misuse.",
+        options: [
+          {
+            id: "weak-secret",
+            label: "HMAC secret is weak and guessable",
+            correct: true,
+            rationale:
+              "The string 'secret' is far too weak for signing security tokens.",
+          },
+          {
+            id: "hardcoded-secret",
+            label: "Signing secret is hardcoded",
+            correct: true,
+            rationale:
+              "Secrets in source code often leak through repositories and deployment artifacts.",
+          },
+          {
+            id: "token-forgery",
+            label: "Attackers may forge JWTs if the secret is recovered",
+            correct: true,
+            rationale:
+              "With the HMAC secret, an attacker can create valid-looking signed tokens.",
+          },
+          {
+            id: "hs256-always-broken",
+            label: "HS256 is always insecure",
+            correct: false,
+            rationale:
+              "HS256 can be secure with a strong secret and correct verification.",
+          },
+          {
+            id: "jwt-json",
+            label: "JWT payloads cannot contain JSON",
+            correct: false,
+            rationale:
+              "JWT payloads are JSON claims; the signing key management is the issue.",
           },
         ],
       },
