@@ -406,6 +406,383 @@ body {
   outline-color: var(--app-accent) !important;
 }
 
+/* ------------------------------------------------------------------ */
+/* Game tile: a "threat console module" card                          */
+/* ------------------------------------------------------------------ */
+.game-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+@media (min-width: 768px) {
+  .game-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .game-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.game-tile {
+  --tile-accent: var(--app-accent);
+  --tile-accent-soft: var(--app-accent-soft);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  isolation: isolate;
+  transition: transform 180ms ease, box-shadow 220ms ease,
+    border-color 180ms ease;
+}
+
+.game-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--tile-accent) 28%, transparent) 1px,
+    transparent 0
+  );
+  background-size: 14px 14px;
+  opacity: 0.28;
+  mask-image: linear-gradient(to bottom right, black 0%, transparent 75%);
+  -webkit-mask-image: linear-gradient(to bottom right, black 0%, transparent 75%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (min-width: 768px) {
+  .game-tile--featured {
+    grid-column: span 2;
+  }
+}
+
+.game-tile--disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.game-tile:not(.game-tile--disabled):hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--tile-accent) 55%, var(--app-border));
+  box-shadow: 0 18px 36px -24px
+      color-mix(in srgb, var(--tile-accent) 75%, transparent),
+    0 4px 12px -10px rgba(15, 23, 42, 0.22);
+}
+
+.game-tile:not(.game-tile--disabled):focus-visible {
+  outline: 2px solid var(--tile-accent);
+  outline-offset: 2px;
+}
+
+/* Chrome bar: traffic dots, mode://path, mode code */
+.game-tile__chrome {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem 0.8rem;
+  background: var(--app-code-bg-soft);
+  border-bottom: 1px solid var(--app-border);
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.72rem;
+  color: var(--app-fg-subtle);
+}
+
+.game-tile__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.game-tile__dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  display: inline-block;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.18);
+}
+
+.game-tile__dot--red {
+  background: #ff5f57;
+}
+.game-tile__dot--amber {
+  background: #febc2e;
+}
+.game-tile__dot--green {
+  background: #28c840;
+}
+
+[data-mantine-color-scheme="dark"] .game-tile__dot {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45);
+}
+
+.game-tile__path {
+  justify-self: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.game-tile__path-scheme {
+  color: var(--tile-accent);
+  font-weight: 600;
+}
+
+.game-tile__code {
+  justify-self: end;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  background: var(--tile-accent-soft);
+  color: var(--tile-accent);
+  font-weight: 700;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+}
+
+[data-mantine-color-scheme="dark"] .game-tile__code {
+  color: color-mix(in srgb, var(--tile-accent) 35%, #ffffff);
+}
+
+/* Body */
+.game-tile__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.05rem 1.1rem 0.95rem;
+  flex: 1;
+}
+
+.game-tile__signal {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.game-tile__icon {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: var(--tile-accent-soft);
+  color: var(--tile-accent);
+}
+
+.game-tile__icon::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 15px;
+  border: 1px dashed
+    color-mix(in srgb, var(--tile-accent) 55%, transparent);
+  opacity: 0;
+  transform: rotate(0deg);
+  transition: opacity 220ms ease, transform 600ms ease;
+}
+
+.game-tile:not(.game-tile--disabled):hover .game-tile__icon::after {
+  opacity: 1;
+  transform: rotate(45deg);
+}
+
+.game-tile__heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.game-tile__tagline {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--tile-accent);
+}
+
+[data-mantine-color-scheme="dark"] .game-tile__tagline {
+  color: color-mix(in srgb, var(--tile-accent) 30%, #ffffff);
+}
+
+.game-tile__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0.25rem;
+  color: var(--app-fg);
+}
+
+.game-tile--featured .game-tile__title {
+  font-size: 1.2rem;
+}
+
+.game-tile__description {
+  font-size: 0.86rem;
+  color: var(--app-fg-muted);
+  line-height: 1.5;
+  flex: 1;
+  margin: 0;
+}
+
+/* Footer / status bar */
+.game-tile__footer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--app-border);
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.game-tile__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.game-tile__status--ready {
+  color: var(--app-success);
+}
+
+.game-tile__status--offline {
+  color: var(--app-fg-subtle);
+}
+
+.game-tile__status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 3px
+    color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.game-tile__status--ready .game-tile__status-dot {
+  animation: tile-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes tile-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 26%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, currentColor 6%, transparent);
+  }
+}
+
+.game-tile__count {
+  margin-left: auto;
+  color: var(--app-fg-muted);
+  font-weight: 600;
+}
+
+.game-tile__arrow {
+  display: inline-flex;
+  color: var(--tile-accent);
+  transition: transform 180ms ease;
+}
+
+.game-tile:not(.game-tile--disabled):hover .game-tile__arrow {
+  transform: translateX(4px);
+}
+
+/* Targeting reticle corners */
+.game-tile__corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: color-mix(in srgb, var(--tile-accent) 70%, transparent);
+  opacity: 0;
+  transition: opacity 200ms ease, inset 200ms ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.game-tile__corner--tl {
+  top: 8px;
+  left: 8px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+  border-top-left-radius: 4px;
+}
+.game-tile__corner--tr {
+  top: 8px;
+  right: 8px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+  border-top-right-radius: 4px;
+}
+.game-tile__corner--bl {
+  bottom: 8px;
+  left: 8px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+  border-bottom-left-radius: 4px;
+}
+.game-tile__corner--br {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  border-bottom-right-radius: 4px;
+}
+
+.game-tile:not(.game-tile--disabled):hover .game-tile__corner--tl {
+  top: 4px;
+  left: 4px;
+}
+.game-tile:not(.game-tile--disabled):hover .game-tile__corner--tr {
+  top: 4px;
+  right: 4px;
+}
+.game-tile:not(.game-tile--disabled):hover .game-tile__corner--bl {
+  bottom: 4px;
+  left: 4px;
+}
+.game-tile:not(.game-tile--disabled):hover .game-tile__corner--br {
+  bottom: 4px;
+  right: 4px;
+}
+
+.game-tile:not(.game-tile--disabled):hover .game-tile__corner {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-tile,
+  .game-tile__arrow,
+  .game-tile__icon::after,
+  .game-tile__corner,
+  .game-tile__status--ready .game-tile__status-dot {
+    transition: none;
+    animation: none;
+  }
+}
+
 /* On small viewports the AppShell footer flows with the page instead of being
    pinned to the viewport, so it is reached by scrolling to the bottom.
    `--app-shell-footer-offset` is set inline on the AppShell root by Mantine,

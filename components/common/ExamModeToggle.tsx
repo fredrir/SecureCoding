@@ -19,7 +19,7 @@ export function ExamModeToggle({ compact = false }: Props) {
         <Switch
           checked={settings.examMode}
           onChange={(e) => setExamMode(e.currentTarget.checked)}
-          color="magenta"
+          color="ntnuBlue"
           size={compact ? "sm" : "md"}
           aria-label="Toggle exam mode"
         />
