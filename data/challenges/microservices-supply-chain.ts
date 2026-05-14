@@ -1,4 +1,4 @@
-import type { Challenge } from "@/domain/challenge";
+﻿import type { Challenge } from "@/domain/challenge";
 import { buildChallenge, fix } from "../builder";
 
 export const microservicesSupplyChainChallenges: readonly Challenge[] = [
@@ -30,19 +30,34 @@ export const microservicesSupplyChainChallenges: readonly Challenge[] = [
         "exact-only",
         "Replace caret ranges with exact versions",
         "Helps but loses easy minor upgrades; lockfile + `npm ci` solves both reproducibility and upgrade flow.",
-        { tempting: true },
+        { tempting: true , code: `{
+  "validation": {
+    "mode": "deny-list",
+    "blocked": ["dot-dot", "script-tag"]
+  }
+}`},
       ),
       fix(
         "auto-upgrade",
         "Run `npm update` nightly in production",
         "Automatic upgrades in production undermine reproducibility and can introduce breakage from compromised packages.",
-        { tempting: true },
+        { tempting: true , code: `{
+  "validation": {
+    "mode": "deny-list",
+    "blocked": ["dot-dot", "script-tag"]
+  }
+}`},
       ),
       fix(
         "vendor-binary",
         "Vendor a tarball of node_modules in the repo",
         "Hard to audit and review; lockfile + registry mirroring is preferable.",
-      ),
+        { code: `{
+  "validation": {
+    "mode": "deny-list",
+    "blocked": ["dot-dot", "script-tag"]
+  }
+}` }),
     ],
     correctFixId: "lockfile-ci",
     explanation:
@@ -54,15 +69,15 @@ export const microservicesSupplyChainChallenges: readonly Challenge[] = [
       "reproducible",
       "audit",
     ],
-    owaspTop10: "A06",
+    owaspTop10: "A03",
     modeData: {
       multipleChoice: {
         question: "How do you make a Node build reproducible against supply-chain risk?",
         options: [
           { id: "a", text: "Commit a lockfile and use `npm ci` in pipelines.", correct: true, rationale: "Reproducibility + auditability." },
-          { id: "b", text: "Always run `npm update`.", correct: false, rationale: "Unpredictable and risky." },
-          { id: "c", text: "Disable network access in CI.", correct: false, rationale: "Doesn't pin versions." },
-          { id: "d", text: "Re-tag releases manually.", correct: false, rationale: "Doesn't address dependencies." },
+          { id: "b", text: "Always run `npm update` before builds so the newest patched versions are selected.", correct: false, rationale: "Unpredictable and risky." },
+          { id: "c", text: "Disable network access in CI after dependency installation has already completed.", correct: false, rationale: "Doesn't pin versions." },
+          { id: "d", text: "Re-tag releases manually after each successful build to document the dependency tree.", correct: false, rationale: "Doesn't address dependencies." },
         ],
       },
     },
@@ -96,19 +111,25 @@ CMD ["node", "server.js"]`,
         "build-arg",
         "Pass the credentials as a build ARG",
         "Build args are baked into image layers and metadata. Same problem.",
-        { tempting: true },
+        { tempting: true , code: `value="$1"
+case "$value" in *..*) exit 1 ;; esac
+eval "process $value"`},
       ),
       fix(
         "env-runtime",
         "Provide credentials via container environment variables",
         "Better than baking, but env vars still leak via process inspection and logs; managed identities are stronger.",
-        { tempting: true },
+        { tempting: true , code: `value="$1"
+case "$value" in *..*) exit 1 ;; esac
+eval "process $value"`},
       ),
       fix(
         "private-registry",
         "Push the image to a private registry only",
         "Anyone with pull access has the secret; layered storage means even old layers may retain it.",
-      ),
+        { code: `value="$1"
+case "$value" in *..*) exit 1 ;; esac
+eval "process $value"` }),
     ],
     correctFixId: "iam-role",
     explanation:
@@ -120,7 +141,7 @@ CMD ["node", "server.js"]`,
       "image layers",
       "short-lived",
     ],
-    owaspTop10: "A05",
+    owaspTop10: "A02",
   }),
 
   buildChallenge({
@@ -143,9 +164,9 @@ CMD ["node", "server.js"]`,
         question: "Which approach gives the smallest blast radius when one microservice is compromised?",
         options: [
           { id: "a", text: "mTLS or workload-identity-issued short-lived tokens per service.", correct: true, rationale: "Each service has a unique identity; rotation is automatic." },
-          { id: "b", text: "A shared API key rotated annually.", correct: false, rationale: "Shared secret = all-or-nothing breach." },
-          { id: "c", text: "Network ACLs only.", correct: false, rationale: "Networking helps but doesn't authenticate the principal." },
-          { id: "d", text: "VPN with a single password.", correct: false, rationale: "Same shared-secret problem." },
+          { id: "b", text: "A shared API key rotated annually and distributed to every internal service.", correct: false, rationale: "Shared secret = all-or-nothing breach." },
+          { id: "c", text: "Network ACLs only, with all internal services trusted once traffic enters the subnet.", correct: false, rationale: "Networking helps but doesn't authenticate the principal." },
+          { id: "d", text: "A VPN with a single password used by every service for east-west traffic.", correct: false, rationale: "Same shared-secret problem." },
         ],
       },
       explainPrompt:

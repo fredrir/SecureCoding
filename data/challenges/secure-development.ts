@@ -309,19 +309,19 @@ export const secureDevelopmentChallenges: readonly Challenge[] = [
           },
           {
             id: "b",
-            text: "The application logs both timestamp and severity.",
+            text: "The application logs both timestamp and severity for each security-relevant event.",
             correct: false,
             rationale: "That is normally good logging practice.",
           },
           {
             id: "c",
-            text: "Logs are protected against ordinary users reading them.",
+            text: "Logs are protected against ordinary users reading them through the application UI.",
             correct: false,
             rationale: "That protects confidentiality and integrity.",
           },
           {
             id: "d",
-            text: "The system uses centralised log collection.",
+            text: "The system uses centralised log collection with retention for incident investigations.",
             correct: false,
             rationale:
               "Central collection usually improves monitoring and forensics.",

@@ -35,7 +35,7 @@ export const practiceModeChallenges: readonly Challenge[] = [
     explanation:
       "Reflected XSS is triggered by a single crafted request whose payload appears unmodified in the response body. The payload needs to break out of the surrounding HTML context and run JS in the victim's origin.",
     examKeywords: ["reflected", "payload", "context", "origin"],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-01",
     supportedModes: ATTACK_ONLY,
     modeData: {
@@ -107,7 +107,7 @@ WHERE username = '$user'
     explanation:
       "Authentication bypass via SQL injection works by closing the username quote and short-circuiting the AND clause to always-true, so the predicate matches the first user row.",
     examKeywords: ["bypass", "always true", "tautology", "comment"],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-05",
     supportedModes: ATTACK_ONLY,
     modeData: {
@@ -180,7 +180,7 @@ username=Admin&password=Admin`,
     explanation:
       "SSRF lets the attacker make the server send requests on their behalf. The instance metadata service at 169.254.169.254 hands out short-lived cloud credentials to any client that asks.",
     examKeywords: ["ssrf", "metadata", "169.254", "credentials"],
-    owaspTop10: "A06",
+    owaspTop10: "A01",
     owaspWstg: "WSTG-INPV-19",
     supportedModes: ATTACK_ONLY,
     modeData: {
@@ -249,7 +249,7 @@ Host: admin.example.com`,
       wstgMapping: {
         question:
           "Which WSTG category best describes a persisted XSS payload in a comment field?",
-        top10Hint: "A03",
+        top10Hint: "A05",
         options: [
           {
             id: "stored",
@@ -477,7 +477,7 @@ Host: admin.example.com`,
       wstgMapping: {
         question:
           "Which WSTG category covers a server fetching attacker-controlled URLs, including internal hosts?",
-        top10Hint: "A05",
+        top10Hint: "A01",
         options: [
           {
             id: "ssrf",
@@ -887,7 +887,7 @@ Host: admin.example.com`,
       wstgMapping: {
         question:
           "Which WSTG category covers production error pages that expose stack traces?",
-        top10Hint: "A02",
+        top10Hint: "A10",
         options: [
           {
             id: "stack-traces",
@@ -944,7 +944,7 @@ Host: admin.example.com`,
       wstgMapping: {
         question:
           "Which WSTG category covers overly permissive CORS policies that expose authenticated API responses?",
-        top10Hint: "A02",
+        top10Hint: "A01",
         options: [
           {
             id: "cors",
@@ -1105,13 +1105,13 @@ Host: admin.example.com`,
     vulnerabilityType: "TLS Validation Disabled",
     fixOptions: [],
     explanation:
-      "Weak transport security between services maps to WSTG-CRYP-01. Top 10 home is A02 Cryptographic Failures.",
+      "Weak transport security between services maps to WSTG-CRYP-01. Top 10 home is A04 Cryptographic Failures.",
     examKeywords: ["tls", "cryp-01"],
     supportedModes: WSTG_ONLY,
     modeData: {
       wstgMapping: {
         question: "Which WSTG code fits a disabled-cert-validation finding?",
-        top10Hint: "A02",
+        top10Hint: "A04",
         options: [
           {
             id: "cryp01",
@@ -1265,7 +1265,7 @@ Host: admin.example.com`,
       "work factor",
       "no plaintext",
     ],
-    owaspTop10: "A07",
+    owaspTop10: "A04",
     supportedModes: SECURE_REQ_ONLY,
     modeData: {
       secureRequirement: {
@@ -1306,7 +1306,7 @@ Host: admin.example.com`,
       "logout",
       "session rotation",
     ],
-    owaspTop10: "A07",
+    owaspTop10: "A02",
     owaspWstg: "WSTG-SESS-02",
     supportedModes: SECURE_REQ_ONLY,
     modeData: {
@@ -1599,7 +1599,7 @@ Host: admin.example.com`,
       "correlation ID",
       "debug disabled",
     ],
-    owaspTop10: "A02",
+    owaspTop10: "A10",
     owaspWstg: "WSTG-ERRH-02",
     supportedModes: SECURE_REQ_ONLY,
     modeData: {
@@ -4521,15 +4521,15 @@ function issueAdminToken(user) {
     vulnerabilityType: "SQL Injection",
     fixOptions: [],
     explanation:
-      "A complete writeup names the bug, points at the vulnerable lines, shows an exploit (e.g. admin'-- as the username), states the impact (full DB compromise, auth bypass), and prescribes prepared statements plus password hashing. WSTG-INPV-05 / A03.",
+      "A complete writeup names the bug, points at the vulnerable lines, shows an exploit (e.g. admin'-- as the username), states the impact (full DB compromise, auth bypass), and prescribes prepared statements plus password hashing. WSTG-INPV-05 / A05.",
     examKeywords: [
       "sql injection",
       "prepared statement",
       "wstg-inpv-05",
-      "a03",
+      "a05",
       "tautology",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-05",
     supportedModes: REPORT_ONLY,
     modeData: {
@@ -4582,8 +4582,8 @@ function issueAdminToken(user) {
           {
             id: "mapping",
             label: "WSTG / Top 10",
-            placeholder: "WSTG-INPV-05, OWASP Top 10 A03",
-            keywords: ["wstg-inpv-05", "a03"],
+            placeholder: "WSTG-INPV-05, OWASP Top 10 A05",
+            keywords: ["wstg-inpv-05", "a05"],
           },
         ],
       },

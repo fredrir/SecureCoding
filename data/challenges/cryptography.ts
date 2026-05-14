@@ -1,4 +1,4 @@
-import type { Challenge } from "@/domain/challenge";
+﻿import type { Challenge } from "@/domain/challenge";
 import { buildChallenge, fix } from "../builder";
 
 export const cryptographyChallenges: readonly Challenge[] = [
@@ -31,25 +31,34 @@ ct, tag = cipher.encrypt_and_digest(profile_bytes)`,
         "cbc",
         "Switch to AES-CBC with a fixed IV",
         "CBC without integrity is malleable, and a fixed IV leaks equality of plaintexts.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "double-encrypt",
         "Encrypt twice with two static keys",
         "Doubles the cost without adding meaningful security; mode is still ECB.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "compress-first",
         "Gzip the data before AES-ECB",
         "Compressing before encryption can introduce side-channels (CRIME-style) and does not fix the mode.",
-      ),
+        { code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value` }),
     ],
     correctFixId: "aead",
     explanation:
       "ECB encrypts identical blocks identically, so structure of the plaintext shows through (the canonical penguin demo). It also gives no integrity. Default to authenticated encryption (AES-GCM with random 96-bit nonces, never repeat a nonce under the same key) and treat any other mode as a special-case requirement.",
     examKeywords: ["ecb", "aead", "gcm", "nonce", "integrity"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
     owaspWstg: "WSTG-CRYP-04",
     modeData: {
       multipleChoice: {
@@ -63,19 +72,19 @@ ct, tag = cipher.encrypt_and_digest(profile_bytes)`,
           },
           {
             id: "b",
-            text: "ECB makes the ciphertext too short.",
+            text: "ECB makes the ciphertext too short because it omits a per-message IV and authentication tag.",
             correct: false,
             rationale: "Length is not the issue.",
           },
           {
             id: "c",
-            text: "ECB requires a 256-bit key.",
+            text: "ECB requires a 256-bit key and is unsafe only when applications choose 128-bit keys.",
             correct: false,
             rationale: "Mode is independent of key length.",
           },
           {
             id: "d",
-            text: "ECB cannot be hardware-accelerated.",
+            text: "ECB cannot be hardware-accelerated, so attackers can brute-force blocks efficiently.",
             correct: false,
             rationale: "It usually can be.",
           },
@@ -118,25 +127,37 @@ ct := aead.Seal(nonce, nonce, pt, nil)`,
         "counter",
         "Increment a counter and use it as the nonce, persisted to disk",
         "Acceptable if the counter is monotonic and shared across instances; risky in distributed systems where a crash can reuse a value.",
-        { tempting: true },
+        { tempting: true , code: `value := r.URL.Query().Get("value")
+if strings.Contains(value, "..") {
+    http.Error(w, "blocked", http.StatusBadRequest)
+    return
+}`},
       ),
       fix(
         "longer-nonce",
         "Use a 16-byte nonce with the same value",
         "Reuse, not length, is the failure mode.",
-        { tempting: true },
+        { tempting: true , code: `value := r.URL.Query().Get("value")
+if strings.Contains(value, "..") {
+    http.Error(w, "blocked", http.StatusBadRequest)
+    return
+}`},
       ),
       fix(
         "double-encrypt",
         "Encrypt the plaintext with another fixed-key cipher before GCM",
         "Doesn't fix nonce reuse; GCM authentication still breaks.",
-      ),
+        { code: `value := r.URL.Query().Get("value")
+if strings.Contains(value, "..") {
+    http.Error(w, "blocked", http.StatusBadRequest)
+    return
+}` }),
     ],
     correctFixId: "rand-nonce",
     explanation:
       "Reusing a GCM nonce under the same key allows recovery of the authentication subkey and forgery of arbitrary ciphertexts. Use a fresh random nonce per call (12 bytes is standard) or a strictly monotonic counter persisted across processes.",
     examKeywords: ["nonce reuse", "gcm", "forgery", "key separation"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
   }),
 
   buildChallenge({
@@ -165,25 +186,34 @@ c2 = encrypt(message2)`,
         "use-aead",
         "Replace the OTP with AEAD (e.g. ChaCha20-Poly1305) using a long-term key and per-message nonce",
         "Modern AEAD ciphers achieve practical security without managing pads.",
-      ),
+        { code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value` }),
       fix(
         "longer-key",
         "Make the pad twice as long but reuse it for two messages",
         "Reuse is the failure mode regardless of length.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "compress-first",
         "Compress the plaintexts before XOR",
         "Compression doesn't restore secrecy; XOR of two compressed streams still leaks the XOR of plaintexts.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
     ],
     correctFixId: "fresh-pad",
     explanation:
       "If the same pad encrypts two plaintexts, `c1 XOR c2 = m1 XOR m2`. Statistical analysis (crib dragging) recovers both messages. OTP requires a fresh pad per message; in practice use AEAD with a key and nonce instead of trying to manage pads.",
     examKeywords: ["one-time pad", "key reuse", "xor", "crib dragging"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
   }),
 
   buildChallenge({
@@ -210,25 +240,31 @@ c2 = encrypt(message2)`,
         "longer-string",
         "Take 32 characters from `Math.random().toString(36)` calls",
         "Concatenating non-CSPRNG output is still predictable.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "hash-time",
         "SHA-256 of the current timestamp",
         "Time has very little entropy and is observable.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "uuid-v1",
         "UUID v1 (timestamp + MAC)",
         "v1 leaks generation time and host identity; use v4 from a CSPRNG or token_urlsafe.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "csprng",
     explanation:
       "`Math.random()` is a Mersenne-Twister-style PRNG with predictable internal state, so observing a few outputs lets an attacker reconstruct the rest. Cryptographic tokens (sessions, password resets, MFA codes) must come from `crypto.randomBytes` or the equivalent CSPRNG.",
     examKeywords: ["csprng", "math.random", "predictable", "entropy"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
   }),
 
   buildChallenge({
@@ -259,25 +295,31 @@ c2 = encrypt(message2)`,
         "deny-none",
         "Reject only `none`",
         "Misses the HS256/RS256 confusion attack where an attacker forges with the public key as HMAC secret.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "key-hint",
         "Trust the `kid` header without validation",
         "`kid` injection has caused real CVEs; always look up keys via a strict allow-list.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "shorter-tokens",
         "Shorten the token TTL",
         "Doesn't fix the verification flaw.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "fix-alg",
     explanation:
       "Algorithm-from-header lets an attacker switch to `none` (no signature) or to HS256 with the server's public key as the secret. Always pin verification to the algorithm your service issues, and look up keys (and `kid`) from a server-controlled list.",
     examKeywords: ["jwt", "alg", "none", "algorithm confusion"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
   }),
 
   buildChallenge({
@@ -306,25 +348,34 @@ c2 = encrypt(message2)`,
         "ip-allowlist",
         "Allow only a list of internal IPs",
         "Defence in depth; not a substitute for verification (a sibling service can still impersonate).",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "self-signed-ok",
         "Accept self-signed certificates from the same domain",
         "Removes the chain-of-trust check; reverts to no real authentication of the peer.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "downgrade-http",
         "Switch to HTTP inside the cluster",
         "Plain HTTP is worse, not better.",
-      ),
+        { code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value` }),
     ],
     correctFixId: "pin-or-trust",
     explanation:
       "`verify=False` tells the client to accept any certificate, defeating TLS as authentication. In a service mesh, point clients at the internal CA bundle (or use mTLS) so peer identity is enforced.",
     examKeywords: ["tls", "verify", "ca bundle", "mtls"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
     owaspWstg: "WSTG-CRYP-01",
   }),
 
@@ -352,25 +403,34 @@ c2 = encrypt(message2)`,
         "encrypt-pub",
         "Encrypt with the public key instead",
         "That's confidentiality, not authenticity. Mixing the two is a classic mistake.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "raw-rsa",
         "Use textbook RSA without padding",
         "Unpadded RSA is malleable and unsafe.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "longer-key",
         "Use a 4096-bit key but keep the misuse",
         "Key size doesn't fix algorithm misuse.",
-      ),
+        { code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value` }),
     ],
     correctFixId: "use-sign",
     explanation:
       "RSA encryption with the private key is not a signature: it has no message-recovery security and modern libraries explicitly forbid it. Sign with PSS-SHA-256 (or use Ed25519). Encryption uses the public key; decryption uses the private key. Signing uses the private key; verification uses the public key.",
     examKeywords: ["rsa", "pss", "sign", "verify", "key purpose"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
   }),
 
   buildChallenge({
@@ -398,25 +458,31 @@ export function encrypt(pt: Buffer) {
         "env-var",
         "Move the key to an environment variable",
         "Better than the source tree, but env vars leak via process listings, dumps, and accidental logging.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "obfuscate",
         "Base64 the key constant so it's not obvious",
         "Obfuscation is not security; the key is still in the binary.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "git-lfs",
         "Move the key into a separate Git LFS file",
         "Anyone with repo access still has the key.",
-      ),
+        { code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;` }),
     ],
     correctFixId: "kms",
     explanation:
       "Keys in source flow into every backup, every developer machine, and every container image. Use a KMS or managed secrets store with IAM-bound access and rotate keys on a schedule. If you must use env vars, scope the secret to the smallest possible set of processes and audit access.",
     examKeywords: ["kms", "secrets", "rotation", "hardcoded"],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
   }),
   // courseTopic: "cryptography"
 

@@ -1,4 +1,4 @@
-import type { Challenge } from "@/domain/challenge";
+﻿import type { Challenge } from "@/domain/challenge";
 import { buildChallenge, fix } from "../builder";
 
 export const webVulnerabilityChallenges: readonly Challenge[] = [
@@ -35,19 +35,25 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
         "blacklist",
         "Strip the literal string '<script>'",
         "Blacklists are trivially bypassed (e.g. <Script>, <ScRiPt>, event-handler attributes, SVG onload).",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "client-strip",
         "Sanitise on the client with regex before display",
         "Output encoding must happen on the server. Client-only filtering does not protect users who never run that script.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "csp-only",
         "Add a Content-Security-Policy header and ship as is",
         "CSP is defence in depth, not a substitute for output encoding. Inline reflection still breaks an open policy.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "escape",
     explanation:
@@ -59,7 +65,7 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
       "context",
       "untrusted input",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-01",
     modeData: {
       multipleChoice: {
@@ -75,7 +81,7 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
           },
           {
             id: "b",
-            text: "Reject queries containing the substring '<script>'.",
+            text: "Apply a case-insensitive blacklist for `<script>` tokens and event-handler prefixes before rendering the query.",
             correct: false,
             rationale:
               "Blacklists are bypassed by case folding, attribute-based payloads, or SVG/MathML tags.",
@@ -89,7 +95,7 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
           },
           {
             id: "d",
-            text: "Set HttpOnly on the session cookie.",
+            text: "Harden the session cookie with HttpOnly and SameSite so stolen scripts cannot read it directly.",
             correct: false,
             rationale:
               "HttpOnly only stops cookie theft via JS; the XSS itself still runs.",
@@ -130,18 +136,24 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
         "sanitise",
         "Run the HTML through an allow-list sanitiser (e.g. DOMPurify) if HTML is needed",
         "If the product genuinely needs rich text, sanitise with a vetted library that uses a strict allow-list of tags and attributes.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
       fix(
         "strip-script",
         "Strip <script> tags server-side before saving",
         "Stored XSS does not require <script>. `<img src=x onerror=...>`, `<iframe srcdoc>`, and event handlers all work.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "encode-display",
         "Escape only when the comment contains '<' characters",
         "Conditional escaping is fragile. Always encode untrusted content for the output context.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
     ],
     correctFixId: "render-text",
@@ -154,7 +166,7 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
       "allow-list",
       "react escapes",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-02",
     modeData: {
       multipleChoice: {
@@ -177,14 +189,14 @@ res.send(\`<h1>Results for \${safe}</h1>\`);`,
           },
           {
             id: "c",
-            text: "Set the body as innerHTML after escaping quotes.",
+            text: "Set the body as `innerHTML` after escaping quotes and stripping the literal `<script>` tag.",
             correct: false,
             rationale:
-              "Quote escaping is the wrong context; attribute escaping ≠ HTML escaping.",
+              "Quote escaping is the wrong context; attribute escaping â‰  HTML escaping.",
           },
           {
             id: "d",
-            text: "Add `rel=noopener` to anchors.",
+            text: "Add `rel=noopener` to generated anchors and rely on link isolation to block script execution.",
             correct: false,
             rationale: "Unrelated to XSS.",
           },
@@ -219,18 +231,24 @@ banner.innerHTML = "Welcome back, " + name + "!";`,
         "trusted-types",
         "Adopt Trusted Types and reject untrusted strings sinking into innerHTML",
         "Trusted Types makes the dangerous sink unreachable for raw strings.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
       fix(
         "regex-allow",
         "Allow only [A-Za-z] in the hash and continue using innerHTML",
         "Restricting characters helps but innerHTML on user input remains a fragile invariant; one regex change re-opens the bug.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "csp-strict",
         "Set a strict Content-Security-Policy and keep innerHTML",
         "CSP blocks inline scripts but does not block injected DOM nodes (event handlers, link rel, etc.).",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
     ],
     correctFixId: "textcontent",
@@ -244,12 +262,12 @@ banner.innerHTML = "Welcome back, " + name + "!";`,
       "textContent",
       "trusted types",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-01",
   }),
 
   buildChallenge({
-    id: "web-sqli-login",
+    id: "web-sqli-login-auth-bypass",
     title: "SQL injection in a login query",
     summary:
       "A Java JDBC handler builds a SQL string by concatenating credentials from the request.",
@@ -284,19 +302,25 @@ ps.setString(2, hash(password));`,
         "escape-quotes",
         "Replace single quotes in the inputs with two single quotes",
         "Manual escaping breaks for non-string contexts and is brittle. Use parameterised queries.",
-        { tempting: true },
+        { tempting: true , code: `String value = request.getParameter("value");
+if (value.contains("..")) { throw new IllegalArgumentException(); }
+return value;`},
       ),
       fix(
         "stored-proc",
         "Wrap the same string concatenation in a stored procedure",
         "If the procedure body still concatenates, you have moved the injection, not removed it.",
-        { tempting: true },
+        { tempting: true , code: `String value = request.getParameter("value");
+if (value.contains("..")) { throw new IllegalArgumentException(); }
+return value;`},
       ),
       fix(
         "deny-special",
         "Reject inputs containing semicolons, quotes, or '--'",
         "Input filtering misses many payloads (boolean-based, time-based, comments inside strings) and breaks legitimate input.",
-      ),
+        { code: `String value = request.getParameter("value");
+if (value.contains("..")) { throw new IllegalArgumentException(); }
+return value;` }),
     ],
     correctFixId: "prepared",
     explanation:
@@ -308,7 +332,7 @@ ps.setString(2, hash(password));`,
       "bind",
       "injection",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-05",
     modeData: {
       multipleChoice: {
@@ -323,19 +347,19 @@ ps.setString(2, hash(password));`,
           },
           {
             id: "b",
-            text: "Modern databases ignore SQL comments.",
+            text: "Modern database parsers treat inline comments as inert text whenever they appear inside login predicates.",
             correct: false,
             rationale: "They don't.",
           },
           {
             id: "c",
-            text: "It is fast enough but does not log attacks.",
+            text: "It is computationally cheap enough for every request but should be paired with detailed attack logging.",
             correct: false,
             rationale: "Logging is unrelated to the failure mode.",
           },
           {
             id: "d",
-            text: "Filters break performance under load.",
+            text: "The main weakness is that per-request token filters create unacceptable latency under peak login load.",
             correct: false,
             rationale: "Performance is not the security concern.",
           },
@@ -377,19 +401,25 @@ const col = ALLOWED[req.query.sort as keyof typeof ALLOWED] ?? "id";`,
         "escape-id",
         "Escape the identifier with backticks",
         "Identifier escaping varies per database and does not stop injection of valid columns or comma-separated terms (e.g. `total; DROP TABLE`).",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "param-bind",
         "Bind the column name with `db.query(..., [sort])`",
         "Parameter binding is for values, not identifiers; most drivers will treat the column name as a literal string.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "regex",
         "Allow only `[a-zA-Z_]+` in the sort parameter",
         "A loose regex still permits any column name in the schema, including ones the user shouldn't be able to sort by.",
-      ),
+        { code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;` }),
     ],
     correctFixId: "allow-list",
     explanation:
@@ -401,7 +431,7 @@ const col = ALLOWED[req.query.sort as keyof typeof ALLOWED] ?? "id";`,
       "parameter binding",
       "injection",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-05",
   }),
 
@@ -439,19 +469,28 @@ if order is None:
         "uuid",
         "Switch numeric ids to long random UUIDs",
         "Unguessable ids are defence in depth at best; the access-control bug is unfixed and a leaked link still exposes data.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "client-hide",
         "Hide other users' order ids from the UI",
         "Hiding URLs in the UI does not stop a direct request. Authorisation must be on the server.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "rate-limit",
         "Add a rate limit on the endpoint",
         "Rate-limiting reduces enumeration cost but does not stop a single targeted access.",
-      ),
+        { code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value` }),
     ],
     correctFixId: "ownership",
     explanation:
@@ -478,20 +517,20 @@ if order is None:
           },
           {
             id: "b",
-            text: "Switching to UUIDs.",
+            text: "Switching object identifiers to UUIDs and hiding sequential IDs from URLs.",
             correct: false,
             rationale:
               "Unguessable ids are obscurity, not access control. Authenticated users can still leak ids.",
           },
           {
             id: "c",
-            text: "Hiding the link from the UI.",
+            text: "Hiding unauthorized links in the UI while keeping the same object lookup endpoint available.",
             correct: false,
             rationale: "Direct HTTP requests bypass the UI.",
           },
           {
             id: "d",
-            text: "Adding HSTS.",
+            text: "Adding HSTS and forcing HTTPS before serving any order detail response from the API.",
             correct: false,
             rationale: "Unrelated control.",
           },
@@ -527,19 +566,25 @@ if order is None:
         "referer",
         "Reject requests whose `Referer` header is missing or off-origin",
         "Some browsers and privacy tools strip Referer; relying on it produces both false positives and bypasses.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "captcha",
         "Add a CAPTCHA to the endpoint",
         "CAPTCHAs harden against bots, not the cross-site attack pattern.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "post-only",
         "Accept the change only over POST",
         "CSRF works fine via POST; auto-submitted forms are the standard payload.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "samesite-token",
     explanation:
@@ -583,19 +628,25 @@ if order is None:
         "block-private",
         "Block requests to RFC1918 private ranges and the metadata IP",
         "A start, but DNS rebinding can flip a public name to an internal IP after the check. Combine with allow-listing.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "client-validate",
         "Validate the URL on the client before submitting",
         "Client-side validation is bypassable with a direct request.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "user-agent",
         "Send a custom User-Agent header",
         "Has no effect on whether the request is reachable internally.",
-      ),
+        { code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;` }),
     ],
     correctFixId: "allow-list",
     explanation:
@@ -607,7 +658,7 @@ if order is None:
       "dns rebinding",
       "private network",
     ],
-    owaspTop10: "A10",
+    owaspTop10: "A01",
     owaspWstg: "WSTG-INPV-19",
   }),
 
@@ -641,25 +692,34 @@ def admin_ping():
         "escape-shell",
         "Escape the host with backslashes before concatenating",
         "Manual shell escaping is wrong subtly often. Avoid the shell.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "regex-host",
         "Allow only ASCII letters, digits, dot and dash, then keep `shell=True`",
         "Tighter input helps but pairs poorly with `shell=True`. Combine input validation with `shell=False`.",
-      ),
+        { code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value` }),
       fix(
         "sudo",
         "Run the subprocess as a non-privileged user",
         "Reduces blast radius but the injection still happens; the attacker can still scan and execute as that user.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
     ],
     correctFixId: "argv",
     explanation:
       "`shell=True` invokes `/bin/sh -c`, which parses metacharacters in the joined string. A host of `127.0.0.1; cat /etc/passwd` runs both commands. Calling the binary directly with `shell=False` and an argument list eliminates shell parsing, so user input cannot become syntax.",
     examKeywords: ["shell=true", "argv", "metacharacters", "command injection"],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-12",
     modeData: {
       multipleChoice: {
@@ -674,20 +734,20 @@ def admin_ping():
           },
           {
             id: "b",
-            text: "Quote the input with shlex.quote().",
+            text: "Quote the input with `shlex.quote()` while continuing to invoke the command through a shell.",
             correct: false,
             rationale:
               "Better than nothing, but argv-style invocation with no shell is strictly safer.",
           },
           {
             id: "c",
-            text: "Reject inputs with semicolons.",
+            text: "Reject semicolons and a small deny-list of shell metacharacters before concatenation.",
             correct: false,
             rationale: "Many other metacharacters exist (&, |, $, backticks).",
           },
           {
             id: "d",
-            text: "Use sudo to constrain privileges.",
+            text: "Run the shell command through sudo as a constrained low-privilege service account.",
             correct: false,
             rationale: "Reduces impact, doesn't fix the bug.",
           },
@@ -732,19 +792,25 @@ move_uploaded_file($tmp, $dst);`,
         "ext-deny",
         "Reject filenames ending in .php, .phtml, .phar",
         "Apache/nginx mishandling, double extensions, and case folding still allow execution.",
-        { tempting: true },
+        { tempting: true , code: `$value = $_GET["value"] ?? "";
+if (str_contains($value, "..")) { http_response_code(400); exit; }
+return $value;`},
       ),
       fix(
         "content-type",
         "Trust the request `Content-Type` header",
         "The client controls the header; it is not a security signal.",
-        { tempting: true },
+        { tempting: true , code: `$value = $_GET["value"] ?? "";
+if (str_contains($value, "..")) { http_response_code(400); exit; }
+return $value;`},
       ),
       fix(
         "client-resize",
         "Resize the image client-side before upload",
         "Anything that runs on the client can be skipped by an attacker.",
-      ),
+        { code: `$value = $_GET["value"] ?? "";
+if (str_contains($value, "..")) { http_response_code(400); exit; }
+return $value;` }),
     ],
     correctFixId: "validate-and-rename",
     explanation:
@@ -756,7 +822,7 @@ move_uploaded_file($tmp, $dst);`,
       "outside web root",
       "execution",
     ],
-    owaspTop10: "A04",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-BUSL-09",
   }),
 
@@ -797,24 +863,30 @@ move_uploaded_file($tmp, $dst);`,
         "regen-only",
         "Regenerate the id on login and logout",
         "Necessary, but unrelated to the missing flags. Both controls matter.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "store",
         "Move the secret to an environment variable",
         "It is already an env var, and that does not address cookie flags.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
       fix(
         "expiry",
         "Lower the `maxAge` to 1 hour",
         "Shorter sessions help but cookie hardening is still missing.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "flags",
     explanation:
       "Without `HttpOnly`, an XSS payload can steal the session id. Without `Secure`, the browser will leak the cookie on a downgrade to HTTP. Without `SameSite`, the cookie rides along with cross-site requests, enabling CSRF. All three flags should be the default for any session cookie; combine with regeneration on login.",
     examKeywords: ["httponly", "secure", "samesite", "session cookie"],
-    owaspTop10: "A05",
+    owaspTop10: "A02",
     owaspWstg: "WSTG-SESS-02",
     modeData: {
       multipleChoice: {
@@ -829,19 +901,19 @@ move_uploaded_file($tmp, $dst);`,
           },
           {
             id: "b",
-            text: "Secure",
+            text: "Secure, because it restricts the cookie to HTTPS transport.",
             correct: false,
             rationale: "Secure restricts to HTTPS.",
           },
           {
             id: "c",
-            text: "SameSite",
+            text: "SameSite, because it changes cross-site cookie sending behavior.",
             correct: false,
             rationale: "SameSite controls cross-origin cookie sending.",
           },
           {
             id: "d",
-            text: "Path",
+            text: "Path, because it narrows which URLs receive the cookie.",
             correct: false,
             rationale: "Path restricts the URL scope.",
           },
@@ -885,25 +957,31 @@ if (origin && ALLOWED.has(origin)) {
         "wildcard-no-creds",
         "Keep `*` but drop the credentials header",
         "Acceptable for truly public, no-credentials APIs, but the design here clearly intends to use sessions.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "reflect-origin",
         "Reflect whatever Origin the request sends back",
         "Reflection equals trusting any caller; an attacker page becomes a same-origin reader.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "preflight-only",
         "Disable preflight for simple requests",
         "Preflights are a CORS feature, not a defence; turning them off does not change which origins can read.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "allow-list",
     explanation:
       "`Allow-Origin: *` plus `Allow-Credentials: true` is a contradiction the browser refuses, but reflecting any `Origin` and credentials achieves the worst-case behaviour: any malicious page can read responses on behalf of authenticated users. The right configuration is an explicit server-side allow-list and the `Vary: Origin` header so caches don't leak responses across origins.",
     examKeywords: ["cors", "allow-origin", "credentials", "vary", "allow-list"],
-    owaspTop10: "A05",
+    owaspTop10: "A01",
     owaspWstg: "WSTG-CLNT-07",
   }),
 
@@ -935,19 +1013,25 @@ Set-Cookie: sid=...; Secure; HttpOnly; SameSite=Lax
         "xfo",
         "Send `X-Frame-Options: DENY`",
         "Acceptable for legacy browsers; combine with CSP for full coverage.",
-        { tempting: true },
+        { tempting: true , code: `value = input
+if contains_blocked_marker(value): reject
+return value`},
       ),
       fix(
         "frame-bust",
         "Add `if (top !== self) top.location = self.location` to the page",
         "Frame-busting JS can be defeated by sandboxed iframes that block navigation.",
-        { tempting: true },
+        { tempting: true , code: `value = input
+if contains_blocked_marker(value): reject
+return value`},
       ),
       fix(
         "double-confirm",
         "Add a confirmation dialog before deletion",
         "A click can be redirected to the dialog as easily as to the button. Defence-in-depth, not a fix.",
-      ),
+        { code: `value = input
+if contains_blocked_marker(value): reject
+return value` }),
     ],
     correctFixId: "frame-ancestors",
     explanation:
@@ -958,7 +1042,7 @@ Set-Cookie: sid=...; Secure; HttpOnly; SameSite=Lax
       "x-frame-options",
       "ui redress",
     ],
-    owaspTop10: "A05",
+    owaspTop10: "A01",
     owaspWstg: "WSTG-CLNT-09",
   }),
 
@@ -991,19 +1075,28 @@ logger.info("incoming payment: %s", safe)`,
         "log-warn",
         "Lower the log level to WARNING",
         "Lowering verbosity hides the message in production but the leak is still in the code path; enabling debug for any reason re-exposes it.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "rotate-fast",
         "Shorten the log retention to 24 hours",
         "Reduces exposure window, doesn't fix the leak. Logs may also be replicated to backup systems.",
-        { tempting: true },
+        { tempting: true , code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value`},
       ),
       fix(
         "tls-only",
         "Send logs over TLS",
         "Transport encryption is unrelated to whether secrets are in the log message.",
-      ),
+        { code: `value = str(request.args.get("value", ""))
+if ".." in value:
+    raise ValueError("blocked")
+return value` }),
     ],
     correctFixId: "redact",
     explanation:
@@ -1056,19 +1149,25 @@ logger.info("incoming payment: %s", safe)`,
         "escape-quotes",
         "Replace single quotes in input",
         "Manual escaping is error-prone and database-specific. Parameterised queries are the robust defence.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "blacklist-or",
         "Reject usernames containing 'OR'",
         "Blacklists are easily bypassed with comments, encoding, case changes, or alternative SQL syntax.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "hide-errors",
         "Hide SQL error messages from users",
         "This reduces information leakage but does not stop the injection.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "prepared",
     explanation:
@@ -1079,7 +1178,7 @@ logger.info("incoming payment: %s", safe)`,
       "parameterised query",
       "authentication bypass",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-05",
     modeData: {
       multipleChoice: {
@@ -1095,19 +1194,19 @@ logger.info("incoming payment: %s", safe)`,
           },
           {
             id: "b",
-            text: "Remove single quotes from the username and password.",
+            text: "Remove single quotes and SQL comment markers from username and password before concatenation.",
             correct: false,
             rationale: "Manual filtering is incomplete and can be bypassed.",
           },
           {
             id: "c",
-            text: "Return a generic login error message.",
+            text: "Return a generic login error and hide database syntax failures from the response.",
             correct: false,
             rationale: "This is good practice but does not stop the injection.",
           },
           {
             id: "d",
-            text: "Check that the username is at least six characters.",
+            text: "Require usernames to satisfy a stricter length and character policy before querying.",
             correct: false,
             rationale:
               "Length validation does not prevent SQL syntax injection.",
@@ -1155,19 +1254,25 @@ logger.info("incoming payment: %s", safe)`,
         "hidden-input",
         "Store userId in a hidden form field",
         "Hidden fields are still client-controlled and can be modified.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "uuid",
         "Use UUIDs instead of numeric IDs",
         "Unpredictable IDs reduce guessing but do not replace authorization checks.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "log-only",
         "Log profile updates for later investigation",
         "Logging helps detection but does not prevent unauthorized updates.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "server-user",
     explanation:
@@ -1194,20 +1299,20 @@ logger.info("incoming payment: %s", safe)`,
           },
           {
             id: "b",
-            text: "The display name is too short.",
+            text: "The display name accepts short values and is not normalized before being persisted.",
             correct: false,
             rationale: "Input length is unrelated to the authorization flaw.",
           },
           {
             id: "c",
-            text: "The route uses POST instead of PUT.",
+            text: "The route uses POST rather than PUT, making the update operation less RESTful.",
             correct: false,
             rationale:
               "The HTTP method does not fix broken object-level authorization.",
           },
           {
             id: "d",
-            text: "The response message is too detailed.",
+            text: "The response message reveals that a profile update completed successfully.",
             correct: false,
             rationale:
               "The main issue is missing authorization, not information leakage.",
@@ -1254,19 +1359,25 @@ logger.info("incoming payment: %s", safe)`,
         "get-to-post",
         "Use POST instead of GET",
         "The endpoint already uses POST. CSRF can target POST forms too.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "check-referer-only",
         "Only check the Referer header",
         "Referer checks can help, but they are brittle as the sole defence.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "confirm-message",
         "Show a success message after changing the email",
         "A success message does not stop a forged request from being submitted.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "csrf-token",
     explanation:
@@ -1293,19 +1404,19 @@ logger.info("incoming payment: %s", safe)`,
           },
           {
             id: "b",
-            text: "It encrypts the user's session cookie.",
+            text: "It encrypts the user's session cookie so cross-site forms cannot attach a usable credential.",
             correct: false,
             rationale: "CSRF tokens are not cookie encryption.",
           },
           {
             id: "c",
-            text: "It prevents SQL injection in the email field.",
+            text: "It validates the email field before storage, preventing SQL injection in the profile update.",
             correct: false,
             rationale: "SQL injection requires query parameterisation.",
           },
           {
             id: "d",
-            text: "It disables JavaScript in the browser.",
+            text: "It disables JavaScript execution during the cross-site form submission in the victim's browser.",
             correct: false,
             rationale: "CSRF protection is unrelated to disabling JavaScript.",
           },
@@ -1352,19 +1463,25 @@ const response = await safeFetchExternalImage(url);`,
         "extension",
         "Only allow URLs ending in .jpg or .png",
         "File extensions do not prove that the destination is safe or external.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "client-fetch",
         "Fetch the image in the user's browser and send it to the server",
         "This shifts the problem and may introduce other risks. The server still needs validation for uploaded content.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "hide-errors",
         "Hide fetch errors from the response",
         "Hiding errors reduces reconnaissance but does not prevent requests to internal services.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "allowlist",
     explanation:
@@ -1376,7 +1493,7 @@ const response = await safeFetchExternalImage(url);`,
       "allow-list",
       "internal network",
     ],
-    owaspTop10: "A10",
+    owaspTop10: "A01",
     owaspWstg: "WSTG-INPV-19",
     modeData: {
       multipleChoice: {
@@ -1391,20 +1508,20 @@ const response = await safeFetchExternalImage(url);`,
           },
           {
             id: "b",
-            text: "It always executes JavaScript in the victim's browser.",
+            text: "It always executes JavaScript in the victim's browser once the server returns the fetched image.",
             correct: false,
             rationale: "That describes XSS, not SSRF.",
           },
           {
             id: "c",
-            text: "It allows the attacker to choose the HTTP status code.",
+            text: "It allows the attacker to control the HTTP status code returned by the avatar service.",
             correct: false,
             rationale:
               "The core issue is unauthorized server-side network access.",
           },
           {
             id: "d",
-            text: "It prevents TLS from working.",
+            text: "It downgrades TLS validation for outbound avatar requests to external hosts and internal services.",
             correct: false,
             rationale:
               "TLS does not prevent SSRF to attacker-chosen destinations.",
@@ -1452,19 +1569,25 @@ res.download(requested);`,
         "remove-dotdot",
         "Remove all '../' substrings",
         "String replacement is fragile and can be bypassed with encoding or platform-specific path separators.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "check-extension",
         "Only allow files ending in .pdf",
         "Extension checks do not guarantee the resolved path remains inside the intended directory.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "rename-route",
         "Rename the route from /files to /download",
         "Changing the URL does not change the path traversal behaviour.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "canonical-check",
     explanation:
@@ -1492,20 +1615,20 @@ res.download(requested);`,
           },
           {
             id: "b",
-            text: "Check whether the filename contains the word 'secret'.",
+            text: "Reject filenames containing sensitive words such as `secret`, `private`, or `backup`.",
             correct: false,
             rationale:
               "Sensitive files can have many names; blacklisting is not robust.",
           },
           {
             id: "c",
-            text: "Compress the file before sending it.",
+            text: "Compress the selected file before sending it so path details are not visible.",
             correct: false,
             rationale: "Compression does not enforce access control.",
           },
           {
             id: "d",
-            text: "Use a longer route path.",
+            text: "Move downloads behind a longer, less guessable route path in the application.",
             correct: false,
             rationale: "The route name does not affect filesystem access.",
           },
@@ -1548,19 +1671,25 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
         "extension-only",
         "Allow upload when the filename ends with .png",
         "Extension checks alone are weak because content type and execution behaviour may differ from the name.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "original-name",
         "Keep the original filename for user convenience",
         "Original filenames can contain dangerous characters, collisions, or misleading extensions.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "chmod-777",
         "Make the upload directory writable by everyone",
         "This worsens the issue by weakening filesystem permissions.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "validate-store",
     explanation:
@@ -1572,7 +1701,7 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
       "server-generated filename",
       "non-executable storage",
     ],
-    owaspTop10: "A04",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-BUSL-08",
     modeData: {
       multipleChoice: {
@@ -1587,20 +1716,20 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
           },
           {
             id: "b",
-            text: "Trust the browser-provided Content-Type header.",
+            text: "Trust the browser-provided Content-Type header after adding an extension deny-list for executable suffixes.",
             correct: false,
             rationale: "The client controls this header.",
           },
           {
             id: "c",
-            text: "Store files using the user's original filename.",
+            text: "Store files under the user's original filename after replacing whitespace and path separators.",
             correct: false,
             rationale:
               "Original names can be unsafe or collide with existing files.",
           },
           {
             id: "d",
-            text: "Only reject files larger than 100 MB.",
+            text: "Only reject unusually large files and rely on size limits as the main upload safety boundary.",
             correct: false,
             rationale:
               "Size checks help availability but do not validate content safety.",
@@ -1654,19 +1783,25 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
         "base64-check",
         "Check that the token has three Base64URL parts",
         "A well-formed token can still be attacker-created and unsigned.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "decode-twice",
         "Decode the token twice before trusting it",
         "Decoding is not verification. It only parses attacker-controlled data.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "short-expiry",
         "Use shorter token expiry but still decode only",
         "Expiry is also an untrusted claim unless the signature is verified.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "verify",
     explanation:
@@ -1692,19 +1827,19 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
           },
           {
             id: "b",
-            text: "It always deletes the expiry claim.",
+            text: "It always deletes the expiry claim when decoding a token with an unsigned algorithm.",
             correct: false,
             rationale: "The problem is missing verification, not deletion.",
           },
           {
             id: "c",
-            text: "It encrypts the JWT with the wrong key.",
+            text: "It encrypts the JWT with an asymmetric key that the server cannot decrypt during verification.",
             correct: false,
             rationale: "JWT signing and encryption are separate concepts.",
           },
           {
             id: "d",
-            text: "It prevents users from logging out.",
+            text: "It prevents users from logging out because unsigned claims cannot be invalidated server-side.",
             correct: false,
             rationale: "Logout is a separate session management concern.",
           },
@@ -1750,19 +1885,25 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
         "sha256",
         "Replace MD5 with plain SHA-256",
         "SHA-256 is fast and not designed for password storage. Use a password hashing function.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "base64",
         "Base64-encode the password before storing it",
         "Encoding is reversible and provides no password protection.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "client-hash",
         "Hash the password in JavaScript before sending it",
         "Client-side hashing does not replace server-side password hashing and may turn the hash into a password equivalent.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "argon2",
     explanation:
@@ -1774,7 +1915,7 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
       "bcrypt",
       "offline cracking",
     ],
-    owaspTop10: "A02",
+    owaspTop10: "A04",
     owaspWstg: "WSTG-ATHN-07",
     modeData: {
       multipleChoice: {
@@ -1789,20 +1930,20 @@ await fs.promises.rename(req.file.path, path.join(UPLOAD_DIR, safeName));`,
           },
           {
             id: "b",
-            text: "It should produce the shortest possible hash.",
+            text: "It should produce the shortest possible digest to reduce storage and comparison cost.",
             correct: false,
             rationale:
               "Hash length is not the main password-storage security property.",
           },
           {
             id: "c",
-            text: "It should use Base64 so the value is unreadable.",
+            text: "It should Base64-encode the digest so the stored value is no longer human-readable.",
             correct: false,
             rationale: "Base64 is encoding, not hashing or encryption.",
           },
           {
             id: "d",
-            text: "It should be fast so login is instant.",
+            text: "It should be optimized for fast verification so normal logins complete instantly.",
             correct: false,
             rationale:
               "Fast hashes help attackers crack leaked password databases.",
@@ -1851,19 +1992,25 @@ res.redirect(next);`,
         "url-encode",
         "URL-encode the next parameter before redirecting",
         "Encoding does not make an attacker-controlled destination trustworthy.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "https-only",
         "Allow redirects to any HTTPS URL",
         "A phishing site can also use HTTPS. The destination still needs to be trusted.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "warning",
         "Show a warning in the footer that phishing exists",
         "User education is not a substitute for preventing unsafe redirects.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "relative-only",
     explanation:
@@ -1891,19 +2038,19 @@ res.redirect(next);`,
           },
           {
             id: "b",
-            text: "Allow all HTTPS destinations.",
+            text: "Allow any destination that uses HTTPS and reject only plain HTTP redirect targets.",
             correct: false,
             rationale: "HTTPS does not mean the destination is trustworthy.",
           },
           {
             id: "c",
-            text: "Allow the redirect only after successful login.",
+            text: "Allow the redirect after successful login because authenticated flow proves intent.",
             correct: false,
             rationale: "That is exactly what makes phishing more convincing.",
           },
           {
             id: "d",
-            text: "Encode the URL before redirecting.",
+            text: "URL-encode the destination before redirecting so special characters cannot break parsing.",
             correct: false,
             rationale: "Encoding does not validate trust.",
           },
@@ -1957,19 +2104,25 @@ if (!user || !(await verifyPassword(user.passwordHash, req.body.password))) {
         "json-stringify",
         "Run JSON.stringify on the body before querying",
         "Stringifying the entire body does not create a correct authentication flow and may introduce logic bugs.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "operator-blacklist",
         "Reject keys containing '$ne'",
         "Blacklisting one MongoDB operator misses many other operators and nested encodings.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "limit-one",
         "Add limit(1) to the query",
         "Returning one result does not prevent the attacker from changing the query predicate.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "type-validate",
     explanation:
@@ -1981,7 +2134,7 @@ if (!user || !(await verifyPassword(user.passwordHash, req.body.password))) {
       "authentication bypass",
       "password hash",
     ],
-    owaspTop10: "A03",
+    owaspTop10: "A05",
     owaspWstg: "WSTG-INPV-05",
     modeData: {
       multipleChoice: {
@@ -1996,20 +2149,20 @@ if (!user || !(await verifyPassword(user.passwordHash, req.body.password))) {
           },
           {
             id: "b",
-            text: "MongoDB automatically executes JavaScript in every query.",
+            text: "MongoDB automatically executes JavaScript expressions embedded in every JSON query predicate.",
             correct: false,
             rationale:
               "The issue here is operator injection into query objects.",
           },
           {
             id: "c",
-            text: "The session ID is too short.",
+            text: "The session identifier is too short to survive an online guessing attack against active sessions.",
             correct: false,
             rationale: "The vulnerable logic is in the login query.",
           },
           {
             id: "d",
-            text: "The redirect happens after login.",
+            text: "The redirect happens immediately after login and hides failed authentication states from users.",
             correct: false,
             rationale: "The authentication query is the relevant flaw.",
           },
@@ -2062,19 +2215,25 @@ req.preferences = preferences;`,
         "base64-twice",
         "Base64-encode the cookie twice",
         "Base64 is not integrity protection. The client can still modify and re-encode the value.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "try-catch",
         "Wrap JSON.parse in a try/catch",
         "This prevents crashes from malformed JSON but does not stop tampering.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "rename-cookie",
         "Rename the cookie to app_preferences_v2",
         "A different cookie name does not make client-controlled data trustworthy.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "server-side",
     explanation:
@@ -2100,19 +2259,19 @@ req.preferences = preferences;`,
           },
           {
             id: "b",
-            text: "Base64 can only store numbers.",
+            text: "Base64 can only represent numeric identifiers and loses object field names.",
             correct: false,
             rationale: "Base64 can encode arbitrary bytes.",
           },
           {
             id: "c",
-            text: "Base64 automatically expires after one hour.",
+            text: "Base64 automatically expires after one hour unless refreshed by the server.",
             correct: false,
             rationale: "Expiry is unrelated to Base64.",
           },
           {
             id: "d",
-            text: "Base64 prevents JSON parsing.",
+            text: "Base64 prevents JSON parsing unless the cookie is first encrypted with a server key.",
             correct: false,
             rationale: "The code decodes and parses JSON successfully.",
           },
@@ -2157,19 +2316,25 @@ res.status(500).json({
         "remove-message-only",
         "Remove only the message field but keep the stack",
         "The stack trace can reveal file paths, framework versions, and implementation details.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "status-200",
         "Return HTTP 200 for all errors",
         "Incorrect status codes confuse clients and monitoring, and do not prevent information leakage.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "console-log",
         "Print the error to console and still return it",
         "Returning the error to users is the problem. Logging alone is not enough.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "generic-log",
     explanation:
@@ -2181,7 +2346,7 @@ res.status(500).json({
       "logging",
       "least information",
     ],
-    owaspTop10: "A05",
+    owaspTop10: "A10",
     owaspWstg: "WSTG-ERRH-02",
     modeData: {
       multipleChoice: {
@@ -2197,21 +2362,21 @@ res.status(500).json({
           },
           {
             id: "b",
-            text: "The full stack trace so users can debug it.",
+            text: "The full stack trace and framework version so users can submit precise bug reports.",
             correct: false,
             rationale:
               "Stack traces reveal implementation details useful to attackers.",
           },
           {
             id: "c",
-            text: "The SQL query that failed.",
+            text: "The failed SQL query with bound values removed so the response excludes secrets.",
             correct: false,
             rationale:
               "SQL details can help attackers craft injection payloads.",
           },
           {
             id: "d",
-            text: "A 200 OK response with the exception object.",
+            text: "A 200 OK response that embeds the exception object in a standard JSON envelope.",
             correct: false,
             rationale: "This leaks details and breaks error semantics.",
           },
@@ -2262,19 +2427,19 @@ res.status(500).json({
           },
           {
             id: "b",
-            text: "Block only the string `<script>`.",
+            text: "Block the literal string `<script>` and a few common mixed-case variants at input time.",
             correct: false,
             rationale: "This blacklist is incomplete and easily bypassed.",
           },
           {
             id: "c",
-            text: "Use HTTPS.",
+            text: "Use HTTPS everywhere so attackers cannot modify the search response in transit.",
             correct: false,
             rationale: "HTTPS protects transport but does not stop XSS.",
           },
           {
             id: "d",
-            text: "Make the search box shorter.",
+            text: "Shorten the search box and reject unusually long query strings before rendering.",
             correct: false,
             rationale: "Length limits alone do not fix unsafe output handling.",
           },
@@ -2319,20 +2484,20 @@ res.status(500).json({
           },
           {
             id: "b",
-            text: "It only works against the attacker who submitted it.",
+            text: "It only executes in the browser session that originally submitted the malicious comment.",
             correct: false,
             rationale: "Stored XSS affects later viewers.",
           },
           {
             id: "c",
-            text: "It is impossible to fix.",
+            text: "It cannot be fixed once a payload has been saved because stored content is trusted.",
             correct: false,
             rationale:
               "Output encoding and safe rendering are standard mitigations.",
           },
           {
             id: "d",
-            text: "It requires database administrator privileges.",
+            text: "It requires database administrator privileges to insert the payload into persistent storage.",
             correct: false,
             rationale: "It often only requires a normal input field.",
           },
@@ -2369,6 +2534,7 @@ to=attacker&amount=1000`,
       "state-changing request",
       "cookie authentication",
     ],
+    owaspTop10: "A01",
     owaspWstg: "WSTG-SESS-05",
     modeData: {
       multipleChoice: {
@@ -2383,19 +2549,19 @@ to=attacker&amount=1000`,
           },
           {
             id: "b",
-            text: "Using a prettier confirmation page.",
+            text: "Adding a more prominent confirmation page without binding the submission to a server token.",
             correct: false,
             rationale: "Visual design does not prevent forged requests.",
           },
           {
             id: "c",
-            text: "Returning HTTP 200 for every request.",
+            text: "Returning HTTP 200 for every transfer request to avoid revealing validation failures.",
             correct: false,
             rationale: "This hides errors but does not prevent CSRF.",
           },
           {
             id: "d",
-            text: "Only minifying JavaScript.",
+            text: "Minifying the client-side JavaScript that builds the transfer form before deployment.",
             correct: false,
             rationale: "Minification is unrelated.",
           },
@@ -2434,7 +2600,7 @@ def preview():
       "allow-list",
       "egress filtering",
     ],
-    owaspTop10: "A05",
+    owaspTop10: "A01",
     owaspWstg: "WSTG-INPV-19",
     modeData: {
       multipleChoice: {
@@ -2449,19 +2615,19 @@ def preview():
           },
           {
             id: "b",
-            text: "The timeout is too short.",
+            text: "The outbound request timeout is too short, causing incomplete responses from metadata services.",
             correct: false,
             rationale: "Timeouts can limit impact but do not prevent SSRF.",
           },
           {
             id: "c",
-            text: "The response is text instead of JSON.",
+            text: "The preview endpoint returns plain text instead of parsing the response as JSON with a schema.",
             correct: false,
             rationale: "The response format is not the core issue.",
           },
           {
             id: "d",
-            text: "The endpoint uses GET.",
+            text: "The preview endpoint uses GET, which makes the attacker-supplied URL visible in access logs.",
             correct: false,
             rationale: "SSRF can occur with any HTTP method.",
           },

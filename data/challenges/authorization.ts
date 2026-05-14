@@ -1,4 +1,4 @@
-import type { Challenge } from "@/domain/challenge";
+﻿import type { Challenge } from "@/domain/challenge";
 import { buildChallenge, fix } from "../builder";
 
 export const authorizationChallenges: readonly Challenge[] = [
@@ -37,19 +37,25 @@ if (!user?.isAdmin) return res.status(403).end();`,
         "verify-only",
         "Just verify the JWT signature and keep using `claims.role`",
         "Still wrong if the upstream issuer can be tricked into setting `role=admin`. Authorisation must be evaluated against the data owner.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "header-secret",
         "Require an `X-Admin-Secret` header in addition",
         "Shared secrets in headers leak in logs and don't model per-user authorisation.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "frontend-hide",
         "Hide the admin route from the front-end menu",
         "UI-only restrictions don't stop direct API calls.",
-      ),
+        { code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;` }),
     ],
     correctFixId: "verify-server-role",
     explanation:
@@ -75,21 +81,21 @@ if (!user?.isAdmin) return res.status(403).end();`,
           },
           {
             id: "b",
-            text: "From a verified JWT issued by another microservice.",
+            text: "From a verified JWT issued by another microservice that forwards its local role mapping.",
             correct: false,
             rationale:
               "Only as trustworthy as the issuer; transitive trust is risky.",
           },
           {
             id: "c",
-            text: "From a `role` cookie set at login.",
+            text: "From a signed `role` cookie set at login and refreshed with the session on every request.",
             correct: false,
             rationale:
               "Cookies are user-controlled if not signed and stored correctly; still better to look up.",
           },
           {
             id: "d",
-            text: "From the front-end's local state.",
+            text: "From the front-end's local state after the UI hides administrator controls.",
             correct: false,
             rationale: "Client-side authorisation is no authorisation.",
           },
@@ -129,19 +135,25 @@ await Users.update(req.user.id, { displayName, language, timezone });`,
         "deny-role",
         "Delete `req.body.role` before passing it to the update",
         "Brittle: every new privileged field has to be added. Allow-listing fails closed; deny-listing fails open.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "client-form",
         "Render only the editable fields in the front-end form",
         "Doesn't stop a hand-crafted request.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);`},
       ),
       fix(
         "audit-log",
         "Audit-log every update",
         "Detection helps after the fact; the bug is still exploitable.",
-      ),
+        { code: `const value = String(req.query.value ?? "");
+if (value.includes("<script>")) return res.status(400).end();
+return res.send(value);` }),
     ],
     correctFixId: "explicit-fields",
     explanation:
@@ -185,18 +197,30 @@ if rel, err := filepath.Rel(root, abs); err != nil || strings.HasPrefix(rel, "..
         "dotdot-strip",
         "Strip occurrences of `..` from the input",
         "Ineffective: encoded variants (%2e%2e), unicode lookalikes, and path separators bypass naive replacement.",
-        { tempting: true },
+        { tempting: true , code: `value := r.URL.Query().Get("value")
+if strings.Contains(value, "..") {
+    http.Error(w, "blocked", http.StatusBadRequest)
+    return
+}`},
       ),
       fix(
         "regex-name",
         "Allow only [A-Za-z0-9_.-] in the file name",
         "A file like `secrets.txt` still works if it happens to match. The control must be the boundary check, not character class.",
-      ),
+        { code: `value := r.URL.Query().Get("value")
+if strings.Contains(value, "..") {
+    http.Error(w, "blocked", http.StatusBadRequest)
+    return
+}` }),
       fix(
         "chmod",
         "Make the storage directory world-readable",
         "Worsens the situation with broader exposure.",
-        { tempting: true },
+        { tempting: true , code: `value := r.URL.Query().Get("value")
+if strings.Contains(value, "..") {
+    http.Error(w, "blocked", http.StatusBadRequest)
+    return
+}`},
       ),
     ],
     correctFixId: "clean-and-confine",
@@ -236,19 +260,25 @@ if rel, err := filepath.Rel(root, abs); err != nil || strings.HasPrefix(rel, "..
         "client-filter",
         "Filter results client-side based on the user's tenant",
         "Sends every group to every user; a hostile or curious client sees everything.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "obscure-ids",
         "Use long random ids on Group rows",
         "Doesn't address the listing leak.",
-        { tempting: true },
+        { tempting: true , code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;`},
       ),
       fix(
         "audit",
         "Log every cross-tenant access",
         "Detection without prevention.",
-      ),
+        { code: `const value = String(input ?? "");
+if (value.includes("..")) throw new Error("blocked");
+return value;` }),
     ],
     correctFixId: "scope-tenant",
     explanation:
@@ -297,20 +327,20 @@ def invoice(invoice_id):
           },
           {
             id: "b",
-            text: "Hide the invoice link in the UI.",
+            text: "Hide the invoice link in the UI and rely on the navigation menu to limit access to invoices.",
             correct: false,
             rationale: "Attackers can still request the URL directly.",
           },
           {
             id: "c",
-            text: "Use a larger invoice number.",
+            text: "Use a larger random-looking invoice number to reduce successful guessing by attackers.",
             correct: false,
             rationale:
               "Guessing becomes harder, but access control is still missing.",
           },
           {
             id: "d",
-            text: "Return the PDF as base64.",
+            text: "Return the PDF as Base64 so the direct object reference is less obvious in responses.",
             correct: false,
             rationale: "Encoding does not enforce authorization.",
           },
