@@ -9,14 +9,6 @@ import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 import type { Challenge } from "@/domain/challenge";
 
-const STRIDE_NAMES: Record<string, string> = {
-  S: "S · Spoofing",
-  T: "T · Tampering",
-  R: "R · Repudiation",
-  I: "I · Information Disclosure",
-  D: "D · Denial of Service",
-  E: "E · Elevation of Privilege",
-};
 
 interface Props {
   challenges: readonly Challenge[];
@@ -128,7 +120,7 @@ export function StrideRunner({ challenges, examMode }: Props) {
                   multi
                   option={{
                     id: option.id,
-                    label: `${STRIDE_NAMES[option.id] ?? option.id}  -  ${option.label}`,
+                    label: `${option.id} · ${option.label}`,
                     correct: option.correct,
                     rationale: option.rationale,
                   }}
