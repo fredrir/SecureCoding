@@ -10,6 +10,7 @@ import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
+import QuestionBox from "@/components/challenge/QuestionBox";
 
 interface Props {
   challenges: readonly Challenge[];
@@ -77,12 +78,14 @@ export function AttackTraceRunner({ challenges, examMode }: Props) {
       feedback={state.feedback}
       stage={state.stage}
       attempts={state.attempts}
-      prompt={
-        attack?.question ??
-        "Which exploit payload or request sequence triggers this vulnerability?"
-      }
       workspace={
-        <Stack gap="md">
+        <Stack gap="lg">
+          <QuestionBox
+            question={
+              attack?.question ??
+              "Which exploit payload or request sequence triggers this vulnerability?"
+            }
+          />
           {challenge?.code ? (
             <CodeViewer
               code={challenge.code}

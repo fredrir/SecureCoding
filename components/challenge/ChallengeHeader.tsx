@@ -42,11 +42,7 @@ export function ChallengeHeader({ challenge, prompt }: Props) {
         <Text size="md" c="dimmed" style={{ whiteSpace: "pre-wrap" }}>
           {prompt}
         </Text>
-      ) : (
-        <Text size="md" c="dimmed" style={{ whiteSpace: "pre-wrap" }}>
-          {challenge.summary}
-        </Text>
-      )}
+      ) : null}
     </Stack>
   );
 }

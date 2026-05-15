@@ -11,6 +11,7 @@ import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 import type { Challenge } from "@/domain/challenge";
 import { mulberry32, shuffle } from "@/lib/random";
+import QuestionBox from "@/components/challenge/QuestionBox";
 
 interface Props {
   challenges: readonly Challenge[];
@@ -96,9 +97,10 @@ export function MultipleChoiceSprintRunner({
       feedback={state.feedback}
       stage={state.stage}
       attempts={state.attempts}
-      prompt={mc?.question}
       workspace={
-        <Stack gap="md">
+        <Stack gap="lg">
+          <QuestionBox question={mc?.question} />
+
           {challenge?.codeSnippets ? (
             <MultiCodeViewer snippets={challenge.codeSnippets} />
           ) : challenge?.code ? (
@@ -107,21 +109,7 @@ export function MultipleChoiceSprintRunner({
               language={challenge.language ?? "plaintext"}
               filename={challenge.filename}
             />
-          ) : (
-            <Paper
-              withBorder
-              radius="lg"
-              p="lg"
-              className="bg-app-surface border-app-border"
-            >
-              <Stack gap="md">
-                <div className="text-xs uppercase font-bold text-app-fg-muted tracking-wider">
-                  Question
-                </div>
-                <Text size="sm">{challenge?.summary}</Text>
-              </Stack>
-            </Paper>
-          )}
+          ) : null}
           <Text size="xs" c="dimmed">
             No penalty for wrong answers, pick the most justified option.
           </Text>

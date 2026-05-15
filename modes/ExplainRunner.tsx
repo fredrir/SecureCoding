@@ -9,6 +9,7 @@ import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 import type { Challenge } from "@/domain/challenge";
+import QuestionBox from "@/components/challenge/QuestionBox";
 
 interface Props {
   challenges: readonly Challenge[];
@@ -63,7 +64,7 @@ export function ExplainRunner({ challenges, examMode }: Props) {
     });
   };
 
-  const prompt =
+  const question =
     challenge?.modeData?.explainPrompt ??
     `Explain ${challenge?.vulnerabilityType.toLowerCase()} based on the snippet below. ` +
       "Cover what is wrong, why it is exploitable, and how a correct fix works.";
@@ -78,25 +79,17 @@ export function ExplainRunner({ challenges, examMode }: Props) {
       feedback={state.feedback}
       stage={state.stage}
       attempts={state.attempts}
-      prompt={prompt}
       workspace={
-        <Stack gap="md">
+        <Stack gap="lg">
+          <QuestionBox question={question} />
+
           {challenge?.code ? (
             <CodeViewer
               code={challenge.code}
               language={challenge.language ?? "plaintext"}
               filename={challenge.filename}
             />
-          ) : (
-            <Paper
-              withBorder
-              radius="lg"
-              p="lg"
-              className="bg-app-surface border-app-border"
-            >
-              <Text size="sm">{challenge?.summary}</Text>
-            </Paper>
-          )}
+          ) : null}
         </Stack>
       }
       answer={

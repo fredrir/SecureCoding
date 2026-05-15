@@ -9,6 +9,7 @@ import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
+import QuestionBox from "@/components/challenge/QuestionBox";
 
 interface Props {
   challenges: readonly Challenge[];
@@ -76,12 +77,14 @@ export function RiskScoringRunner({ challenges, examMode }: Props) {
       feedback={state.feedback}
       stage={state.stage}
       attempts={state.attempts}
-      prompt={
-        risk?.question ??
-        "Reason about exploitability and impact, then pick the severity that best fits."
-      }
       workspace={
-        <Stack gap="md">
+        <Stack gap="lg">
+          <QuestionBox
+            question={
+              risk?.question ??
+              "Reason about exploitability and impact, then pick the severity that best fits."
+            }
+          />
           <Paper
             withBorder
             radius="lg"
