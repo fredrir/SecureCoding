@@ -7,6 +7,7 @@ import { ScenarioChoiceCard } from "@/components/answers/ScenarioChoiceCard";
 import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
+import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
 
 interface Props {
@@ -53,6 +54,7 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
   const { state, controls } = runner;
   const challenge = state.current;
   const scenario = challenge?.modeData?.privacyScenario;
+  const principles = useShuffled(scenario?.principles ?? []);
 
   const toggle = (id: string) => {
     setSelected((cur) =>
@@ -166,7 +168,7 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
         >
           {scenario ? (
             <SimpleGrid cols={1} spacing="xs">
-              {scenario.principles.map((p) => (
+              {principles.map((p) => (
                 <ScenarioChoiceCard
                   key={p.id}
                   multi

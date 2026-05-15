@@ -7,6 +7,7 @@ import { ScenarioChoiceCard } from "@/components/answers/ScenarioChoiceCard";
 import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
+import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
 
 interface Props {
@@ -51,6 +52,7 @@ export function RiskScoringRunner({ challenges, examMode }: Props) {
   const { state, controls } = runner;
   const challenge = state.current;
   const risk = challenge?.modeData?.riskScoring;
+  const riskOptions = useShuffled(risk?.options ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;
@@ -113,7 +115,7 @@ export function RiskScoringRunner({ challenges, examMode }: Props) {
         >
           {risk ? (
             <SimpleGrid cols={1} spacing="xs">
-              {risk.options.map((option) => (
+              {riskOptions.map((option) => (
                 <ScenarioChoiceCard
                   key={option.id}
                   option={{

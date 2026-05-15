@@ -8,6 +8,7 @@ import { ScenarioChoiceCard } from "@/components/answers/ScenarioChoiceCard";
 import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
+import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
 
 interface Props {
@@ -52,6 +53,7 @@ export function CryptoMisuseRunner({ challenges, examMode }: Props) {
   const { state, controls } = runner;
   const challenge = state.current;
   const crypto = challenge?.modeData?.cryptoMisuse;
+  const cryptoOptions = useShuffled(crypto?.options ?? []);
 
   const toggle = (id: string) => {
     setSelected((cur) =>
@@ -117,7 +119,7 @@ export function CryptoMisuseRunner({ challenges, examMode }: Props) {
         >
           {crypto ? (
             <SimpleGrid cols={1} spacing="xs">
-              {crypto.options.map((option) => (
+              {cryptoOptions.map((option) => (
                 <ScenarioChoiceCard
                   key={option.id}
                   multi

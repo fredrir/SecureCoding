@@ -8,6 +8,7 @@ import { ScenarioChoiceCard } from "@/components/answers/ScenarioChoiceCard";
 import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
+import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
 
 interface Props {
@@ -52,6 +53,7 @@ export function AttackTraceRunner({ challenges, examMode }: Props) {
   const { state, controls } = runner;
   const challenge = state.current;
   const attack = challenge?.modeData?.attackTrace;
+  const attackOptions = useShuffled(attack?.options ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;
@@ -111,7 +113,7 @@ export function AttackTraceRunner({ challenges, examMode }: Props) {
         >
           {attack ? (
             <SimpleGrid cols={1} spacing="xs">
-              {attack.options.map((option) => (
+              {attackOptions.map((option) => (
                 <ScenarioChoiceCard
                   key={option.id}
                   option={{

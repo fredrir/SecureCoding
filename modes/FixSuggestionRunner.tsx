@@ -8,6 +8,7 @@ import { FixOptionCard } from "@/components/answers/FixOptionCard";
 import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
+import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
 import type { FixOptionId } from "@/domain/ids";
 
@@ -56,6 +57,7 @@ export function FixSuggestionRunner({ challenges, examMode }: Props) {
   const language = challenge?.language ?? "plaintext";
   const code = challenge?.code ?? "";
   const intro = challenge?.modeData?.fixSuggestion?.intro;
+  const fixOptions = useShuffled(challenge?.fixOptions ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;
@@ -103,7 +105,7 @@ export function FixSuggestionRunner({ challenges, examMode }: Props) {
               checks, or just catching the exception.
             </Text>
             <SimpleGrid cols={1} spacing="xs">
-              {challenge?.fixOptions.map((option) => (
+              {fixOptions.map((option) => (
                 <FixOptionCard
                   key={option.id}
                   option={option}

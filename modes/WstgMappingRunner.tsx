@@ -16,6 +16,7 @@ import { ScenarioChoiceCard } from "@/components/answers/ScenarioChoiceCard";
 import { useChallengeRunner } from "./useChallengeRunner";
 import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
+import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
 
 interface Props {
@@ -62,6 +63,7 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
   const { state, controls } = runner;
   const challenge = state.current;
   const mapping = challenge?.modeData?.wstgMapping;
+  const mappingOptions = useShuffled(mapping?.options ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;
@@ -148,7 +150,7 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
         >
           {mapping ? (
             <SimpleGrid cols={1} spacing="xs">
-              {mapping.options.map((option) => (
+              {mappingOptions.map((option) => (
                 <ScenarioChoiceCard
                   key={option.id}
                   option={{
