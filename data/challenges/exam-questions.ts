@@ -3059,113 +3059,213 @@ STATIC_URL = '/static/'`,
     tags: ["code-quiz", "md5"],
     vulnerabilityType: "Weak Cryptographic Hash",
     verbatimPrompt: "Which lines of the above code snippet are vulnerable?",
-    code: `from __future__ import unicode_literals
-
-import hashlib
-from datetime import date
-from datetime import timedelta
+    codeSnippets: [
+      {
+        filename: "models.py",
+        language: "python",
+        code: `from __future__ import unicode_literals
 
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import User
 
 
-class Payment(models.Model):
-    """
-    Represents a payment.
-
-    It could be pending to be processed (\`accepted\` is None)
-    or already processed (\`accepted\` is True or False).
-    """
-    description = models.CharField(max_length=50)
-    payment_from = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
-    payment_to = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+')
-    amount = models.DecimalField(max_digits=9, decimal_places=2)
-    accepted = models.NullBooleanField(null=True)
-
-
-class InvalidSecurityCode(Exception):
-    """The provided security code is not valid"""
-
-
-class SecurityCodeManager(models.Manager):
-    @staticmethod
-    def encrypt_security_code(plaintext_security_code):
-        """
-        Encrypt the provided plain-text security code
-        :param plaintext_security_code: plain-text security code
-        :return: crypted security code
-        """
-        assert isinstance(plaintext_security_code, unicode)
-
-        hash_inst = hashlib.md5(plaintext_security_code.encode('utf-8'))
-        return hash_inst.hexdigest()
-
-    def check_security_code(self, plaintext_security_code):
-        """
-        Verifies if the provided plain-text security code
-        exists in the database, and isn't too old.
-
-        Raises an exception if the code isn't valid.
-
-        :param plaintext_security_code: the security code in plain text
-        format (as entered by the user)
-        :raise InvalidSecurityCode: if code is not valid
-        """
-        crypted_code = self.encrypt_security_code(plaintext_security_code)
-
-        today = date.today()
-        valid_from_date = today - timedelta(days=15)
-
-        # control date and ignore time, we no need such precision
-        qs = self.filter(created_at__date__gte=valid_from_date)
-        qs = qs.filter(crypted_password=crypted_code)
-
-        if not qs.exists():
-            raise InvalidSecurityCode()
-
-    def delete_old_security_codes(self):
-        """
-        Delete old security codes from the database.
-
-        This should be called periodically to avoid having
-        old codes in the database.
-        """
-        today = date.today()
-        valid_from_date = today - timedelta(days=15)
-
-        self.filter(created_at__date__lt=valid_from_date).delete()
-
-
-class SecurityCode(models.Model):
-    """
-    Represents a security code to be entered by the user
-    to prove the authenticity when processing a payment.
-    """
-    created_at = models.DateTimeField(auto_now_add=True)
-    crypted_password = models.CharField(max_length=1000, db_index=True)
-
-    objects = SecurityCodeManager()
-
-    def set_security_code(self, plaintext_code):
-        """
-        Crypt and set the security code in this instance, based on the
-        provided plain-text security code.
-
-        Use of this method must call save() to update the database.
-        """
-
-        if len(set(list(plaintext_code.lower()))) < 10:
-            raise InvalidSecurityCode("The provided text is "
-                                      "not valid and can not be used as "
-                                      "a security code")
-
-        self.crypted_password = SecurityCodeManager.encrypt_security_code(
-            plaintext_code)
+# Model for team participating in competition.
+class Team(models.Model):
+    name = models.CharField(max_length=15)
 
     def __str__(self):
-        return "Security code {} ({})".format(self.id, self.created_at)`,
-    language: "python",
-    filename: "security_code.py",
+        return self.name
+
+
+# Model for gamer profiles.
+class GamerProfile(models.Model):
+    alias_name = models.CharField(max_length=40)
+    game_name = models.CharField(max_length=30)
+    score = models.IntegerField()
+    team = models.ForeignKey(Team)
+    user = models.ForeignKey(User)
+
+    def __str__(self):
+        return self.alias_name`,
+      },
+      {
+        filename: "views.py",
+        language: "python",
+        code: `from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib import messages
+from django.contrib.auth import decorators
+from django.shortcuts import get_object_or_404
+
+from games.models import GamerProfile, Team
+from games.forms import LoginForm
+
+
+# User login process
+def user_login(request):
+    # Checking the request method
+    if request.method == 'POST':
+        # Create a form instance and populate it with data from the request
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            # Fetching the username and passwords from POST methods
+            user_name = form.cleaned_data['username']
+            pass_word = form.cleaned_data['password']
+            # Authenticating the user
+            user = authenticate(username=user_name, password=pass_word)
+            # Checking if the user is successfully authenticated
+            if user is not None:
+                # Login the user and creating a user session
+                if user.is_active:
+                    login(request, user)
+                    return HttpResponseRedirect(reverse('games:dashboard'))
+                else:
+                    messages(request, 'User is disabled.')
+        else:
+            form = LoginForm()
+            messages.error(request, 'Incorrect Login Details. Please try again')
+    else:
+        # Instantiating empty form
+        form = LoginForm()
+
+    return render(request, 'games/login.html', {'form': form})
+
+
+# User gaming dashboard
+@decorators.login_required(login_url='/games/login/')
+def dashboard(request):
+    team = get_object_or_404(Team, user=request.user)
+    team_gamers = GamerProfile.objects.filter(team=team.team)
+    return render(request, 'games/dashboard.html', {'team_gamers': team_gamers, })
+
+
+# User Team members
+@decorators.login_required(login_url='/games/login/')
+def gamer_profile(request, gamer_id):
+    gamer_details = get_object_or_404(GamerProfile, pk=gamer_id)
+    return render(request, 'games/gamer_details.html', {'gamer': gamer_details, })
+
+
+# User logout
+@decorators.login_required(login_url='/games/login/')
+def log_out(request):
+    logout(request)
+    return render(request, 'games/logout.html', {})`,
+      },
+      {
+        filename: "settings.py",
+        language: "python",
+        code: `# -*- coding: utf-8 -*-
+
+#
+# settings file for production environment
+#
+# This settings provides the MINIMUM level of security. Additional
+# settings may be used to hardening the system (not added here because of
+# potential compatibility issues with the software), like, for example:
+#
+# - SECURE_PROXY_SSL_HEADER
+# - SECURE_HSTS_SECONDS
+# - SECURE_HSTS_INCLUDE_SUBDOMAINS
+# - SECURE_SSL_REDIRECT
+# - SECURE_SSL_HOST
+#
+
+from __future__ import unicode_literals
+
+import os
+
+from django.core.exceptions import ImproperlyConfigured
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'games.apps.GamesConfig',
+]
+
+ROOT_URLCONF = 'website.urls'
+
+WSGI_APPLICATION = 'website.wsgi.application'
+
+DEBUG = False
+
+ALLOWED_HOSTS = [
+    'randomapp.securecodewarrior.com'
+]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+try:
+    SECRET_KEY = os.environ['DJANGO__SECRET_KEY']
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['DJANGO__DB_NAME'],
+            'USER': os.environ['DJANGO__DB_USER'],
+            'PASSWORD': os.environ['DJANGO__DB_PASSWORD'],
+            'HOST': os.environ['DJANGO__DB_HOST'],
+            'PORT': os.environ['DJANGO__DB_PORT'],
+        }
+    }
+
+except KeyError, ex:
+    key = ex.args[0]
+    raise ImproperlyConfigured("The environment variable {0} "
+                               "was not found and is required".format(key))
+
+MIDDLEWARE_CLASSES = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    }
+]
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+STATIC_URL = '/static/'`,
+      },
+    ],
     explanation:
       "The expected answer is lines 39-40. MD5 is a fast, collision-broken hash and is not appropriate for protecting security codes or password-like secrets.",
     examKeywords: ["lines 39-40", "md5", "fast hash", "security code"],
@@ -5241,6 +5341,7 @@ from django.utils import six
 from rest_framework.exceptions import ParseError
 from rest_framework_xml.parsers import XMLParser
 
+
 class CustomXMLParser(XMLParser):
 
     media_type = 'application/xml'
@@ -5252,14 +5353,34 @@ class CustomXMLParser(XMLParser):
         parser = etree.XMLParser(
             encoding=encoding,
             resolve_entities=True,
-            no_network=False)
+            no_network=False
+        )
         try:
             tree = etree.parse(stream, parser=parser)
         except (etree.ParseError, ValueError) as exc:
             raise ParseError('XML parse error - %s' % six.text_type(exc))
         data = self._xml_convert(tree.getroot())
 
-        return data`,
+        return data
+
+    def _xml_convert(self, element):
+
+        children = list(element)
+
+        if len(children) == 0:
+            return self._type_convert(element.text)
+        else:
+            # if the fist child tag is list-item means all children are list-item
+            if children[0].tag == "list-item":
+                data = []
+                for child in children:
+                    data.append(self._xml_convert(child))
+            else:
+                data = {}
+                for child in children:
+                    data[child.tag] = self._xml_convert(child)
+
+            return data`,
     language: "python",
     filename: "xml_parser.py",
     explanation:

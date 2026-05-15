@@ -195,6 +195,7 @@ export function ExamSprintRunner({ challenges, examMode }: Props) {
 function CaseDescriptionPanel({
   description,
   title,
+  caseYear,
 }: {
   description: string;
   title: string | undefined;
@@ -212,7 +213,7 @@ function CaseDescriptionPanel({
       >
         <Stack gap="md" className="text-left">
           <div className="text-xs uppercase font-bold text-app-fg-muted tracking-wider">
-            Case
+            {caseYear ? `${caseYear} ` : ""}Case
           </div>
           <div className="flex items-center justify-between gap-2">
             <Group gap="xs" className="border-t-0">
