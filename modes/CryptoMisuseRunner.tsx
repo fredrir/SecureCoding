@@ -31,6 +31,10 @@ export function CryptoMisuseRunner({ challenges, examMode }: Props) {
     setSelected([]);
   }
 
+  const challenge = runner?.state.current;
+  const crypto = challenge?.modeData?.cryptoMisuse;
+  const cryptoOptions = useShuffled(crypto?.options ?? []);
+
   if (!runner) {
     return (
       <RunnerScaffold
@@ -51,9 +55,6 @@ export function CryptoMisuseRunner({ challenges, examMode }: Props) {
   }
 
   const { state, controls } = runner;
-  const challenge = state.current;
-  const crypto = challenge?.modeData?.cryptoMisuse;
-  const cryptoOptions = useShuffled(crypto?.options ?? []);
 
   const toggle = (id: string) => {
     setSelected((cur) =>

@@ -114,7 +114,12 @@ export function MultipleChoiceSprintRunner({
               p="lg"
               className="bg-app-surface border-app-border"
             >
-              <Text size="sm">{challenge?.summary}</Text>
+              <Stack gap="md">
+                <div className="text-xs uppercase font-bold text-app-fg-muted tracking-wider">
+                  Question
+                </div>
+                <Text size="sm">{challenge?.summary}</Text>
+              </Stack>
             </Paper>
           )}
           <Text size="xs" c="dimmed">

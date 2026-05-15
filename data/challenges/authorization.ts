@@ -37,25 +37,46 @@ if (!user?.isAdmin) return res.status(403).end();`,
         "verify-only",
         "Just verify the JWT signature and keep using `claims.role`",
         "Still wrong if the upstream issuer can be tricked into setting `role=admin`. Authorisation must be evaluated against the data owner.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `const claims = jwt.verify(token, OTHER_SERVICE_PUBLIC_KEY);
+if (claims.role === "admin") {
+  await Users.delete(req.params.id);
+}`,
+        },
       ),
       fix(
         "header-secret",
         "Require an `X-Admin-Secret` header in addition",
         "Shared secrets in headers leak in logs and don't model per-user authorisation.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `if (req.header("X-Admin-Secret") !== process.env.ADMIN_SECRET) {
+  return res.status(403).end();
+}`,
+        },
       ),
       fix(
         "frontend-hide",
         "Hide the admin route from the front-end menu",
         "UI-only restrictions don't stop direct API calls.",
-        { code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;` }),
+        {
+          code: `if (!currentUser.isAdmin) {
+  document.querySelector("#admin-nav")?.remove();
+}`,
+        },
+      ),
+      fix(
+        "decode-and-cache",
+        "Decode the JWT once at login and cache the role in the session",
+        "Caching an unverified or externally asserted role preserves the same trust-boundary mistake.",
+        {
+          tempting: true,
+          code: `const claims = jwt.decode(token);
+req.session.role = claims?.role;
+if (req.session.role === "admin") await Users.delete(req.params.id);`,
+        },
+      ),
     ],
     correctFixId: "verify-server-role",
     explanation:
@@ -135,25 +156,44 @@ await Users.update(req.user.id, { displayName, language, timezone });`,
         "deny-role",
         "Delete `req.body.role` before passing it to the update",
         "Brittle: every new privileged field has to be added. Allow-listing fails closed; deny-listing fails open.",
-        { tempting: true , code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);`},
+        {
+          tempting: true,
+          code: `delete req.body.role;
+delete req.body.isAdmin;
+await Users.update(req.user.id, req.body);`,
+        },
       ),
       fix(
         "client-form",
         "Render only the editable fields in the front-end form",
         "Doesn't stop a hand-crafted request.",
-        { tempting: true , code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);`},
+        {
+          tempting: true,
+          code: `<form>
+  <input name="displayName" />
+  <input name="timezone" />
+</form>`,
+        },
       ),
       fix(
         "audit-log",
         "Audit-log every update",
         "Detection helps after the fact; the bug is still exploitable.",
-        { code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);` }),
+        {
+          code: `logger.info({ userId: req.user.id, updates: req.body }, "profile update");
+await Users.update(req.user.id, req.body);`,
+        },
+      ),
+      fix(
+        "schema-passthrough",
+        "Validate types with a schema but allow unknown fields through",
+        "Type validation is useful, but `passthrough` still lets privileged properties reach the model.",
+        {
+          tempting: true,
+          code: `const updates = userUpdateSchema.passthrough().parse(req.body);
+await Users.update(req.user.id, updates);`,
+        },
+      ),
     ],
     correctFixId: "explicit-fields",
     explanation:
@@ -197,30 +237,46 @@ if rel, err := filepath.Rel(root, abs); err != nil || strings.HasPrefix(rel, "..
         "dotdot-strip",
         "Strip occurrences of `..` from the input",
         "Ineffective: encoded variants (%2e%2e), unicode lookalikes, and path separators bypass naive replacement.",
-        { tempting: true , code: `value := r.URL.Query().Get("value")
-if strings.Contains(value, "..") {
-    http.Error(w, "blocked", http.StatusBadRequest)
-    return
-}`},
+        {
+          tempting: true,
+          code: `name = strings.ReplaceAll(name, "..", "")
+path := filepath.Join("/var/app/uploads", name)
+http.ServeFile(w, r, path)`,
+        },
       ),
       fix(
         "regex-name",
         "Allow only [A-Za-z0-9_.-] in the file name",
         "A file like `secrets.txt` still works if it happens to match. The control must be the boundary check, not character class.",
-        { code: `value := r.URL.Query().Get("value")
-if strings.Contains(value, "..") {
-    http.Error(w, "blocked", http.StatusBadRequest)
-    return
-}` }),
+        {
+          code: `if !regexp.MustCompile("^[A-Za-z0-9_.-]+$").MatchString(name) {
+  http.Error(w, "bad name", 400)
+  return
+}
+http.ServeFile(w, r, filepath.Join(root, name))`,
+        },
+      ),
       fix(
         "chmod",
         "Make the storage directory world-readable",
         "Worsens the situation with broader exposure.",
-        { tempting: true , code: `value := r.URL.Query().Get("value")
-if strings.Contains(value, "..") {
-    http.Error(w, "blocked", http.StatusBadRequest)
-    return
-}`},
+        {
+          tempting: true,
+          code: `os.Chmod("/var/app/uploads", 0755)
+path := filepath.Join("/var/app/uploads", name)
+http.ServeFile(w, r, path)`,
+        },
+      ),
+      fix(
+        "clean-no-rel",
+        "Call `filepath.Clean` but do not check the result stays under root",
+        "Cleaning normalises traversal; it does not by itself enforce the storage boundary.",
+        {
+          tempting: true,
+          code: `clean := filepath.Clean(name)
+path := filepath.Join("/var/app/uploads", clean)
+http.ServeFile(w, r, path)`,
+        },
       ),
     ],
     correctFixId: "clean-and-confine",
@@ -260,25 +316,45 @@ if strings.Contains(value, "..") {
         "client-filter",
         "Filter results client-side based on the user's tenant",
         "Sends every group to every user; a hostile or curious client sees everything.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `const groups = await Groups.findAll();
+res.json(groups.filter((g) => g.tenantId === currentTenantId));`,
+        },
       ),
       fix(
         "obscure-ids",
         "Use long random ids on Group rows",
         "Doesn't address the listing leak.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `const groups = await Groups.findAll({
+  where: { publicId: { not: null } }
+});`,
+        },
       ),
       fix(
         "audit",
         "Log every cross-tenant access",
         "Detection without prevention.",
-        { code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;` }),
+        {
+          code: `const all = await Groups.findAll();
+logger.warn({ userId: req.user.id, count: all.length }, "group list");
+res.json(all);`,
+        },
+      ),
+      fix(
+        "tenant-param",
+        "Accept `tenantId` from the query string and filter with that value",
+        "The attacker controls the query string, so this only moves the trust mistake to a different field.",
+        {
+          tempting: true,
+          code: `const groups = await Groups.findAll({
+  where: { tenantId: req.query.tenantId }
+});
+res.json(groups);`,
+        },
+      ),
     ],
     correctFixId: "scope-tenant",
     explanation:

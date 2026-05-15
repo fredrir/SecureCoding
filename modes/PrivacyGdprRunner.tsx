@@ -32,6 +32,10 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
     setDpiaPick(null);
   }
 
+  const challenge = runner?.state.current;
+  const scenario = challenge?.modeData?.privacyScenario;
+  const principles = useShuffled(scenario?.principles ?? []);
+
   if (!runner) {
     return (
       <RunnerScaffold
@@ -52,9 +56,6 @@ export function PrivacyGdprRunner({ challenges, examMode }: Props) {
   }
 
   const { state, controls } = runner;
-  const challenge = state.current;
-  const scenario = challenge?.modeData?.privacyScenario;
-  const principles = useShuffled(scenario?.principles ?? []);
 
   const toggle = (id: string) => {
     setSelected((cur) =>

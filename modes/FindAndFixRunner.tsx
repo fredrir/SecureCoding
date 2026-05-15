@@ -40,6 +40,9 @@ export function FindAndFixRunner({ challenges, examMode }: Props) {
       ? { correct: runner.state.current?.vulnerableLines ?? [] }
       : undefined;
 
+  const challenge = runner?.state.current;
+  const fixOptions = useShuffled(challenge?.fixOptions ?? []);
+
   if (!runner) {
     return (
       <RunnerScaffold
@@ -60,10 +63,8 @@ export function FindAndFixRunner({ challenges, examMode }: Props) {
   }
 
   const { state, controls } = runner;
-  const challenge = state.current;
   const code = challenge?.code ?? "";
   const language = challenge?.language ?? "plaintext";
-  const fixOptions = useShuffled(challenge?.fixOptions ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;

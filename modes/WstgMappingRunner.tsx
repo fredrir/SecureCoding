@@ -18,6 +18,7 @@ import { RunnerScaffold } from "./RunnerScaffold";
 import { GAME_MODE_IDS } from "@/domain/gameMode";
 import { useShuffled } from "@/lib/useShuffled";
 import type { Challenge } from "@/domain/challenge";
+import { OWASP_TOP_10, OwaspTop10Id } from "@/domain/owasp";
 
 interface Props {
   challenges: readonly Challenge[];
@@ -41,6 +42,10 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
     setTipOpen(false);
   }
 
+  const challenge = runner?.state.current;
+  const mapping = challenge?.modeData?.wstgMapping;
+  const mappingOptions = useShuffled(mapping?.options ?? []);
+
   if (!runner) {
     return (
       <RunnerScaffold
@@ -61,9 +66,9 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
   }
 
   const { state, controls } = runner;
-  const challenge = state.current;
-  const mapping = challenge?.modeData?.wstgMapping;
-  const mappingOptions = useShuffled(mapping?.options ?? []);
+
+  const owaspTop10Title =
+    OWASP_TOP_10[mapping?.top10Hint as OwaspTop10Id] ?? null;
 
   const handleSubmit = () => {
     if (!challenge) return;
@@ -105,7 +110,13 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
               p="lg"
               className="bg-app-surface border-app-border"
             >
-              <Text size="sm">{challenge?.summary}</Text>
+              {" "}
+              <Stack gap="md">
+                <div className="text-xs uppercase font-bold text-app-fg-muted tracking-wider">
+                  Question
+                </div>
+                <Text size="sm">{challenge?.summary}</Text>
+              </Stack>
             </Paper>
           )}
           {mapping?.top10Hint ? (
@@ -119,9 +130,9 @@ export function WstgMappingRunner({ challenges, examMode }: Props) {
                 onClose={() => setTipOpen(false)}
               >
                 <Text size="sm">
-                  Aligns with OWASP Top 10 category{" "}
+                  Aligns with OWASP Top 10 category{": "}
                   <Text span fw={600}>
-                    {mapping.top10Hint}
+                    {mapping.top10Hint} {" -"} {owaspTop10Title}
                   </Text>
                   .
                 </Text>

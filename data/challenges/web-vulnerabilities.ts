@@ -51,9 +51,14 @@ return res.send(value);`},
         "csp-only",
         "Add a Content-Security-Policy header and ship as is",
         "CSP is defence in depth, not a substitute for output encoding. Inline reflection still breaks an open policy.",
-        { code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);` }),
+        {
+          code: `trustedTypes.createPolicy("default", {
+  createHTML: () => {
+    throw new TypeError("raw HTML is blocked");
+  },
+});`,
+        },
+      ),
     ],
     correctFixId: "escape",
     explanation:
@@ -143,17 +148,33 @@ return res.send(value);` }),
         "strip-script",
         "Strip <script> tags server-side before saving",
         "Stored XSS does not require <script>. `<img src=x onerror=...>`, `<iframe srcdoc>`, and event handlers all work.",
-        { tempting: true , code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);`},
+        {
+          tempting: true,
+          code: `if (/^[A-Za-z ]+$/.test(name)) {
+  banner.innerHTML = "Welcome back, " + name + "!";
+}`,
+        },
       ),
       fix(
         "encode-display",
         "Escape only when the comment contains '<' characters",
         "Conditional escaping is fragile. Always encode untrusted content for the output context.",
-        { tempting: true , code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);`},
+        {
+          tempting: true,
+          code: `<meta http-equiv="Content-Security-Policy" content="script-src 'self'">
+<script>
+banner.innerHTML = "Welcome back, " + name + "!";
+</script>`,
+        },
+      ),
+      fix(
+        "decode-twice",
+        "Decode the fragment twice before writing to innerHTML",
+        "More decoding can turn encoded payloads into active markup; it does not change the dangerous sink.",
+        {
+          code: `const name = decodeURIComponent(decodeURIComponent(location.hash.slice(1)));
+banner.innerHTML = "Welcome back, " + name + "!";`,
+        },
       ),
     ],
     correctFixId: "render-text",
@@ -302,25 +323,47 @@ ps.setString(2, hash(password));`,
         "escape-quotes",
         "Replace single quotes in the inputs with two single quotes",
         "Manual escaping breaks for non-string contexts and is brittle. Use parameterised queries.",
-        { tempting: true , code: `String value = request.getParameter("value");
-if (value.contains("..")) { throw new IllegalArgumentException(); }
-return value;`},
+        {
+          tempting: true,
+          code: `username = username.replace("'", "''");
+password = password.replace("'", "''");
+String sql = "SELECT * FROM users WHERE username = '" + username + "'";`,
+        },
       ),
       fix(
         "stored-proc",
         "Wrap the same string concatenation in a stored procedure",
         "If the procedure body still concatenates, you have moved the injection, not removed it.",
-        { tempting: true , code: `String value = request.getParameter("value");
-if (value.contains("..")) { throw new IllegalArgumentException(); }
-return value;`},
+        {
+          tempting: true,
+          code: `CallableStatement cs = conn.prepareCall("{call login_user(?, ?)}");
+// login_user internally builds SQL by concatenating the arguments.
+cs.setString(1, username);
+cs.setString(2, password);`,
+        },
       ),
       fix(
         "deny-special",
         "Reject inputs containing semicolons, quotes, or '--'",
         "Input filtering misses many payloads (boolean-based, time-based, comments inside strings) and breaks legitimate input.",
-        { code: `String value = request.getParameter("value");
-if (value.contains("..")) { throw new IllegalArgumentException(); }
-return value;` }),
+        {
+          code: `if (username.matches(".*(;|'|--).*")) {
+  throw new IllegalArgumentException("blocked");
+}
+String sql = "SELECT * FROM users WHERE username = '" + username + "'";`,
+        },
+      ),
+      fix(
+        "orm-raw",
+        "Move the concatenated predicate into an ORM raw query helper",
+        "ORM raw query helpers still execute SQL text; concatenating into them is still injection.",
+        {
+          tempting: true,
+          code: `return entityManager.createNativeQuery(
+  "SELECT * FROM users WHERE username = '" + username + "'"
+).getSingleResult();`,
+        },
+      ),
     ],
     correctFixId: "prepared",
     explanation:
@@ -401,25 +444,47 @@ const col = ALLOWED[req.query.sort as keyof typeof ALLOWED] ?? "id";`,
         "escape-id",
         "Escape the identifier with backticks",
         "Identifier escaping varies per database and does not stop injection of valid columns or comma-separated terms (e.g. `total; DROP TABLE`).",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `const sort = String(req.query.sort).replaceAll("\`", "\`\`");
+const rows = await db.query(
+  \`SELECT id, total FROM reports ORDER BY \\\`\${sort}\\\`\`
+);`,
+        },
       ),
       fix(
         "param-bind",
         "Bind the column name with `db.query(..., [sort])`",
         "Parameter binding is for values, not identifiers; most drivers will treat the column name as a literal string.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `const rows = await db.query(
+  "SELECT id, total FROM reports ORDER BY ?",
+  [req.query.sort]
+);`,
+        },
       ),
       fix(
         "regex",
         "Allow only `[a-zA-Z_]+` in the sort parameter",
         "A loose regex still permits any column name in the schema, including ones the user shouldn't be able to sort by.",
-        { code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;` }),
+        {
+          code: `const sort = String(req.query.sort);
+if (!/^[a-zA-Z_]+$/.test(sort)) throw new Error("bad sort");
+const rows = await db.query(\`SELECT id, total FROM reports ORDER BY \${sort}\`);`,
+        },
+      ),
+      fix(
+        "default-fallback",
+        "Fall back to `id` only when the sort parameter is empty",
+        "A fallback helps missing input but still trusts attacker-controlled non-empty input.",
+        {
+          code: `const sort = req.query.sort || "id";
+const rows = await db.query(
+  \`SELECT id, total FROM reports ORDER BY \${sort}\`
+);`,
+        },
+      ),
     ],
     correctFixId: "allow-list",
     explanation:

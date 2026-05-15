@@ -30,6 +30,10 @@ export function RiskScoringRunner({ challenges, examMode }: Props) {
     setSelected(null);
   }
 
+  const challenge = runner?.state.current;
+  const risk = challenge?.modeData?.riskScoring;
+  const riskOptions = useShuffled(risk?.options ?? []);
+
   if (!runner) {
     return (
       <RunnerScaffold
@@ -50,9 +54,6 @@ export function RiskScoringRunner({ challenges, examMode }: Props) {
   }
 
   const { state, controls } = runner;
-  const challenge = state.current;
-  const risk = challenge?.modeData?.riskScoring;
-  const riskOptions = useShuffled(risk?.options ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;

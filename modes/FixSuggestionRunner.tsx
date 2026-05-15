@@ -33,6 +33,9 @@ export function FixSuggestionRunner({ challenges, examMode }: Props) {
     setSelectedFix(null);
   }
 
+  const challenge = runner?.state.current;
+  const fixOptions = useShuffled(challenge?.fixOptions ?? []);
+
   if (!runner) {
     return (
       <RunnerScaffold
@@ -53,11 +56,9 @@ export function FixSuggestionRunner({ challenges, examMode }: Props) {
   }
 
   const { state, controls } = runner;
-  const challenge = state.current;
   const language = challenge?.language ?? "plaintext";
   const code = challenge?.code ?? "";
   const intro = challenge?.modeData?.fixSuggestion?.intro;
-  const fixOptions = useShuffled(challenge?.fixOptions ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;

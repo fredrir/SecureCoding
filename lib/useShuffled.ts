@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 function shuffle<T>(arr: readonly T[]): T[] {
   const out = [...arr];
@@ -23,6 +23,8 @@ export function useShuffled<T extends { id: string }>(
   keyOf: (item: T) => string = (item) => item.id,
 ): readonly T[] {
   const key = items.map(keyOf).join("|");
+  const [shuffled, setShuffled] = useState<readonly T[]>(items);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useMemo(() => shuffle(items), [key]);
+  useEffect(() => { setShuffled(shuffle(items)); }, [key]);
+  return shuffled;
 }

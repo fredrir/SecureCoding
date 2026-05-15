@@ -254,7 +254,7 @@ Host: admin.example.com`,
           {
             id: "stored",
             code: "WSTG-INPV-02",
-            label: "Test for Stored Cross Site Scripting",
+            label: "Testing for Stored Cross Site Scripting",
             correct: true,
             rationale:
               "The payload is persisted server-side and rendered on every view: stored XSS.",
@@ -262,7 +262,7 @@ Host: admin.example.com`,
           {
             id: "reflected",
             code: "WSTG-INPV-01",
-            label: "Test for Reflected Cross Site Scripting",
+            label: "Testing for Reflected Cross Site Scripting",
             correct: false,
             rationale:
               "Reflected XSS uses a single request whose response echoes the payload. Persistence makes it stored.",
@@ -270,14 +270,14 @@ Host: admin.example.com`,
           {
             id: "sqli",
             code: "WSTG-INPV-05",
-            label: "Test for SQL Injection",
+            label: "Testing for SQL Injection",
             correct: false,
             rationale: "Wrong family; this is client-side execution.",
           },
           {
             id: "idor",
             code: "WSTG-ATHZ-04",
-            label: "Test for Insecure Direct Object References",
+            label: "Testing for Insecure Direct Object References",
             correct: false,
             rationale: "Authorisation control, not output encoding.",
           },
@@ -310,7 +310,7 @@ Host: admin.example.com`,
           {
             id: "reflected",
             code: "WSTG-INPV-01",
-            label: "Test for Reflected Cross Site Scripting",
+            label: "Testing for Reflected Cross Site Scripting",
             correct: true,
             rationale:
               "The payload comes from the current request and is reflected in the response without being stored.",
@@ -318,7 +318,7 @@ Host: admin.example.com`,
           {
             id: "stored",
             code: "WSTG-INPV-02",
-            label: "Test for Stored Cross Site Scripting",
+            label: "Testing for Stored Cross Site Scripting",
             correct: false,
             rationale:
               "Stored XSS requires server-side persistence and later rendering.",
@@ -326,7 +326,7 @@ Host: admin.example.com`,
           {
             id: "sqli",
             code: "WSTG-INPV-05",
-            label: "Test for SQL Injection",
+            label: "Testing for SQL Injection",
             correct: false,
             rationale:
               "This is browser-side script execution, not database query manipulation.",
@@ -334,7 +334,7 @@ Host: admin.example.com`,
           {
             id: "csrf",
             code: "WSTG-SESS-05",
-            label: "Test for Cross Site Request Forgery",
+            label: "Testing for Cross Site Request Forgery",
             correct: false,
             rationale:
               "CSRF tricks a browser into sending a request; it is not about reflected script execution.",
@@ -368,7 +368,7 @@ Host: admin.example.com`,
           {
             id: "sqli",
             code: "WSTG-INPV-05",
-            label: "Test for SQL Injection",
+            label: "Testing for SQL Injection",
             correct: true,
             rationale:
               "The attacker can alter the SQL query structure through untrusted input.",
@@ -376,7 +376,7 @@ Host: admin.example.com`,
           {
             id: "cmdi",
             code: "WSTG-INPV-12",
-            label: "Test for Command Injection",
+            label: "Testing for Command Injection",
             correct: false,
             rationale:
               "Command injection targets OS commands, not SQL statements.",
@@ -384,7 +384,7 @@ Host: admin.example.com`,
           {
             id: "weak-encryption",
             code: "WSTG-CRYP-04",
-            label: "Test for Weak Encryption",
+            label: "Testing for Weak Encryption",
             correct: false,
             rationale:
               "The issue is query construction, not cryptographic strength.",
@@ -426,7 +426,7 @@ Host: admin.example.com`,
           {
             id: "cmdi",
             code: "WSTG-INPV-12",
-            label: "Test for Command Injection",
+            label: "Testing for Command Injection",
             correct: true,
             rationale:
               "The user-controlled `host` value can become part of an OS command.",
@@ -434,14 +434,14 @@ Host: admin.example.com`,
           {
             id: "sqli",
             code: "WSTG-INPV-05",
-            label: "Test for SQL Injection",
+            label: "Testing for SQL Injection",
             correct: false,
             rationale: "No database query is being manipulated.",
           },
           {
             id: "ssrf",
             code: "WSTG-INPV-19",
-            label: "Test for SSRF",
+            label: "Testing for Server-Side Request Forgery",
             correct: false,
             rationale:
               "SSRF makes the server issue network requests; this scenario executes shell commands.",
@@ -477,12 +477,12 @@ Host: admin.example.com`,
       wstgMapping: {
         question:
           "Which WSTG category covers a server fetching attacker-controlled URLs, including internal hosts?",
-        top10Hint: "A01",
+        top10Hint: "A05",
         options: [
           {
             id: "ssrf",
             code: "WSTG-INPV-19",
-            label: "Test for SSRF",
+            label: "Testing for Server-Side Request Forgery",
             correct: true,
             rationale:
               "The attacker controls where the server sends outbound requests.",
@@ -490,7 +490,7 @@ Host: admin.example.com`,
           {
             id: "cors",
             code: "WSTG-CLNT-07",
-            label: "Test for Cross Origin Resource Sharing",
+            label: "Testing Cross Origin Resource Sharing",
             correct: false,
             rationale:
               "CORS is a browser-enforced cross-origin access control issue, not a server-side fetch issue.",
@@ -498,7 +498,7 @@ Host: admin.example.com`,
           {
             id: "redirect",
             code: "WSTG-CLNT-04",
-            label: "Testing for Client Side URL Redirect",
+            label: "Testing for Client-side URL Redirect",
             correct: false,
             rationale:
               "The server is fetching the URL; the browser is not merely redirected.",
@@ -506,7 +506,7 @@ Host: admin.example.com`,
           {
             id: "tls",
             code: "WSTG-CRYP-01",
-            label: "Test for Weak Transport Layer Security",
+            label: "Testing for Weak Transport Layer Security",
             correct: false,
             rationale: "Transport encryption is not the central weakness here.",
           },
@@ -539,7 +539,7 @@ Host: admin.example.com`,
           {
             id: "csrf",
             code: "WSTG-SESS-05",
-            label: "Test for Cross Site Request Forgery",
+            label: "Testing for Cross Site Request Forgery",
             correct: true,
             rationale:
               "The attack causes the victim's authenticated browser to submit an unwanted state-changing request.",
@@ -547,7 +547,7 @@ Host: admin.example.com`,
           {
             id: "cookie-attrs",
             code: "WSTG-SESS-02",
-            label: "Test for Cookies Attributes",
+            label: "Testing for Cookies Attributes",
             correct: false,
             rationale:
               "Cookie attributes may help, but the specific missing control is CSRF protection.",
@@ -563,7 +563,7 @@ Host: admin.example.com`,
           {
             id: "idor",
             code: "WSTG-ATHZ-04",
-            label: "Test for Insecure Direct Object References",
+            label: "Testing for Insecure Direct Object References",
             correct: false,
             rationale:
               "No direct object identifier is being accessed without authorization.",
@@ -597,7 +597,7 @@ Host: admin.example.com`,
           {
             id: "cookie-attrs",
             code: "WSTG-SESS-02",
-            label: "Test for Cookies Attributes",
+            label: "Testing for Cookies Attributes",
             correct: true,
             rationale:
               "This category specifically covers whether cookies have appropriate security attributes.",
@@ -613,7 +613,7 @@ Host: admin.example.com`,
           {
             id: "weak-tls",
             code: "WSTG-CRYP-01",
-            label: "Test for Weak Transport Layer Security",
+            label: "Testing for Weak Transport Layer Security",
             correct: false,
             rationale:
               "TLS is related to transport security, but the finding is cookie attribute configuration.",
@@ -621,7 +621,7 @@ Host: admin.example.com`,
           {
             id: "csrf",
             code: "WSTG-SESS-05",
-            label: "Test for Cross Site Request Forgery",
+            label: "Testing for Cross Site Request Forgery",
             correct: false,
             rationale:
               "SameSite can reduce CSRF risk, but the test category for cookie flags is WSTG-SESS-02.",
@@ -655,7 +655,7 @@ Host: admin.example.com`,
           {
             id: "weak-password-policy",
             code: "WSTG-ATHN-07",
-            label: "Test for Weak Password Policy",
+            label: "Testing for Weak Password Policy",
             correct: true,
             rationale:
               "The weakness is that the application allows easily guessed passwords.",
@@ -663,7 +663,7 @@ Host: admin.example.com`,
           {
             id: "weak-lockout",
             code: "WSTG-ATHN-03",
-            label: "Test for Weak Lockout Mechanism",
+            label: "Testing for Weak Lock Out Mechanism",
             correct: false,
             rationale:
               "Lockout controls repeated guessing attempts; they do not define password strength.",
@@ -671,7 +671,7 @@ Host: admin.example.com`,
           {
             id: "default-creds",
             code: "WSTG-ATHN-02",
-            label: "Test for Default Credentials",
+            label: "Testing for Default Credentials",
             correct: false,
             rationale:
               "Default credentials are vendor or preconfigured accounts, not user-selected weak passwords.",
@@ -679,7 +679,7 @@ Host: admin.example.com`,
           {
             id: "reset",
             code: "WSTG-ATHN-09",
-            label: "Test for Weak Password Change or Reset Functionalities",
+            label: "Testing for Weak Password Change or Reset Functionalities",
             correct: false,
             rationale:
               "The scenario concerns password creation policy, not reset flow weaknesses.",
@@ -713,7 +713,7 @@ Host: admin.example.com`,
           {
             id: "weak-lockout",
             code: "WSTG-ATHN-03",
-            label: "Test for Weak Lockout Mechanism",
+            label: "Testing for Weak Lock Out Mechanism",
             correct: true,
             rationale:
               "The issue is that attackers can repeatedly guess credentials without effective limits.",
@@ -721,7 +721,7 @@ Host: admin.example.com`,
           {
             id: "weak-password-policy",
             code: "WSTG-ATHN-07",
-            label: "Test for Weak Password Policy",
+            label: "Testing for Weak Password Policy",
             correct: false,
             rationale:
               "Password policy concerns password quality, not repeated guessing controls.",
@@ -729,14 +729,14 @@ Host: admin.example.com`,
           {
             id: "default-creds",
             code: "WSTG-ATHN-02",
-            label: "Test for Default Credentials",
+            label: "Testing for Default Credentials",
             correct: false,
             rationale: "No vendor default account is described.",
           },
           {
             id: "csrf",
             code: "WSTG-SESS-05",
-            label: "Test for Cross Site Request Forgery",
+            label: "Testing for Cross Site Request Forgery",
             correct: false,
             rationale:
               "CSRF is about forged authenticated requests, not brute-force login attempts.",
@@ -770,7 +770,7 @@ Host: admin.example.com`,
           {
             id: "default-creds",
             code: "WSTG-ATHN-02",
-            label: "Test for Default Credentials",
+            label: "Testing for Default Credentials",
             correct: true,
             rationale:
               "The weakness is the use of known default login credentials.",
@@ -778,7 +778,7 @@ Host: admin.example.com`,
           {
             id: "weak-lockout",
             code: "WSTG-ATHN-03",
-            label: "Test for Weak Lockout Mechanism",
+            label: "Testing for Weak Lock Out Mechanism",
             correct: false,
             rationale:
               "Lockout mechanisms limit guessing attempts; here the credentials are already known defaults.",
@@ -836,7 +836,7 @@ Host: admin.example.com`,
           {
             id: "weak-tls",
             code: "WSTG-CRYP-01",
-            label: "Test for Weak Transport Layer Security",
+            label: "Testing for Weak Transport Layer Security",
             correct: false,
             rationale:
               "Weak TLS covers protocol and cipher strength; HSTS is an HTTP security header.",
@@ -845,7 +845,7 @@ Host: admin.example.com`,
             id: "unencrypted-channel",
             code: "WSTG-CRYP-03",
             label:
-              "Test for Sensitive Information Sent via Unencrypted Channels",
+              "Testing for Sensitive Information Sent via Unencrypted Channels",
             correct: false,
             rationale:
               "That category concerns sensitive data sent over HTTP or another unencrypted channel.",
@@ -853,7 +853,7 @@ Host: admin.example.com`,
           {
             id: "cookie-attrs",
             code: "WSTG-SESS-02",
-            label: "Test for Cookies Attributes",
+            label: "Testing for Cookies Attributes",
             correct: false,
             rationale:
               "Cookie flags are separate from the HSTS response header.",
@@ -915,7 +915,7 @@ Host: admin.example.com`,
           {
             id: "weak-encryption",
             code: "WSTG-CRYP-04",
-            label: "Test for Weak Encryption",
+            label: "Testing for Weak Encryption",
             correct: false,
             rationale:
               "The vulnerability is information disclosure through errors, not weak cryptography.",
@@ -944,12 +944,12 @@ Host: admin.example.com`,
       wstgMapping: {
         question:
           "Which WSTG category covers overly permissive CORS policies that expose authenticated API responses?",
-        top10Hint: "A01",
+        top10Hint: "A02",
         options: [
           {
             id: "cors",
             code: "WSTG-CLNT-07",
-            label: "Test for Cross Origin Resource Sharing",
+            label: "Testing Cross Origin Resource Sharing",
             correct: true,
             rationale:
               "CORS controls whether browsers may expose cross-origin responses to scripts.",
@@ -957,7 +957,7 @@ Host: admin.example.com`,
           {
             id: "csrf",
             code: "WSTG-SESS-05",
-            label: "Test for Cross Site Request Forgery",
+            label: "Testing for Cross Site Request Forgery",
             correct: false,
             rationale:
               "CSRF sends unwanted requests; CORS controls whether responses can be read cross-origin.",
@@ -965,7 +965,7 @@ Host: admin.example.com`,
           {
             id: "ssrf",
             code: "WSTG-INPV-19",
-            label: "Test for SSRF",
+            label: "Testing for Server-Side Request Forgery",
             correct: false,
             rationale:
               "SSRF is server-side request forgery, not browser cross-origin access.",
@@ -973,7 +973,7 @@ Host: admin.example.com`,
           {
             id: "client-redirect",
             code: "WSTG-CLNT-04",
-            label: "Testing for Client Side URL Redirect",
+            label: "Testing for Client-side URL Redirect",
             correct: false,
             rationale: "No client-side redirect is described.",
           },
@@ -1001,12 +1001,12 @@ Host: admin.example.com`,
       wstgMapping: {
         question:
           "Which WSTG category covers sensitive pages that can be embedded in an attacker iframe?",
-        top10Hint: "A01",
+        top10Hint: "A02",
         options: [
           {
             id: "clickjacking",
             code: "WSTG-CLNT-09",
-            label: "Test for Clickjacking",
+            label: "Testing for Clickjacking",
             correct: true,
             rationale:
               "The attack overlays or frames a legitimate page to trick the user into clicking.",
@@ -1014,7 +1014,7 @@ Host: admin.example.com`,
           {
             id: "cors",
             code: "WSTG-CLNT-07",
-            label: "Test for Cross Origin Resource Sharing",
+            label: "Testing Cross Origin Resource Sharing",
             correct: false,
             rationale:
               "CORS controls script access to cross-origin responses, not whether a page can be framed.",
@@ -1022,7 +1022,7 @@ Host: admin.example.com`,
           {
             id: "csrf",
             code: "WSTG-SESS-05",
-            label: "Test for Cross Site Request Forgery",
+            label: "Testing for Cross Site Request Forgery",
             correct: false,
             rationale:
               "CSRF and clickjacking can both trigger actions, but framing/UI redress is clickjacking.",
@@ -1030,7 +1030,7 @@ Host: admin.example.com`,
           {
             id: "client-redirect",
             code: "WSTG-CLNT-04",
-            label: "Testing for Client Side URL Redirect",
+            label: "Testing for Client-side URL Redirect",
             correct: false,
             rationale: "No redirect behavior is involved.",
           },
@@ -1062,14 +1062,14 @@ Host: admin.example.com`,
           {
             id: "idor",
             code: "WSTG-ATHZ-04",
-            label: "Test for Insecure Direct Object References",
+            label: "Testing for Insecure Direct Object References",
             correct: true,
             rationale: "Object-level authorisation is exactly WSTG-ATHZ-04.",
           },
           {
             id: "bypass",
             code: "WSTG-ATHZ-02",
-            label: "Test for Bypassing Authorization Schema",
+            label: "Testing for Bypassing Authorization Schema",
             correct: false,
             rationale:
               "Schema bypass is broader (e.g. role escalation), not direct object reference.",
@@ -1116,7 +1116,7 @@ Host: admin.example.com`,
           {
             id: "cryp01",
             code: "WSTG-CRYP-01",
-            label: "Test for Weak Transport Layer Security",
+            label: "Testing for Weak Transport Layer Security",
             correct: true,
             rationale:
               "Verification disabled means the chain is not validated, which CRYP-01 covers.",
@@ -1124,7 +1124,7 @@ Host: admin.example.com`,
           {
             id: "cryp04",
             code: "WSTG-CRYP-04",
-            label: "Test for Weak Encryption",
+            label: "Testing for Weak Encryption",
             correct: false,
             rationale: "Encryption strength is not the failure here; trust is.",
           },
@@ -1138,7 +1138,8 @@ Host: admin.example.com`,
           {
             id: "athn01",
             code: "WSTG-ATHN-01",
-            label: "Test for Credentials Transported over an Encrypted Channel",
+            label:
+              "Testing for Credentials Transported over an Encrypted Channel",
             correct: false,
             rationale:
               "Concerns where credentials travel, not the cert validation itself.",
@@ -1171,21 +1172,21 @@ Host: admin.example.com`,
           {
             id: "sess05",
             code: "WSTG-SESS-05",
-            label: "Test for Cross Site Request Forgery",
+            label: "Testing for Cross Site Request Forgery",
             correct: true,
             rationale: "Direct match.",
           },
           {
             id: "clnt07",
             code: "WSTG-CLNT-07",
-            label: "Test for Cross Origin Resource Sharing",
+            label: "Testing Cross Origin Resource Sharing",
             correct: false,
             rationale: "CORS configuration is a different control.",
           },
           {
             id: "sess02",
             code: "WSTG-SESS-02",
-            label: "Test for Cookies Attributes",
+            label: "Testing for Cookies Attributes",
             correct: false,
             rationale:
               "Cookie attribute checks are related defence in depth but not the primary mapping.",
@@ -1193,10 +1194,880 @@ Host: admin.example.com`,
           {
             id: "athz02",
             code: "WSTG-ATHZ-02",
-            label: "Test for Bypassing Authorization Schema",
+            label: "Testing for Bypassing Authorization Schema",
             correct: false,
             rationale:
               "CSRF abuses authenticated sessions, not bypasses authorisation logic.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-http-parameter-pollution",
+    title: "Map: duplicate role parameters alter access",
+    summary:
+      "A request with `role=user&role=admin` is parsed differently by the proxy and application, letting the attacker influence authorization logic.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "hpp", "parameters"],
+    vulnerableLines: [],
+    vulnerabilityType: "HTTP Parameter Pollution",
+    fixOptions: [],
+    explanation:
+      "Duplicate or polluted parameters that change server-side interpretation map to WSTG-INPV-04. The Top 10 home is A05 Injection.",
+    examKeywords: ["http parameter pollution", "hpp", "inpv-04"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers duplicate request parameters that change how the application interprets input?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "hpp",
+            code: "WSTG-INPV-04",
+            label: "Testing for HTTP Parameter Pollution",
+            correct: true,
+            rationale:
+              "The weakness is inconsistent or unsafe handling of repeated HTTP parameters.",
+          },
+          {
+            id: "verb-tampering",
+            code: "WSTG-INPV-03",
+            label: "Testing for HTTP Verb Tampering",
+            correct: false,
+            rationale:
+              "Verb tampering changes the HTTP method, not duplicate parameter interpretation.",
+          },
+          {
+            id: "authz-bypass",
+            code: "WSTG-ATHZ-02",
+            label: "Testing for Bypassing Authorization Schema",
+            correct: false,
+            rationale:
+              "Authorization is affected, but the specific testing category is parameter pollution.",
+          },
+          {
+            id: "session-puzzling",
+            code: "WSTG-SESS-08",
+            label: "Testing for Session Puzzling",
+            correct: false,
+            rationale:
+              "Session puzzling abuses confused session state, not repeated request parameters.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-host-header-poisoning",
+    title: "Map: password reset trusts Host header",
+    summary:
+      "Password reset links are generated from the incoming Host header, allowing an attacker to send victims reset URLs on an attacker-controlled domain.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "host-header", "password-reset"],
+    vulnerableLines: [],
+    vulnerabilityType: "Host Header Injection",
+    fixOptions: [],
+    explanation:
+      "Trusting attacker-controlled Host headers for security-sensitive links maps to WSTG-INPV-17. The Top 10 home is A05 Injection.",
+    examKeywords: ["host header injection", "password reset", "inpv-17"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers poisoning password reset links through an attacker-controlled Host header?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "host-header",
+            code: "WSTG-INPV-17",
+            label: "Testing for Host Header Injection",
+            correct: true,
+            rationale:
+              "The attacker controls the Host value used to construct a trusted URL.",
+          },
+          {
+            id: "client-redirect",
+            code: "WSTG-CLNT-04",
+            label: "Testing for Client-side URL Redirect",
+            correct: false,
+            rationale:
+              "The issue is server-side URL generation from the Host header, not client-side redirect code.",
+          },
+          {
+            id: "weak-reset",
+            code: "WSTG-ATHN-09",
+            label: "Testing for Weak Password Change or Reset Functionalities",
+            correct: false,
+            rationale:
+              "The reset flow is impacted, but the tested weakness is Host header injection.",
+          },
+          {
+            id: "ssrf",
+            code: "WSTG-INPV-19",
+            label: "Testing for Server-Side Request Forgery",
+            correct: false,
+            rationale:
+              "No server-side fetch to an attacker-chosen URL is described.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-ssti-invoice-template",
+    title: "Map: invoice template evaluates user input",
+    summary:
+      "A merchant can place `{{7*7}}` in a custom invoice template and the server renders `49`, exposing access to the template engine.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "ssti", "templates"],
+    vulnerableLines: [],
+    vulnerabilityType: "Server-side Template Injection",
+    fixOptions: [],
+    explanation:
+      "User input evaluated by a server-side template engine maps to WSTG-INPV-18. The Top 10 home is A05 Injection.",
+    examKeywords: ["ssti", "template injection", "inpv-18"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers attacker-controlled input evaluated by a server-side template engine?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "ssti",
+            code: "WSTG-INPV-18",
+            label: "Testing for Server-side Template Injection",
+            correct: true,
+            rationale:
+              "The template expression is evaluated on the server by the template engine.",
+          },
+          {
+            id: "code-injection",
+            code: "WSTG-INPV-11",
+            label: "Testing for Code Injection",
+            correct: false,
+            rationale:
+              "SSTI can lead to code execution, but WSTG has a more specific template injection category.",
+          },
+          {
+            id: "stored-xss",
+            code: "WSTG-INPV-02",
+            label: "Testing for Stored Cross Site Scripting",
+            correct: false,
+            rationale:
+              "The expression executes in the server template engine, not in the browser.",
+          },
+          {
+            id: "format-string",
+            code: "WSTG-INPV-13",
+            label: "Testing for Format String Injection",
+            correct: false,
+            rationale:
+              "Format string bugs abuse formatting functions, not template evaluation.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-xxe-document-preview",
+    title: "Map: XML preview resolves external entities",
+    summary:
+      "A document preview endpoint accepts XML and expands an external entity that reads a local file from the server.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "xml", "xxe"],
+    vulnerableLines: [],
+    vulnerabilityType: "XML Injection",
+    fixOptions: [],
+    explanation:
+      "Unsafe XML parsing and entity expansion fall under WSTG-INPV-07. The Top 10 home is A05 Injection.",
+    examKeywords: ["xml injection", "xxe", "external entity", "inpv-07"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers unsafe XML parsing that expands attacker-supplied entities?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "xml",
+            code: "WSTG-INPV-07",
+            label: "Testing for XML Injection",
+            correct: true,
+            rationale:
+              "The parser processes attacker-controlled XML constructs, including external entities.",
+          },
+          {
+            id: "lfi",
+            code: "WSTG-INPV-11.1",
+            label: "Testing for Local File Inclusion",
+            correct: false,
+            rationale:
+              "A local file may be exposed, but the entry point is XML parsing.",
+          },
+          {
+            id: "ssrf",
+            code: "WSTG-INPV-19",
+            label: "Testing for Server-Side Request Forgery",
+            correct: false,
+            rationale:
+              "XXE can sometimes trigger SSRF, but this scenario is best mapped to XML injection.",
+          },
+          {
+            id: "xpath",
+            code: "WSTG-INPV-09",
+            label: "Testing for XPath Injection",
+            correct: false,
+            rationale:
+              "XPath injection manipulates XPath queries, not XML entity processing.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-workflow-bypass-refund",
+    title: "Map: refund approval step can be skipped",
+    summary:
+      "A user can call the final `/refund/execute` endpoint directly without completing manager approval in the earlier workflow step.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "business-logic", "workflow"],
+    vulnerableLines: [],
+    vulnerabilityType: "Workflow Bypass",
+    fixOptions: [],
+    explanation:
+      "Skipping required business process steps maps to WSTG-BUSL-06. The Top 10 home is A06 Insecure Design.",
+    examKeywords: ["workflow bypass", "business logic", "busl-06"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers directly calling a later endpoint to bypass a required approval workflow?",
+        top10Hint: "A06",
+        options: [
+          {
+            id: "workflow",
+            code: "WSTG-BUSL-06",
+            label: "Testing for the Circumvention of Work Flows",
+            correct: true,
+            rationale:
+              "The attack bypasses the intended sequence of business process steps.",
+          },
+          {
+            id: "request-forgery",
+            code: "WSTG-BUSL-02",
+            label: "Test Ability to Forge Requests",
+            correct: false,
+            rationale:
+              "The problem is not merely crafting a request, but skipping a required workflow state.",
+          },
+          {
+            id: "authz-bypass",
+            code: "WSTG-ATHZ-02",
+            label: "Testing for Bypassing Authorization Schema",
+            correct: false,
+            rationale:
+              "Authorization may also be relevant, but this scenario centers on business workflow order.",
+          },
+          {
+            id: "integrity",
+            code: "WSTG-BUSL-03",
+            label: "Test Integrity Checks",
+            correct: false,
+            rationale:
+              "Integrity checks cover tampering with protected values, not bypassing process order.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-price-hidden-field",
+    title: "Map: checkout trusts hidden price field",
+    summary:
+      "The checkout form posts `price=1999`, and changing it to `price=1` charges the lower amount because the server trusts the client value.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "business-logic", "integrity"],
+    vulnerableLines: [],
+    vulnerabilityType: "Missing Integrity Check",
+    fixOptions: [],
+    explanation:
+      "Client-side tampering with a business-critical value that lacks server-side integrity checks maps to WSTG-BUSL-03. The Top 10 home is A08 Software or Data Integrity Failures.",
+    examKeywords: ["integrity check", "hidden field", "price tampering", "busl-03"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers trusting a client-supplied price without server-side integrity checks?",
+        top10Hint: "A08",
+        options: [
+          {
+            id: "integrity",
+            code: "WSTG-BUSL-03",
+            label: "Test Integrity Checks",
+            correct: true,
+            rationale:
+              "The server fails to verify the integrity of a business-critical value.",
+          },
+          {
+            id: "data-validation",
+            code: "WSTG-BUSL-01",
+            label: "Test Business Logic Data Validation",
+            correct: false,
+            rationale:
+              "Validation matters, but this scenario is specifically about tampering with a trusted value.",
+          },
+          {
+            id: "hpp",
+            code: "WSTG-INPV-04",
+            label: "Testing for HTTP Parameter Pollution",
+            correct: false,
+            rationale:
+              "No duplicate parameters or parser confusion are described.",
+          },
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Testing for Cross Site Request Forgery",
+            correct: false,
+            rationale:
+              "The user is altering their own submitted value, not being tricked into a forged request.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-polyglot-upload",
+    title: "Map: image upload accepts active HTML",
+    summary:
+      "The profile photo uploader accepts a `.html` file with script content because it only checks that the filename contains `.jpg` somewhere.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "file-upload", "content-type"],
+    vulnerableLines: [],
+    vulnerabilityType: "Unexpected File Type Upload",
+    fixOptions: [],
+    explanation:
+      "Accepting file types outside the intended allowlist maps to WSTG-BUSL-08. The Top 10 home is A02 Security Misconfiguration.",
+    examKeywords: ["file upload", "unexpected file type", "busl-08"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers accepting an unexpected active file type through a weak upload allowlist?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "unexpected-type",
+            code: "WSTG-BUSL-08",
+            label: "Test Upload of Unexpected File Types",
+            correct: true,
+            rationale:
+              "The application accepts a file type that should not be permitted for that feature.",
+          },
+          {
+            id: "malicious-file",
+            code: "WSTG-BUSL-09",
+            label: "Test Upload of Malicious Files",
+            correct: false,
+            rationale:
+              "Malicious content may be present, but the described control failure is accepting the wrong file type.",
+          },
+          {
+            id: "stored-xss",
+            code: "WSTG-INPV-02",
+            label: "Testing for Stored Cross Site Scripting",
+            correct: false,
+            rationale:
+              "Stored XSS may be an impact, but the WSTG upload mapping is more specific.",
+          },
+          {
+            id: "file-permission",
+            code: "WSTG-CONF-09",
+            label: "Test File Permission",
+            correct: false,
+            rationale:
+              "This is not about filesystem permissions on deployed files.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-malicious-zip-upload",
+    title: "Map: uploaded archive writes outside target folder",
+    summary:
+      "The upload service extracts ZIP entries without normalising paths, allowing `../../webroot/shell.jsp` to be written outside the intended directory.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "file-upload", "zip-slip"],
+    vulnerableLines: [],
+    vulnerabilityType: "Malicious File Upload",
+    fixOptions: [],
+    explanation:
+      "Uploading a crafted archive that abuses server-side processing maps to WSTG-BUSL-09. The Top 10 home is A05 Injection.",
+    examKeywords: ["malicious upload", "zip slip", "busl-09"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers uploading a crafted archive that causes unsafe server-side extraction?",
+        top10Hint: "A05",
+        options: [
+          {
+            id: "malicious-file",
+            code: "WSTG-BUSL-09",
+            label: "Test Upload of Malicious Files",
+            correct: true,
+            rationale:
+              "The file is intentionally crafted to exploit how the server processes uploads.",
+          },
+          {
+            id: "unexpected-type",
+            code: "WSTG-BUSL-08",
+            label: "Test Upload of Unexpected File Types",
+            correct: false,
+            rationale:
+              "The file type may be allowed; the problem is malicious content and processing behavior.",
+          },
+          {
+            id: "directory-traversal",
+            code: "WSTG-ATHZ-01",
+            label: "Testing Directory Traversal File Include",
+            correct: false,
+            rationale:
+              "Path traversal is part of the impact, but the scenario is framed as malicious upload processing.",
+          },
+          {
+            id: "file-permission",
+            code: "WSTG-CONF-09",
+            label: "Test File Permission",
+            correct: false,
+            rationale:
+              "The weakness is extraction logic, not deployed file permissions.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-graphql-introspection",
+    title: "Map: GraphQL exposes hidden mutations",
+    summary:
+      "GraphQL introspection is enabled in production and reveals administrative mutations that are not linked from the user interface.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "graphql", "api"],
+    vulnerableLines: [],
+    vulnerabilityType: "GraphQL Exposure",
+    fixOptions: [],
+    explanation:
+      "Testing GraphQL schemas, queries, and mutations maps to WSTG-APIT-01. The Top 10 home is A02 Security Misconfiguration.",
+    examKeywords: ["graphql", "introspection", "apit-01"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers exposed GraphQL schema details and hidden mutations?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "graphql",
+            code: "WSTG-APIT-01",
+            label: "Testing GraphQL",
+            correct: true,
+            rationale:
+              "WSTG has a dedicated API testing category for GraphQL behavior and schema exposure.",
+          },
+          {
+            id: "admin-interfaces",
+            code: "WSTG-CONF-05",
+            label: "Enumerate Infrastructure and Application Admin Interfaces",
+            correct: false,
+            rationale:
+              "Admin functionality is exposed, but the interface and testing surface is GraphQL.",
+          },
+          {
+            id: "app-entry",
+            code: "WSTG-INFO-06",
+            label: "Identify Application Entry Points",
+            correct: false,
+            rationale:
+              "Entry point discovery is information gathering, not GraphQL-specific testing.",
+          },
+          {
+            id: "authz-bypass",
+            code: "WSTG-ATHZ-02",
+            label: "Testing for Bypassing Authorization Schema",
+            correct: false,
+            rationale:
+              "Authorization checks may still be tested separately; the mapping focus here is GraphQL exposure.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-websocket-origin",
+    title: "Map: WebSocket accepts commands from any Origin",
+    summary:
+      "A trading WebSocket endpoint authenticates with cookies but accepts cross-site connections and processes state-changing messages from any Origin.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "websocket", "origin"],
+    vulnerableLines: [],
+    vulnerabilityType: "WebSocket Origin Weakness",
+    fixOptions: [],
+    explanation:
+      "Testing WebSocket handshake and message security maps to WSTG-CLNT-10. The Top 10 home is A02 Security Misconfiguration.",
+    examKeywords: ["websocket", "origin", "clnt-10"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers cross-site WebSocket connections that process authenticated commands?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "websocket",
+            code: "WSTG-CLNT-10",
+            label: "Testing WebSockets",
+            correct: true,
+            rationale:
+              "The finding concerns WebSocket handshake origin checks and message handling.",
+          },
+          {
+            id: "cors",
+            code: "WSTG-CLNT-07",
+            label: "Testing Cross Origin Resource Sharing",
+            correct: false,
+            rationale:
+              "CORS applies to browser HTTP responses, while this scenario is WebSocket-specific.",
+          },
+          {
+            id: "csrf",
+            code: "WSTG-SESS-05",
+            label: "Testing for Cross Site Request Forgery",
+            correct: false,
+            rationale:
+              "The risk resembles forged actions, but the WSTG category for this transport is WebSockets.",
+          },
+          {
+            id: "web-messaging",
+            code: "WSTG-CLNT-11",
+            label: "Testing Web Messaging",
+            correct: false,
+            rationale:
+              "Web Messaging covers postMessage, not WebSocket connections.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-browser-storage-token",
+    title: "Map: long-lived JWT stored in localStorage",
+    summary:
+      "The SPA stores a month-long bearer token in localStorage, making it accessible to any injected script running on the origin.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "browser-storage", "tokens"],
+    vulnerableLines: [],
+    vulnerabilityType: "Unsafe Browser Storage",
+    fixOptions: [],
+    explanation:
+      "Reviewing sensitive data in localStorage, sessionStorage, IndexedDB, or similar browser storage maps to WSTG-CLNT-12. The Top 10 home is A02 Security Misconfiguration.",
+    examKeywords: ["browser storage", "localstorage", "jwt", "clnt-12"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers sensitive tokens stored in browser storage such as localStorage?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "browser-storage",
+            code: "WSTG-CLNT-12",
+            label: "Testing Browser Storage",
+            correct: true,
+            rationale:
+              "The issue is sensitive data kept in browser-managed storage.",
+          },
+          {
+            id: "cookies",
+            code: "WSTG-SESS-02",
+            label: "Testing for Cookies Attributes",
+            correct: false,
+            rationale:
+              "The token is not stored in a cookie, so cookie attribute testing is not the best fit.",
+          },
+          {
+            id: "exposed-session",
+            code: "WSTG-SESS-04",
+            label: "Testing for Exposed Session Variables",
+            correct: false,
+            rationale:
+              "Session exposure is related, but WSTG has a more specific browser storage category.",
+          },
+          {
+            id: "dom-xss",
+            code: "WSTG-CLNT-01",
+            label: "Testing for DOM-Based Cross Site Scripting",
+            correct: false,
+            rationale:
+              "XSS may exploit the storage choice, but the mapped finding is unsafe browser storage.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-account-enumeration-reset",
+    title: "Map: reset form reveals registered emails",
+    summary:
+      "The password reset page says `No account found` for unknown emails and `Reset sent` for registered emails.",
+    courseTopic: "authentication",
+    difficulty: "advanced",
+    tags: ["mapping", "enumeration", "identity"],
+    vulnerableLines: [],
+    vulnerabilityType: "Account Enumeration",
+    fixOptions: [],
+    explanation:
+      "Leaking which accounts exist through responses maps to WSTG-IDNT-04. The Top 10 home is A07 Authentication Failures.",
+    examKeywords: ["account enumeration", "password reset", "idnt-04"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers a reset form that reveals whether an email address is registered?",
+        top10Hint: "A07",
+        options: [
+          {
+            id: "enumeration",
+            code: "WSTG-IDNT-04",
+            label: "Testing for Account Enumeration and Guessable User Account",
+            correct: true,
+            rationale:
+              "Different responses allow attackers to enumerate valid user accounts.",
+          },
+          {
+            id: "weak-reset",
+            code: "WSTG-ATHN-09",
+            label: "Testing for Weak Password Change or Reset Functionalities",
+            correct: false,
+            rationale:
+              "The reset flow is the location, but the observed weakness is account enumeration.",
+          },
+          {
+            id: "username-policy",
+            code: "WSTG-IDNT-05",
+            label: "Testing for Weak or Unenforced Username Policy",
+            correct: false,
+            rationale:
+              "The issue is not username format or policy enforcement.",
+          },
+          {
+            id: "weak-lockout",
+            code: "WSTG-ATHN-03",
+            label: "Testing for Weak Lock Out Mechanism",
+            correct: false,
+            rationale:
+              "No repeated guessing limit or lockout behavior is being tested.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-reset-token-not-invalidated",
+    title: "Map: password reset token remains valid",
+    summary:
+      "A password reset link can be reused after the password has already been changed, and old reset links remain valid for days.",
+    courseTopic: "authentication",
+    difficulty: "advanced",
+    tags: ["mapping", "password-reset", "tokens"],
+    vulnerableLines: [],
+    vulnerabilityType: "Weak Password Reset",
+    fixOptions: [],
+    explanation:
+      "Weak reset token lifecycle and reuse behavior maps to WSTG-ATHN-09. The Top 10 home is A07 Authentication Failures.",
+    examKeywords: ["password reset", "token reuse", "athn-09"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers reusable or long-lived password reset tokens?",
+        top10Hint: "A07",
+        options: [
+          {
+            id: "weak-reset",
+            code: "WSTG-ATHN-09",
+            label: "Testing for Weak Password Change or Reset Functionalities",
+            correct: true,
+            rationale:
+              "The weakness is in password reset token validity and invalidation.",
+          },
+          {
+            id: "remember-password",
+            code: "WSTG-ATHN-05",
+            label: "Testing for Vulnerable Remember Password",
+            correct: false,
+            rationale:
+              "Remember-me functionality is separate from password reset flows.",
+          },
+          {
+            id: "session-fixation",
+            code: "WSTG-SESS-03",
+            label: "Testing for Session Fixation",
+            correct: false,
+            rationale:
+              "No attacker-fixed session identifier is involved.",
+          },
+          {
+            id: "account-enum",
+            code: "WSTG-IDNT-04",
+            label: "Testing for Account Enumeration and Guessable User Account",
+            correct: false,
+            rationale:
+              "The issue is token lifecycle, not revealing whether accounts exist.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-session-fixation-login",
+    title: "Map: session id is unchanged after login",
+    summary:
+      "The application accepts a session id set before login and keeps the same identifier after authentication succeeds.",
+    courseTopic: "authentication",
+    difficulty: "advanced",
+    tags: ["mapping", "session", "fixation"],
+    vulnerableLines: [],
+    vulnerabilityType: "Session Fixation",
+    fixOptions: [],
+    explanation:
+      "Keeping an attacker-supplied session identifier across authentication maps to WSTG-SESS-03. The Top 10 home is A07 Authentication Failures.",
+    examKeywords: ["session fixation", "session id", "sess-03"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers failing to rotate the session identifier after login?",
+        top10Hint: "A07",
+        options: [
+          {
+            id: "session-fixation",
+            code: "WSTG-SESS-03",
+            label: "Testing for Session Fixation",
+            correct: true,
+            rationale:
+              "The same session id survives authentication, allowing fixation attacks.",
+          },
+          {
+            id: "session-schema",
+            code: "WSTG-SESS-01",
+            label: "Testing for Session Management Schema",
+            correct: false,
+            rationale:
+              "Session schema is broader; the precise finding is fixation.",
+          },
+          {
+            id: "cookies",
+            code: "WSTG-SESS-02",
+            label: "Testing for Cookies Attributes",
+            correct: false,
+            rationale:
+              "Cookie flags do not address whether the session id is rotated on login.",
+          },
+          {
+            id: "auth-bypass",
+            code: "WSTG-ATHN-04",
+            label: "Testing for Bypassing Authentication Schema",
+            correct: false,
+            rationale:
+              "The user still authenticates; the failure is session identifier handling.",
+          },
+        ],
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "wstg-map-subdomain-takeover",
+    title: "Map: orphaned CNAME points to SaaS tenant",
+    summary:
+      "A retired `help.example.com` CNAME still points to an unclaimed third-party helpdesk service where an attacker can register the tenant.",
+    courseTopic: "web-vulnerabilities",
+    difficulty: "advanced",
+    tags: ["mapping", "subdomain", "takeover"],
+    vulnerableLines: [],
+    vulnerabilityType: "Subdomain Takeover",
+    fixOptions: [],
+    explanation:
+      "Dangling DNS records that can be claimed by attackers map to WSTG-CONF-10. The Top 10 home is A02 Security Misconfiguration.",
+    examKeywords: ["subdomain takeover", "dangling cname", "conf-10"],
+    supportedModes: WSTG_ONLY,
+    modeData: {
+      wstgMapping: {
+        question:
+          "Which WSTG category covers dangling DNS records that allow subdomain takeover?",
+        top10Hint: "A02",
+        options: [
+          {
+            id: "subdomain-takeover",
+            code: "WSTG-CONF-10",
+            label: "Test for Subdomain Takeover",
+            correct: true,
+            rationale:
+              "The unclaimed third-party target can be claimed through a dangling subdomain.",
+          },
+          {
+            id: "admin-interface",
+            code: "WSTG-CONF-05",
+            label: "Enumerate Infrastructure and Application Admin Interfaces",
+            correct: false,
+            rationale:
+              "This is DNS and third-party service takeover, not admin interface enumeration.",
+          },
+          {
+            id: "architecture",
+            code: "WSTG-INFO-10",
+            label: "Map Application Architecture",
+            correct: false,
+            rationale:
+              "Mapping architecture may reveal the record, but the test category is subdomain takeover.",
+          },
+          {
+            id: "cloud-storage",
+            code: "WSTG-CONF-11",
+            label: "Test Cloud Storage",
+            correct: false,
+            rationale:
+              "Cloud storage buckets are a separate configuration testing category.",
           },
         ],
       },
@@ -3212,7 +4083,7 @@ Host: admin.example.com`,
         principles: [
           {
             id: "lawful",
-            label: "Lawfulness, fairness, transparency",
+            label: "Lawfulness, fairness and transparency",
             correct: true,
             rationale:
               "Customers must be told they are subject to automated decision-making, and have a lawful basis (Art. 6) plus Art. 22 safeguards.",
@@ -3281,24 +4152,24 @@ Host: admin.example.com`,
         principles: [
           {
             id: "lawful",
-            label: "Lawfulness  -  invalid consent",
+            label: "Lawfulness, fairness and transparency",
             correct: true,
             rationale:
               "Pre-ticked boxes are not a clear affirmative action (Recital 32).",
           },
           {
             id: "purpose",
-            label: "Purpose limitation  -  bundled purposes",
+            label: "Purpose limitation",
             correct: true,
             rationale:
               "Marketing must be separable from the service contract; bundling makes consent non-freely-given.",
           },
           {
-            id: "fairness",
-            label: "Fairness and transparency",
-            correct: true,
+            id: "accountability",
+            label: "Accountability",
+            correct: false,
             rationale:
-              "Defaults that nudge users into more processing than they expect undermine fair processing.",
+              "The consent pattern must be fixed first; accountability is not the most direct principle here.",
           },
           {
             id: "minimisation",
@@ -3350,7 +4221,7 @@ Host: admin.example.com`,
           },
           {
             id: "lawful",
-            label: "Lawfulness  -  missing basis for new purpose",
+            label: "Lawfulness, fairness and transparency",
             correct: true,
             rationale:
               "Original support basis does not extend to advertising; need fresh consent or compatibility test.",
@@ -3363,11 +4234,11 @@ Host: admin.example.com`,
               "Full transcripts go beyond what advertising would require.",
           },
           {
-            id: "transparency",
-            label: "Transparency",
-            correct: true,
+            id: "storage",
+            label: "Storage limitation",
+            correct: false,
             rationale:
-              "Customers were not told their support data would be used this way.",
+              "Retention is a separate issue; the scenario is about incompatible reuse.",
           },
           {
             id: "integrity",
@@ -3380,6 +4251,706 @@ Host: admin.example.com`,
         dpiaRequired: false,
         dpiaRationale:
           "Likely not Art. 35-mandatory by itself, but a compatibility analysis (Art. 6(4)) is required before the reuse.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-newsletter-excessive-fields",
+    title: "Privacy: newsletter asks for too much",
+    summary:
+      "A newsletter form requires email, full name, date of birth, home address, job title, and phone number.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "intro",
+    tags: ["minimisation", "forms"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "A simple newsletter usually needs only an email address, and sometimes a name if the content is personalised. Extra mandatory fields breach data minimisation and create avoidable privacy risk.",
+    examKeywords: ["data minimisation", "necessity", "art. 5"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "A blog newsletter signup requires users to provide their date of birth, home address, job title, and phone number before it will accept an email subscription.",
+        principles: [
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: true,
+            rationale:
+              "The mandatory fields go beyond what is necessary for sending a newsletter.",
+          },
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "The collection is unfair if users must provide unrelated data to receive the newsletter.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: false,
+            rationale:
+              "The issue is excessive collection for the stated purpose, not reuse for a new purpose.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "There is no indication that inaccurate data is being used.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: false,
+            rationale:
+              "No retention period or over-retention issue is described.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: false,
+            rationale:
+              "Security is always relevant, but it is not the main principle violated here.",
+          },
+        ],
+        dpiaRequired: false,
+        dpiaRationale:
+          "A newsletter form is usually not high-risk processing, but the form should be redesigned to collect only necessary data.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-retention-no-delete",
+    title: "Privacy: raw logs kept forever",
+    summary:
+      "The analytics platform stores raw event logs with user identifiers indefinitely because they might be useful later.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "core",
+    tags: ["retention", "analytics"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Personal data must not be kept in identifiable form longer than necessary. Vague future usefulness is not a retention policy.",
+    examKeywords: ["storage limitation", "retention", "delete", "art. 5"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "Product analytics events include account IDs, IP addresses, and device identifiers. The team keeps raw logs forever because historical analysis might become useful.",
+        principles: [
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: true,
+            rationale:
+              "Identifiable personal data is kept longer than necessary without a defined retention period.",
+          },
+          {
+            id: "accountability",
+            label: "Accountability",
+            correct: true,
+            rationale:
+              "The controller needs a documented retention policy and evidence that it is enforced.",
+          },
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: true,
+            rationale:
+              "Long-term analytics may be possible with aggregated or anonymised data instead of raw identifiers.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: false,
+            rationale:
+              "The stated purpose remains analytics; the main problem is indefinite retention.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "The scenario does not turn on whether the stored data is correct.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: false,
+            rationale:
+              "Security controls matter, but keeping data forever is the central issue.",
+          },
+        ],
+        dpiaRequired: false,
+        dpiaRationale:
+          "Indefinite retention should be fixed, but this scenario alone does not necessarily cross the Art. 35 high-risk threshold.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-wrong-credit-score",
+    title: "Privacy: stale credit data denies service",
+    summary:
+      "A customer is rejected because the system uses an outdated credit score and provides no correction path.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "core",
+    tags: ["accuracy", "rights"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "The accuracy principle requires personal data to be accurate and kept up to date where necessary. Controllers must enable correction when inaccurate data affects people.",
+    examKeywords: ["accuracy", "rectification", "credit", "art. 5"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "A subscription service rejects high-value plans using a credit score copied from an old vendor export. Customers cannot see, challenge, or correct the score.",
+        principles: [
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: true,
+            rationale:
+              "The decision relies on stale personal data that may no longer be correct.",
+          },
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "Customers are affected by hidden processing and need a fair correction route.",
+          },
+          {
+            id: "accountability",
+            label: "Accountability",
+            correct: true,
+            rationale:
+              "The controller should be able to show how data quality and rectification are handled.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: false,
+            rationale:
+              "Retention may be relevant, but the described harm is inaccurate data.",
+          },
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: false,
+            rationale:
+              "The scenario does not show that more data than necessary was collected.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: false,
+            rationale:
+              "There is no breach or security failure in the facts given.",
+          },
+        ],
+        dpiaRequired: false,
+        dpiaRationale:
+          "If the rejection has similarly significant effects and is automated, a DPIA may be needed, but this scenario focuses on accuracy and rectification.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-public-backup-bucket",
+    title: "Privacy: customer export in public bucket",
+    summary:
+      "A CSV export with customer names, emails, and support notes is left in a public cloud bucket.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "core",
+    tags: ["security", "breach"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Personal data must be processed with appropriate integrity and confidentiality. A public bucket containing identifiable customer data is a security failure and may trigger breach notification duties.",
+    examKeywords: ["integrity", "confidentiality", "breach", "security"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "An engineer exports customer records for debugging and places the CSV in a cloud bucket that is readable without authentication. The file includes support notes and email addresses.",
+        principles: [
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: true,
+            rationale:
+              "The data is exposed without appropriate access controls.",
+          },
+          {
+            id: "accountability",
+            label: "Accountability",
+            correct: true,
+            rationale:
+              "The organisation must demonstrate controls for exports, access, and breach response.",
+          },
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: true,
+            rationale:
+              "The debug export includes more identifiable data than likely needed.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "The scenario is about exposure, not whether data is correct.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: false,
+            rationale:
+              "The purpose is debugging; the core failure is confidentiality.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: false,
+            rationale:
+              "Retention is not the main issue unless the export is kept longer than necessary.",
+          },
+        ],
+        dpiaRequired: false,
+        dpiaRationale:
+          "A DPIA is not the immediate remedy; incident assessment and possible breach notification are more urgent.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-employee-keystroke-monitoring",
+    title: "Privacy: always-on employee monitoring",
+    summary:
+      "A company plans to deploy software that records screenshots, keystrokes, and active window titles for all remote employees.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "advanced",
+    tags: ["dpia", "monitoring", "employees"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Systematic monitoring of employees is high-risk because of power imbalance, intrusiveness, and scale. It requires a strong lawful basis, transparency, minimisation, proportionality, and typically a DPIA.",
+    examKeywords: ["employee monitoring", "dpia", "fairness", "minimisation"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "Remote-work monitoring software records screenshots every minute, logs keystrokes, and stores active window titles for all employees, including private chats and health appointments.",
+        principles: [
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "The monitoring is intrusive and must be lawful, fair, clearly explained, and proportionate.",
+          },
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: true,
+            rationale:
+              "Keystrokes and screenshots collect far more data than needed for ordinary performance management.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: true,
+            rationale:
+              "Monitoring purposes must be specific and not expanded into general surveillance.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: true,
+            rationale:
+              "Highly intrusive monitoring data needs strict retention limits.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: true,
+            rationale:
+              "The logs may contain sensitive information and require strong access controls.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "Accuracy is not the main principle in this monitoring proposal.",
+          },
+        ],
+        dpiaRequired: true,
+        dpiaRationale:
+          "Systematic monitoring of employees is likely high-risk and typically requires an Art. 35 DPIA before deployment.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-location-tracking-app",
+    title: "Privacy: precise location collected in background",
+    summary:
+      "A weather app collects precise location continuously in the background and shares it with analytics partners.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "advanced",
+    tags: ["location", "consent", "dpia"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Continuous precise location tracking is intrusive. The controller must limit collection to what is necessary, be transparent, separate purposes, and assess high-risk processing.",
+    examKeywords: ["location data", "minimisation", "purpose limitation", "dpia"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "A weather app asks for location permission once, then collects precise GPS coordinates every five minutes in the background and sends them to analytics partners.",
+        principles: [
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: true,
+            rationale:
+              "Continuous precise GPS is more data than needed for local weather in most cases.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: true,
+            rationale:
+              "Weather delivery and partner analytics are distinct purposes that must not be bundled.",
+          },
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "Users need clear information and an appropriate lawful basis for both location use and sharing.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: true,
+            rationale:
+              "Precise location history should not be retained longer than necessary.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "The risk is excessive tracking and sharing, not inaccurate location data.",
+          },
+          {
+            id: "accountability",
+            label: "Accountability",
+            correct: true,
+            rationale:
+              "The controller must document necessity, partner sharing, and controls.",
+          },
+        ],
+        dpiaRequired: true,
+        dpiaRationale:
+          "Large-scale systematic tracking of precise location can be high-risk and should be assessed with a DPIA.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-children-profiling",
+    title: "Privacy: profiling children for recommendations",
+    summary:
+      "An education app profiles children's behaviour to rank content and share engagement segments with advertisers.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "advanced",
+    tags: ["children", "profiling", "dpia"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Children receive special protection under GDPR. Profiling children and sharing segments for advertising raises fairness, lawfulness, transparency, minimisation, and DPIA concerns.",
+    examKeywords: ["children", "profiling", "advertising", "dpia"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "An education app used by 11-year-olds builds behavioural profiles from quiz answers and reading speed, then shares engagement segments with advertising partners.",
+        principles: [
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "Children need especially clear, age-appropriate transparency and a valid lawful basis.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: true,
+            rationale:
+              "Learning support and advertising segmentation are incompatible purposes without a separate basis.",
+          },
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: true,
+            rationale:
+              "Detailed behavioural profiling and sharing may exceed what is needed for education.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: true,
+            rationale:
+              "Children's behavioural data needs strong controls against misuse and disclosure.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: true,
+            rationale:
+              "Profiles about children should have strict retention periods.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "The scenario focuses on profiling and sharing, not incorrect data.",
+          },
+        ],
+        dpiaRequired: true,
+        dpiaRationale:
+          "Profiling children at scale and sharing behavioural segments is likely high-risk processing requiring a DPIA.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-ai-training-customer-messages",
+    title: "Privacy: train AI on customer messages",
+    summary:
+      "A SaaS vendor wants to train a general AI model on customer messages originally collected for support.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "advanced",
+    tags: ["ai", "purpose-limitation", "minimisation"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Using customer messages for general model training is a new purpose. The controller must establish a lawful basis, provide transparent notice, minimise or anonymise data where possible, and assess risks.",
+    examKeywords: ["ai training", "purpose limitation", "lawful basis", "dpia"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "A SaaS vendor collected customer support messages to resolve tickets. It now wants to train a general-purpose assistant on the full message archive, including personal data and secrets pasted by users.",
+        principles: [
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: true,
+            rationale:
+              "Support messages are being reused for a new and broader AI training purpose.",
+          },
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "Users need clear notice and the controller needs a valid lawful basis for model training.",
+          },
+          {
+            id: "minimisation",
+            label: "Data minimisation",
+            correct: true,
+            rationale:
+              "Full raw messages, secrets, and identifiers are unlikely to be necessary for training.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: true,
+            rationale:
+              "Messages can contain sensitive content and secrets requiring strong controls.",
+          },
+          {
+            id: "accountability",
+            label: "Accountability",
+            correct: true,
+            rationale:
+              "The controller must document the basis, safeguards, and risk assessment.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "The issue is reuse and training data scope, not incorrect records.",
+          },
+        ],
+        dpiaRequired: true,
+        dpiaRationale:
+          "Large-scale reuse of message archives for AI training may be high-risk, especially where sensitive content or secrets are likely present.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-data-subject-access-export",
+    title: "Privacy: access export omits decision data",
+    summary:
+      "A user requests a copy of their data, but the export omits profiling scores used to rank their applications.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "core",
+    tags: ["access-rights", "transparency"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Data subject access rights support transparency and fairness. If profiling scores are personal data used to affect the user, the controller must account for them in the response unless a specific exception applies.",
+    examKeywords: ["access request", "transparency", "profiling", "art. 15"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "A marketplace ranks sellers using internal trust scores. A seller submits an access request, but the export includes only profile fields and omits the scores and input signals used to restrict visibility.",
+        principles: [
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "The user is not given meaningful visibility into personal data used to affect them.",
+          },
+          {
+            id: "accountability",
+            label: "Accountability",
+            correct: true,
+            rationale:
+              "The controller must know what personal data it processes and handle rights requests properly.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: true,
+            rationale:
+              "Access enables users to identify and correct inaccurate profiling data.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: false,
+            rationale:
+              "The issue is not reuse for an incompatible purpose.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: false,
+            rationale:
+              "No over-retention issue is described.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: false,
+            rationale:
+              "The scenario is about rights handling, not unauthorised disclosure.",
+          },
+        ],
+        dpiaRequired: false,
+        dpiaRationale:
+          "The access request failure should be fixed; whether a DPIA is required depends on the underlying profiling risk.",
+      },
+    },
+  }),
+
+  buildChallenge({
+    id: "priv-vendor-no-dpa",
+    title: "Privacy: processor starts without a DPA",
+    summary:
+      "A team sends customer data to a transcription vendor before signing a data processing agreement or checking subprocessors.",
+    courseTopic: "privacy-gdpr",
+    difficulty: "core",
+    tags: ["processor", "vendor", "accountability"],
+    vulnerableLines: [],
+    vulnerabilityType: "GDPR Scenario",
+    fixOptions: [],
+    explanation:
+      "Controllers must use processors that provide sufficient guarantees and must have an Art. 28 data processing agreement in place. Vendor onboarding is part of accountability and confidentiality.",
+    examKeywords: ["processor", "dpa", "art. 28", "vendor"],
+    supportedModes: PRIVACY_ONLY,
+    modeData: {
+      privacyScenario: {
+        scenario:
+          "Support calls are sent to a new transcription vendor. The team has not signed a data processing agreement, checked subprocessors, or documented transfer and deletion terms.",
+        principles: [
+          {
+            id: "accountability",
+            label: "Accountability",
+            correct: true,
+            rationale:
+              "The controller must document processor due diligence and contractual controls.",
+          },
+          {
+            id: "integrity",
+            label: "Integrity and confidentiality",
+            correct: true,
+            rationale:
+              "Customer recordings are disclosed to a vendor without established security and confidentiality guarantees.",
+          },
+          {
+            id: "lawful",
+            label: "Lawfulness, fairness and transparency",
+            correct: true,
+            rationale:
+              "Processor use must fit the lawful processing arrangement and be transparent where required.",
+          },
+          {
+            id: "storage",
+            label: "Storage limitation",
+            correct: true,
+            rationale:
+              "The missing agreement leaves retention and deletion duties undefined.",
+          },
+          {
+            id: "accuracy",
+            label: "Accuracy",
+            correct: false,
+            rationale:
+              "The problem is vendor governance, not correctness of personal data.",
+          },
+          {
+            id: "purpose",
+            label: "Purpose limitation",
+            correct: false,
+            rationale:
+              "The vendor performs transcription for the same support purpose; the issue is processor governance.",
+          },
+        ],
+        dpiaRequired: false,
+        dpiaRationale:
+          "A DPA and processor assessment are required, but this does not automatically mean a DPIA is required unless the transcription processing is high-risk.",
       },
     },
   }),

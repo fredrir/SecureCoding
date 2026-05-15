@@ -32,28 +32,45 @@ hash = ph.hash(password)`,
         "sha256-salt",
         "Switch to SHA-256 with a per-user salt",
         "SHA-256 is fast, which is exactly what you don't want for passwords. A salt is necessary but not sufficient.",
-        { tempting: true , code: `value = str(request.args.get("value", ""))
-if ".." in value:
-    raise ValueError("blocked")
-return value`},
+        {
+          tempting: true,
+          code: `salt = secrets.token_hex(16)
+digest = hashlib.sha256((salt + password).encode()).hexdigest()
+db.users.insert({"email": email, "password_hash": digest, "salt": salt})`,
+        },
       ),
       fix(
         "double-md5",
         "Run MD5 twice",
         "Iterating a broken hash does not produce a strong KDF. MD5 is collision-broken and far too fast.",
-        { tempting: true , code: `value = str(request.args.get("value", ""))
-if ".." in value:
-    raise ValueError("blocked")
-return value`},
+        {
+          tempting: true,
+          code: `digest = hashlib.md5(password.encode()).hexdigest()
+digest = hashlib.md5(digest.encode()).hexdigest()
+db.users.insert({"email": email, "password_hash": digest})`,
+        },
       ),
       fix(
         "encrypt-aes",
         "AES-encrypt the password with a fixed key",
         "Encryption is reversible. If the key leaks, every password leaks. Passwords must be hashed, not encrypted.",
-        { code: `value = str(request.args.get("value", ""))
-if ".." in value:
-    raise ValueError("blocked")
-return value` }),
+        {
+          code: `cipher = AES.new(APP_PASSWORD_KEY, AES.MODE_GCM)
+ct, tag = cipher.encrypt_and_digest(password.encode())
+db.users.insert({"email": email, "password_ciphertext": ct.hex()})`,
+        },
+      ),
+      fix(
+        "pepper-only",
+        "Keep MD5 but append a global pepper from an environment variable",
+        "A pepper can be useful with a real password KDF, but it does not make MD5 slow or memory-hard.",
+        {
+          tempting: true,
+          code: `pepper = os.environ["PASSWORD_PEPPER"]
+digest = hashlib.md5((password + pepper).encode()).hexdigest()
+db.users.insert({"email": email, "password_hash": digest})`,
+        },
+      ),
     ],
     correctFixId: "argon2",
     explanation:
@@ -125,25 +142,47 @@ return value` }),
         "lockout-100",
         "Permanently lock the account after 5 failures",
         "DoS risk: attackers can lock real users by trying their email. Use temporary back-off instead.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `if (!ok) {
+  await Users.update(user.id, { locked: true });
+  return res.status(423).json({ error: "account locked" });
+}`,
+        },
       ),
       fix(
         "client-ratelimit",
         "Disable the submit button for 30 seconds after a failure",
         "Pure client control; the attacker can call the endpoint without the page.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `loginButton.disabled = true;
+setTimeout(() => {
+  loginButton.disabled = false;
+}, 30_000);`,
+        },
       ),
       fix(
         "longer-passwords",
         "Require 12-character passwords",
         "Helpful, but does not stop credential stuffing with leaked plaintexts.",
-        { code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;` }),
+        {
+          code: `if (req.body.password.length < 12) {
+  return res.status(400).json({ error: "password too short" });
+}`,
+        },
+      ),
+      fix(
+        "ip-only",
+        "Rate-limit only by source IP address",
+        "IP-only throttles are easy to distribute around and do not protect one targeted account well.",
+        {
+          tempting: true,
+          code: `await ipLimiter.consume(req.ip);
+// No per-account back-off or credential-stuffing detection.
+const user = await Users.findByEmail(req.body.email);`,
+        },
+      ),
     ],
     correctFixId: "rate-limit",
     explanation:
@@ -188,25 +227,49 @@ if (!await verify(user.hash, password)) {
         "rate",
         "Rate-limit only the wrong-email path",
         "Doesn't address the information disclosure; attackers learn membership in one request.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `if (!user) {
+  await unknownEmailLimiter.consume(req.ip);
+  return res.status(404).json({ error: "no such email" });
+}`,
+        },
       ),
       fix(
         "captcha",
         "Add a CAPTCHA before the form",
         "Slows bots but does not change the response that reveals account existence.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `if (!await verifyCaptcha(req.body.captcha)) {
+  return res.status(400).json({ error: "captcha failed" });
+}
+if (!user) return res.status(404).json({ error: "no such email" });`,
+        },
       ),
       fix(
         "log-only",
         "Log enumeration attempts but keep messages",
         "Detection is not a fix; the data still leaks.",
-        { code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;` }),
+        {
+          code: `if (!user) {
+  logger.warn({ email }, "unknown login email");
+  return res.status(404).json({ error: "no such email" });
+}`,
+        },
+      ),
+      fix(
+        "generic-text-only",
+        "Use the same error text but keep different status codes",
+        "Attackers can still distinguish registered accounts by status code and timing.",
+        {
+          tempting: true,
+          code: `if (!user) return res.status(404).json({ error: "invalid credentials" });
+if (!await verify(user.hash, password)) {
+  return res.status(401).json({ error: "invalid credentials" });
+}`,
+        },
+      ),
     ],
     correctFixId: "generic",
     explanation:
@@ -258,25 +321,47 @@ return value;` }),
         "rotate-day",
         "Rotate session ids once a day",
         "Doesn't help: the fixation occurs at the login moment.",
-        { tempting: true , code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);`},
+        {
+          tempting: true,
+          code: `if (Date.now() - req.session.createdAt > 86_400_000) {
+  req.session.id = crypto.randomUUID();
+}
+req.session.userId = user.id;`,
+        },
       ),
       fix(
         "samesite",
         "Set the cookie to SameSite=Strict",
         "Defends against CSRF but not against an attacker who plants a known id via XSS or query parameter.",
-        { tempting: true , code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);`},
+        {
+          tempting: true,
+          code: `app.use(session({
+  secret,
+  cookie: { sameSite: "strict", httpOnly: true }
+}));`,
+        },
       ),
       fix(
         "ip-bind",
         "Bind the session to the client IP",
         "Breaks for mobile users on changing networks; not a practical mitigation.",
-        { code: `const value = String(req.query.value ?? "");
-if (value.includes("<script>")) return res.status(400).end();
-return res.send(value);` }),
+        {
+          code: `if (req.session.ip && req.session.ip !== req.ip) {
+  req.session.destroy(() => res.status(401).end());
+}
+req.session.ip = req.ip;`,
+        },
+      ),
+      fix(
+        "clear-cookie",
+        "Clear the session cookie just before setting userId",
+        "Clearing the response cookie does not regenerate the server-side session before authentication state is attached.",
+        {
+          code: `res.clearCookie("sid");
+req.session.userId = user.id;
+return res.json({ ok: true });`,
+        },
+      ),
     ],
     correctFixId: "regenerate",
     explanation:
@@ -323,25 +408,47 @@ req.session.userId = user.id;`,
         "client-redirect",
         "Trust the client to redirect to the MFA page",
         "Returns a fully authenticated session; the client could simply ignore the redirect.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `req.session.userId = user.id;
+return res.json({
+  redirectTo: user.mfaEnabled ? "/mfa" : "/home"
+});`,
+        },
       ),
       fix(
         "skip-low-risk",
         "Skip MFA when the IP matches a recent successful login",
         "Risk-based exemption is acceptable, but only as policy on top of a strict step-up flow, not in place of it.",
-        { tempting: true , code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;`},
+        {
+          tempting: true,
+          code: `if (user.lastLoginIp === req.ip) {
+  req.session.userId = user.id;
+  return res.json({ ok: true });
+}`,
+        },
       ),
       fix(
         "longer-pass",
         "Require longer passwords",
         "Doesn't address the bypass.",
-        { code: `const value = String(input ?? "");
-if (value.includes("..")) throw new Error("blocked");
-return value;` }),
+        {
+          code: `if (req.body.password.length < 16) {
+  return res.status(400).json({ error: "password too short" });
+}`,
+        },
+      ),
+      fix(
+        "mfa-claim-session",
+        "Set `mfaRequired` in the session but still authenticate the user",
+        "Authenticated endpoints can forget to check the flag, so the session must not become final until MFA succeeds.",
+        {
+          tempting: true,
+          code: `req.session.userId = user.id;
+req.session.mfaRequired = user.mfaEnabled;
+return res.json({ requiresMfa: user.mfaEnabled });`,
+        },
+      ),
     ],
     correctFixId: "step-up",
     explanation:
@@ -381,28 +488,45 @@ return token`,
         "uuid4",
         "Use a UUID4 token",
         "UUID4 is okay (122 bits of entropy) but use a CSPRNG-derived URL-safe token to be unambiguous; also hash on storage.",
-        { tempting: true , code: `value = str(request.args.get("value", ""))
-if ".." in value:
-    raise ValueError("blocked")
-return value`},
+        {
+          tempting: true,
+          code: `token = str(uuid.uuid4())
+db.save_reset(user.id, token, expires_at=now + timedelta(hours=24))
+return token`,
+        },
       ),
       fix(
         "encrypt-id",
         "AES-encrypt the user id with a server key",
         "Encryption produces predictable structure and replays after key rotation; tokens should be opaque random strings.",
-        { tempting: true , code: `value = str(request.args.get("value", ""))
-if ".." in value:
-    raise ValueError("blocked")
-return value`},
+        {
+          tempting: true,
+          code: `payload = f"{user.id}:{user.reset_counter}".encode()
+token = aes_encrypt(RESET_KEY, payload)
+return base64.urlsafe_b64encode(token).decode()`,
+        },
       ),
       fix(
         "shorter-ttl",
         "Keep the format and just expire the link in 1 minute",
         "A short TTL helps but a guessable token still allows online enumeration.",
-        { code: `value = str(request.args.get("value", ""))
-if ".." in value:
-    raise ValueError("blocked")
-return value` }),
+        {
+          code: `user.reset_counter += 1
+db.save_reset(user.id, expires_at=now + timedelta(minutes=1))
+return f"{user.id}-{user.reset_counter}"`,
+        },
+      ),
+      fix(
+        "signed-counter",
+        "Sign the predictable counter token with HMAC",
+        "Signing prevents tampering but does not make the token opaque or remove the predictable user id and counter pattern.",
+        {
+          tempting: true,
+          code: `raw = f"{user.id}-{user.reset_counter}"
+sig = hmac.new(RESET_SECRET, raw.encode(), sha256).hexdigest()
+return f"{raw}.{sig}"`,
+        },
+      ),
     ],
     correctFixId: "csprng",
     explanation:

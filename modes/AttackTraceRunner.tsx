@@ -31,6 +31,10 @@ export function AttackTraceRunner({ challenges, examMode }: Props) {
     setSelected(null);
   }
 
+  const challenge = runner?.state.current;
+  const attack = challenge?.modeData?.attackTrace;
+  const attackOptions = useShuffled(attack?.options ?? []);
+
   if (!runner) {
     return (
       <RunnerScaffold
@@ -51,9 +55,6 @@ export function AttackTraceRunner({ challenges, examMode }: Props) {
   }
 
   const { state, controls } = runner;
-  const challenge = state.current;
-  const attack = challenge?.modeData?.attackTrace;
-  const attackOptions = useShuffled(attack?.options ?? []);
 
   const handleSubmit = () => {
     if (!challenge) return;

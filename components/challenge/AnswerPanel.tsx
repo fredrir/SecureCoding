@@ -49,7 +49,12 @@ export function AnswerPanel({
         {footer ?? (
           <Group justify="space-between" mt="xs">
             {onSkip ? (
-              <Button variant="subtle" color="gray" onClick={onSkip} disabled={busy}>
+              <Button
+                variant="subtle"
+                color="gray"
+                onClick={onSkip}
+                disabled={busy}
+              >
                 Skip
               </Button>
             ) : (
