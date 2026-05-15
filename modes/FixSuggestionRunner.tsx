@@ -87,7 +87,11 @@ export function FixSuggestionRunner({ challenges, examMode }: Props) {
       }
       workspace={
         <Stack gap="md">
-          <CodeViewer code={code} language={language} filename={challenge?.filename} />
+          <CodeViewer
+            code={code}
+            language={language}
+            filename={challenge?.filename}
+          />
           <Text size="xs" c="dimmed">
             The vulnerability is already located. Your job is the fix.
           </Text>
@@ -115,7 +119,7 @@ export function FixSuggestionRunner({ challenges, examMode }: Props) {
                   onSelect={() => setSelectedFix(option.id)}
                   disabled={state.stage === "feedback"}
                   reveal={
-                    state.stage === "feedback" && challenge.correctFixId
+                    state.stage === "feedback" && challenge?.correctFixId
                       ? { correctId: challenge.correctFixId }
                       : undefined
                   }
