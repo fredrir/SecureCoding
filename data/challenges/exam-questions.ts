@@ -41,7 +41,13 @@ interface ExamQuestion {
 
 function examQuestion(q: ExamQuestion): Challenge {
   const code = q.verbatimCode ?? q.code;
-  const prompt = q.verbatimPrompt ?? q.mc.question;
+  const isModified =
+    q.mc.modifiedFromOpenQuestion ?? !isOriginalMultipleChoice(q.sourceLabel);
+  // For modified (open-answer) questions use the purpose-written MC question.
+  // For original MC questions use the verbatim exam wording.
+  const prompt = isModified
+    ? q.mc.question
+    : (q.verbatimPrompt ?? q.mc.question);
   const options = q.mc.verbatimOptions ?? q.mc.options ?? builtOptions(q);
 
   return buildChallenge({
@@ -322,6 +328,28 @@ export const examQuestionChallenges: readonly Challenge[] = [
     courseTopic: "web-vulnerabilities",
     difficulty: "core",
     tags: ["code-review", "fix"],
+    code: `from django.db import connection
+from django.http import HttpResponse
+
+
+def my_view(request):
+    # Get the user's input from the request
+    user_input = request.GET.get('input')
+
+    # Construct a raw SQL query
+    query = "SELECT * FROM my_table WHERE column='%s'" % user_input
+
+    # Execute the query
+    cursor = connection.cursor()
+    cursor.execute(query)
+
+    # Process the results
+    results = cursor.fetchall()
+
+    # Return the results as an HTTP response
+    return HttpResponse(results)`,
+    language: "python",
+
     vulnerabilityType: "Secure Coding",
     verbatimPrompt:
       "1. What is the main vulnerability here?\n     2. How can it be exploited (give example)?\n     3. Explain how it can be fixed\n     4. Write the code that fixes it (only the lines that need fixing)",
@@ -338,9 +366,9 @@ export const examQuestionChallenges: readonly Challenge[] = [
     ],
     mc: {
       question:
-        "What is usually the strongest code-fix answer in this exam style?",
+        "Which approach correctly fixes the SQL injection in this Django view?",
       correct:
-        "Fix the root cause with the framework's safe API and explain exploitability.",
+        "Use Django's parameterized query API (cursor.execute with a params tuple) instead of string formatting.",
       distractors: [
         "Hide the error message while leaving the vulnerable sink unchanged.",
         "Add a comment saying the input is trusted.",
@@ -523,12 +551,22 @@ export const examQuestionChallenges: readonly Challenge[] = [
     code: `AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {'min_length': 10},
+        'OPTIONS': {
+            'min_length': 10,
+        }
     },
-    {'NAME': 'password_validators.validators.UppercaseValidator'},
-    {'NAME': 'password_validators.validators.LowercaseValidator'},
-    {'NAME': 'password_validators.validators.SymbolValidator'},
-    {'NAME': 'password_validators.validators.NoNorValidator'},
+    {
+        'NAME': 'password_validators.validators.UppercaseValidator',
+    },
+    {
+        'NAME': 'password_validators.validators.LowercaseValidator',
+    },
+    {
+        'NAME': 'password_validators.validators.SymbolValidator',
+    },
+    {
+        'NAME': 'password_validators.validators.NoNorValidator',
+    },
 ]`,
     language: "python",
     filename: "validators.py",
@@ -609,7 +647,8 @@ export const examQuestionChallenges: readonly Challenge[] = [
       "no write down",
     ],
     mc: {
-      question: "Which statement is correct?",
+      question:
+        "Which statement correctly distinguishes Bell-LaPadula from Biba?",
       correct:
         "Bell-LaPadula focuses on confidentiality, while Biba focuses on integrity.",
       distractors: [
@@ -5256,7 +5295,45 @@ class CustomXMLParser(XMLParser):
     vulnerabilityType: "Authentication Bypass",
     verbatimPrompt:
       "Which lines of the code above have authentication vulnerabilities?",
-    code: `class LoginForm(AuthenticationForm):
+    codeSnippets: [
+      {
+        filename: "login.html",
+        language: "html",
+        code: `{% extends 'base.html' %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <div class="g-recaptcha" data-sitekey="{{ sitekey }}"></div>
+    <input type="submit" value="Login">
+    <input type="hidden" name="next" value="{% url 'home' %}" />
+</form>
+<p><a href="{% url 'users:password-reset' %}">Forgot password?</a></p>
+<p><a href="{% url 'users:login-ldap' %}">Login with LDAP?</a></p>
+{% endblock %}`,
+      },
+      {
+        filename: "Form.py",
+        language: "python",
+        code: `import requests
+from django import forms
+from django.conf import settings
+from django.contrib.auth import password_validation, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.translation import gettext_lazy as _
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+
+from captcha.fields import CaptchaField
+
+from .models import User, UserProfile
+from .token import account_activation_token as default_token_generator
+
+
+class LoginForm(AuthenticationForm):
     """User Login Form"""
 
     error_messages = {
@@ -5270,6 +5347,7 @@ class CustomXMLParser(XMLParser):
 
     def clean_g_recaptcha_response(self):
         """reCAPTCHA validation"""
+
         recaptcha = self.request.POST["g-recaptcha-response"]
         if not recaptcha:
             raise forms.ValidationError(
@@ -5293,6 +5371,7 @@ class CustomXMLParser(XMLParser):
         # validate reCAPTCHA
         self.clean_g_recaptcha_response()
 
+        # In the following lines 54 and 55, we trust that cleaned_data is actually cleaned
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
@@ -5304,14 +5383,29 @@ class CustomXMLParser(XMLParser):
             else:
                 self.user_cache = authenticate(
                     self.request, username=username, password=password)
+
             if self.user_cache is None:
                 raise self.get_invalid_login_error()
             else:
                 self.confirm_login_allowed(self.user_cache)
 
-        return self.cleaned_data`,
-    language: "python",
-    filename: "forms.py",
+        return self.cleaned_data
+
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise forms.ValidationError(
+                self.error_messages['inactive'],
+                code='inactive',
+            )
+
+    def get_invalid_login_error(self):
+        return forms.ValidationError(
+            self.error_messages['invalid_login'],
+            code='invalid_login',
+            params={'username': self.username_field.verbose_name},
+        )`,
+      },
+    ],
     explanation:
       "The expected answer is Forms.py lines 58-62. The provided code allows the login flow to treat a login_as=admin parameter as authority to set the authenticated user to admin.",
     examKeywords: [
@@ -5349,20 +5443,62 @@ class CustomXMLParser(XMLParser):
     vulnerabilityType: "Broken Access Control",
     verbatimPrompt:
       "The above code has access control vulnerabilities. Which line of the code is vulnerable?",
-    code: `# User gaming dashboard
+    codeSnippets: [
+      {
+        filename: "details.html",
+        language: "html",
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+    <b>Dear {{ user.first_name }}, Checkout link of all your team mates.<br><br>
+    {% for gamer in team_gamers %}
+        <a href="{% url 'games:gamer_profile' gamer.id %}">{{ gamer.alias_name }}</a><br>
+    {% endfor %}
+    </b>
+
+    <br><br><b><a href="{% url 'games:logout' %}">logout</a></b>
+</body>
+</html>`,
+      },
+      {
+        filename: "Views.py",
+        language: "python",
+        code: `from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib import messages
+from django.contrib.auth import decorators
+from django.shortcuts import get_object_or_404
+
+from games.models import GamerProfile, Team
+from games.forms import LoginForm
+
+
+# User login (Removed the code here to simply the question. we suppose codes here are secure)
+
+# User gaming dashboard
 @decorators.login_required(login_url='/games/login/')
 def dashboard(request):
     team = get_object_or_404(Team, user=request.user)
     team_gamers = GamerProfile.objects.filter(team=team.team)
     return render(request, 'games/dashboard.html', {'team_gamers': team_gamers, })
 
+
 # User Team members
 @decorators.login_required(login_url='/games/login/')
 def gamer_profile(request, gamer_id):
     gamer_details = get_object_or_404(GamerProfile, pk=gamer_id)
-    return render(request, 'games/gamer_details.html', {'gamer': gamer_details, })`,
-    language: "python",
-    filename: "views.py",
+    return render(request, 'games/gamer_details.html', {'gamer': gamer_details, })
+
+
+# User logout (Removed the code here to simplify the question.)`,
+      },
+    ],
     explanation:
       "The expected answer is Views.py line 24. The code fetches a gamer profile by primary key without confirming that it belongs to the authenticated user's team or account.",
     examKeywords: [

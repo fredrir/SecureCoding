@@ -125,10 +125,10 @@ export function ExamSprintRunner({ challenges, examMode }: Props) {
               <Tooltip
                 withArrow
                 openDelay={250}
-                label="This was originally an open-answer exam task. The question text is from the exam, but the multiple-choice answers were added for practice."
+                label="This was originally an open-answer exam task. The question has been changed to a multiple-choice format, for better practice."
               >
                 <Badge size="xs" variant="light" color="orange">
-                  Modified answers
+                  Modified question
                 </Badge>
               </Tooltip>
             ) : null}
