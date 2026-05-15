@@ -8,6 +8,7 @@ import { GAME_MODE_BY_SLUG, GAME_MODE_IDS } from "@/domain/gameMode";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ShieldIcon } from "@/components/common/Icon";
 import { useSettings } from "@/state/useSettings";
+import { isCaseSourceLabel } from "@/data/cases";
 
 import { ExamSprintRunner } from "@/modes/ExamSprintRunner";
 import { VulnSearchRunner } from "@/modes/VulnSearchRunner";
@@ -34,20 +35,37 @@ export function PracticeClient({
 }) {
   const router = useRouter();
   const mode = GAME_MODE_BY_SLUG[slug];
-  const { settings } = useSettings();
+  const { settings, reset } = useSettings();
 
   const challenges = useMemo(() => {
     if (!mode) return [];
+    const esf = settings.examSprintFilter;
     const filtered = [
-      ...challengeRepository.filter(
-        (c) =>
-          c.supportedModes.includes(mode.id) &&
-          (settings.topicFilter.length === 0 ||
-            settings.topicFilter.includes(c.courseTopic)) &&
-          (settings.difficultyFilter.length === 0 ||
-            settings.difficultyFilter.includes(c.difficulty)) &&
-          matchesYearFilter(c.sourceLabel, settings.examYearFilter),
-      ),
+      ...challengeRepository.filter((c) => {
+        if (!c.supportedModes.includes(mode.id)) return false;
+        if (
+          settings.topicFilter.length > 0 &&
+          !settings.topicFilter.includes(c.courseTopic)
+        )
+          return false;
+        if (
+          settings.difficultyFilter.length > 0 &&
+          !settings.difficultyFilter.includes(c.difficulty)
+        )
+          return false;
+        if (!matchesYearFilter(c.sourceLabel, settings.examYearFilter))
+          return false;
+        if (mode.id === GAME_MODE_IDS.examSprint) {
+          if (esf.caseOnly && !isCaseSourceLabel(c.sourceLabel)) return false;
+          if (
+            esf.unmodifiedOnly &&
+            c.modeData?.multipleChoice?.modifiedFromOpenQuestion !== false
+          )
+            return false;
+          if (esf.codeOnly && !c.code && !c.codeSnippets?.length) return false;
+        }
+        return true;
+      }),
     ];
     let state = shuffleSeed >>> 0 || 1;
     for (let i = filtered.length - 1; i > 0; i--) {
@@ -61,6 +79,7 @@ export function PracticeClient({
     settings.topicFilter,
     settings.difficultyFilter,
     settings.examYearFilter,
+    settings.examSprintFilter,
     shuffleSeed,
   ]);
 
@@ -99,19 +118,21 @@ export function PracticeClient({
       <EmptyState
         icon={<ShieldIcon size={36} />}
         title="No challenges match your filters"
-        description="Loosen the topic or difficulty filters from the dashboard, then try again."
+        description="Loosen the topic or difficulty filters or reset them, then try again."
         action={
-          <Button variant="light" onClick={() => router.push("/")}>
-            Back to dashboard
+          <Button variant="light" onClick={() => reset()}>
+            Reset filters
           </Button>
         }
       />
     );
   }
 
+  const runnerKey = challenges.map((c) => c.id).join(",");
+
   return (
     <Stack gap="md">
-      {renderRunner(mode.id, challenges, settings.examMode)}
+      {renderRunner(mode.id, challenges, settings.examMode, runnerKey)}
     </Stack>
   );
 }
@@ -130,10 +151,17 @@ function renderRunner(
   modeId: string,
   challenges: ReturnType<typeof challengeRepository.filter>,
   examMode: boolean,
+  runnerKey: string,
 ) {
   switch (modeId) {
     case GAME_MODE_IDS.examSprint:
-      return <ExamSprintRunner challenges={challenges} examMode={examMode} />;
+      return (
+        <ExamSprintRunner
+          key={runnerKey}
+          challenges={challenges}
+          examMode={examMode}
+        />
+      );
     case GAME_MODE_IDS.vulnSearch:
       return <VulnSearchRunner challenges={challenges} examMode={examMode} />;
     case GAME_MODE_IDS.findAndFix:

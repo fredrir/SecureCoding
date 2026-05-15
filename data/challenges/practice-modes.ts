@@ -1914,40 +1914,40 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  the URL is a bearer credential",
+            label: "S",
             correct: true,
             rationale:
               "Anyone with the link can act as the original recipient; there is no separate authentication.",
           },
           {
             id: "T",
-            label: "Tampering  -  SHA-1(secret|id) is length-extendable",
+            label: "T",
             correct: true,
             rationale:
               "An attacker who knows the secret length can extend the message and forge a valid signature for a modified payload.",
           },
           {
             id: "R",
-            label: "Repudiation  -  disputing an action",
+            label: "R",
             correct: false,
             rationale: "Not the primary concern here.",
           },
           {
             id: "I",
-            label: "Information disclosure  -  links leak via chat",
+            label: "I",
             correct: true,
             rationale:
               "Forwarded links land outside the trust boundary and expose internal data.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale: "Nothing here amplifies cost to the server.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "There is no role escalation; access is the same as the original recipient.",
@@ -1985,44 +1985,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label:
-              "Spoofing  -  leaked reset link lets attacker act as the user",
+            label: "S",
             correct: true,
             rationale:
               "Possession of the reset URL is enough to reset the account password.",
           },
           {
             id: "T",
-            label: "Tampering  -  attacker modifies protected state",
+            label: "T",
             correct: true,
             rationale:
               "The attacker can change the victim's password, modifying security-critical account state.",
           },
           {
             id: "R",
-            label: "Repudiation  -  no evidence of who used the token",
+            label: "R",
             correct: true,
             rationale:
               "If reset-token use is not tied to authenticated identity, IP, timestamp, or audit logs, the real actor may be hard to prove.",
           },
           {
             id: "I",
-            label:
-              "Information disclosure  -  token may leak via support workflows",
+            label: "I",
             correct: true,
             rationale:
               "Forwarded emails, logs, browser history, and referrer headers can expose the bearer token.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale:
               "The main issue is account takeover, not exhausting system resources.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "The attacker gains the victim's account, but the scenario does not show escalation to a higher role.",
@@ -2060,43 +2058,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  pretending to be an administrator",
+            label: "S",
             correct: true,
             rationale:
               "The attacker can make the system treat them as an admin by manipulating client-controlled state.",
           },
           {
             id: "T",
-            label: "Tampering  -  changing localStorage or direct API requests",
+            label: "T",
             correct: true,
             rationale:
               "The attacker can alter client-side state or bypass the UI and send the request directly.",
           },
           {
             id: "R",
-            label: "Repudiation  -  destructive admin action may be disputed",
+            label: "R",
             correct: true,
             rationale:
               "Without strong audit logging, a user may deny having performed the deletion.",
           },
           {
             id: "I",
-            label: "Information disclosure",
+            label: "I",
             correct: false,
             rationale:
               "The scenario focuses on unauthorized destructive actions, not reading confidential data.",
           },
           {
             id: "D",
-            label: "Denial of service  -  deleting users disrupts access",
+            label: "D",
             correct: true,
             rationale:
               "Unauthorized deletion of accounts can deny legitimate users access to the service.",
           },
           {
             id: "E",
-            label:
-              "Elevation of privilege  -  normal user performs admin action",
+            label: "E",
             correct: true,
             rationale:
               "A regular authenticated user obtains administrative capability.",
@@ -2135,42 +2132,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  attacker impersonates the payment provider",
+            label: "S",
             correct: true,
             rationale:
               "The server has no reliable way to know whether the request really came from the payment provider.",
           },
           {
             id: "T",
-            label: "Tampering  -  attacker forges payment status",
+            label: "T",
             correct: true,
             rationale:
               "The attacker can submit or modify the JSON body to mark an unpaid order as paid.",
           },
           {
             id: "R",
-            label: "Repudiation  -  weak audit trail for payment events",
+            label: "R",
             correct: true,
             rationale:
               "Without signed events and logs, it is difficult to prove which party produced a payment message.",
           },
           {
             id: "I",
-            label: "Information disclosure",
+            label: "I",
             correct: false,
             rationale:
               "The described failure is about forged state changes, not leaking data.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale:
               "The scenario does not describe resource exhaustion or service disruption.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "The attacker is not gaining a higher application role; they are forging trusted external input.",
@@ -2208,43 +2205,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing",
+            label: "S",
             correct: false,
             rationale:
               "The scenario does not depend on pretending to be another identity.",
           },
           {
             id: "T",
-            label: "Tampering  -  backups can be overwritten",
+            label: "T",
             correct: true,
             rationale:
               "Overwriting backup objects compromises the integrity of recovery data.",
           },
           {
             id: "R",
-            label: "Repudiation  -  access logging is disabled",
+            label: "R",
             correct: true,
             rationale:
               "Without logs, it is hard to determine who accessed or modified backups.",
           },
           {
             id: "I",
-            label:
-              "Information disclosure  -  public backups expose sensitive data",
+            label: "I",
             correct: true,
             rationale:
               "Database backups often contain personal data, secrets, internal records, and historical data.",
           },
           {
             id: "D",
-            label: "Denial of service  -  corrupted backups can block recovery",
+            label: "D",
             correct: true,
             rationale:
               "If attackers overwrite backups, the organization may be unable to recover after an incident.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "Reading or overwriting the bucket is serious, but no higher application role is obtained.",
@@ -2282,44 +2278,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label:
-              "Spoofing  -  forged subject claim impersonates another user",
+            label: "S",
             correct: true,
             rationale:
               "The attacker can set sub or userId to another identity without a valid signature.",
           },
           {
             id: "T",
-            label: "Tampering  -  JWT claims can be modified",
+            label: "T",
             correct: true,
             rationale:
               "Changing role, userId, or expiry in an unsigned token changes trusted authorization data.",
           },
           {
             id: "R",
-            label:
-              "Repudiation  -  logs may attribute actions to forged userId",
+            label: "R",
             correct: true,
             rationale:
               "If logs trust the token subject, actions may be falsely attributed to the victim.",
           },
           {
             id: "I",
-            label: "Information disclosure  -  admin data may become readable",
+            label: "I",
             correct: true,
             rationale:
               "Forged admin claims can expose data restricted to privileged users.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale:
               "The core issue is trust in unsigned identity and authorization claims.",
           },
           {
             id: "E",
-            label: "Elevation of privilege  -  attacker sets role='admin'",
+            label: "E",
             correct: true,
             rationale:
               "A normal user can gain administrator privileges by editing the token.",
@@ -2351,41 +2345,41 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  request is sent under victim's session",
+            label: "S",
             correct: true,
             rationale:
               "The server treats the forged request as if the victim intentionally sent it.",
           },
           {
             id: "T",
-            label: "Tampering  -  account email is changed",
+            label: "T",
             correct: true,
             rationale: "The attack modifies security-relevant account data.",
           },
           {
             id: "R",
-            label: "Repudiation  -  victim can deny intentional action",
+            label: "R",
             correct: true,
             rationale:
               "The request came from the victim's browser, but not from the victim's intention.",
           },
           {
             id: "I",
-            label: "Information disclosure",
+            label: "I",
             correct: false,
             rationale:
               "Classic CSRF causes actions; it usually does not let the attacker read the response due to same-origin policy.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale:
               "The scenario does not describe making the service unavailable.",
           },
           {
             id: "E",
-            label: "Elevation of privilege  -  may lead to account takeover",
+            label: "E",
             correct: true,
             rationale:
               "Changing the email may allow password reset takeover, effectively giving the attacker control of the account.",
@@ -2423,43 +2417,41 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label:
-              "Spoofing  -  attacker causes requests from trusted server identity",
+            label: "S",
             correct: true,
             rationale:
               "The metadata service sees the request as coming from the trusted VM, not the external attacker.",
           },
           {
             id: "T",
-            label: "Tampering",
+            label: "T",
             correct: false,
             rationale:
               "The described request mainly reads metadata and credentials, not modifies data.",
           },
           {
             id: "R",
-            label: "Repudiation",
+            label: "R",
             correct: false,
             rationale: "Auditability is not the central issue in the scenario.",
           },
           {
             id: "I",
-            label: "Information disclosure  -  metadata credentials may leak",
+            label: "I",
             correct: true,
             rationale:
               "The attacker may read instance role credentials or internal-only service responses.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale:
               "The scenario is not about exhausting resources or crashing services.",
           },
           {
             id: "E",
-            label:
-              "Elevation of privilege  -  stolen role credentials grant cloud access",
+            label: "E",
             correct: true,
             rationale:
               "Temporary cloud credentials may allow the attacker to access resources beyond normal user permissions.",
@@ -2497,41 +2489,41 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing",
+            label: "S",
             correct: false,
             rationale:
               "The error output does not by itself let the attacker impersonate another identity.",
           },
           {
             id: "T",
-            label: "Tampering",
+            label: "T",
             correct: false,
             rationale:
               "The stack trace leaks information; it does not directly modify server state.",
           },
           {
             id: "R",
-            label: "Repudiation",
+            label: "R",
             correct: false,
             rationale:
               "The issue is not primarily about denying actions or missing audit evidence.",
           },
           {
             id: "I",
-            label: "Information disclosure  -  internals and secrets may leak",
+            label: "I",
             correct: true,
             rationale:
               "Stack traces and environment data can reveal sensitive implementation details or credentials.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale: "The scenario does not describe resource exhaustion.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "Leaked details may help future attacks, but no privilege escalation is directly shown.",
@@ -2569,42 +2561,41 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing",
+            label: "S",
             correct: false,
             rationale:
               "The scenario does not say users can impersonate each other.",
           },
           {
             id: "T",
-            label: "Tampering  -  user records can be edited",
+            label: "T",
             correct: true,
             rationale:
               "Admins can modify records, so integrity of user data is in scope.",
           },
           {
             id: "R",
-            label: "Repudiation  -  admins can deny sensitive actions",
+            label: "R",
             correct: true,
             rationale:
               "Without audit logs, it is hard to prove who exported, changed, or deleted data.",
           },
           {
             id: "I",
-            label:
-              "Information disclosure  -  personal data exports are untracked",
+            label: "I",
             correct: true,
             rationale:
               "Exporting personal data without traceability increases the impact of unauthorized disclosure.",
           },
           {
             id: "D",
-            label: "Denial of service  -  account deletion can remove access",
+            label: "D",
             correct: true,
             rationale: "Deleting accounts can deny service to affected users.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "The users already have admin privileges; the problem is lack of accountability.",
@@ -2642,43 +2633,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  attacker may log in as a victim",
+            label: "S",
             correct: true,
             rationale:
               "Credential guessing or stuffing can let the attacker authenticate as another user.",
           },
           {
             id: "T",
-            label: "Tampering",
+            label: "T",
             correct: false,
             rationale:
               "The login flow does not directly modify application data.",
           },
           {
             id: "R",
-            label: "Repudiation",
+            label: "R",
             correct: false,
             rationale:
               "The primary problem is authentication abuse, not denying performed actions.",
           },
           {
             id: "I",
-            label:
-              "Information disclosure  -  valid accounts can be enumerated",
+            label: "I",
             correct: true,
             rationale:
               "Different error messages reveal whether an email address is registered.",
           },
           {
             id: "D",
-            label: "Denial of service  -  lockouts are abused",
+            label: "D",
             correct: false,
             rationale:
               "No lockout exists in this scenario, so lockout-based DoS is not the issue.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "Logging in as a victim is spoofing; no higher role is necessarily gained.",
@@ -2716,44 +2706,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  attacker abuses a trusted client identity",
+            label: "S",
             correct: true,
             rationale:
               "The attacker can make the authorization server treat their redirect endpoint as belonging to the legitimate client.",
           },
           {
             id: "T",
-            label: "Tampering  -  redirect_uri is attacker-controlled",
+            label: "T",
             correct: true,
             rationale:
               "The attacker changes a security-critical protocol parameter.",
           },
           {
             id: "R",
-            label: "Repudiation",
+            label: "R",
             correct: false,
             rationale:
               "The main issue is token/code leakage, not denial of responsibility.",
           },
           {
             id: "I",
-            label:
-              "Information disclosure  -  authorization code or token leaks",
+            label: "I",
             correct: true,
             rationale:
               "The authorization response may be delivered to the attacker's callback URL.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale:
               "The attack is not primarily about preventing service availability.",
           },
           {
             id: "E",
-            label:
-              "Elevation of privilege  -  stolen token may grant user access",
+            label: "E",
             correct: true,
             rationale:
               "If the attacker redeems the code or receives a token, they may gain access as the victim.",
@@ -2791,42 +2779,42 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing",
+            label: "S",
             correct: false,
             rationale:
               "The attacker is not successfully authenticating as another user in this scenario.",
           },
           {
             id: "T",
-            label: "Tampering  -  attacker modifies the meaning of logs",
+            label: "T",
             correct: true,
             rationale:
               "Injected newline characters and fake fields alter the integrity of the log record.",
           },
           {
             id: "R",
-            label: "Repudiation  -  audit trail becomes unreliable",
+            label: "R",
             correct: true,
             rationale:
               "Manipulated logs make it harder to prove what actually happened.",
           },
           {
             id: "I",
-            label: "Information disclosure",
+            label: "I",
             correct: false,
             rationale:
               "The issue is corrupting logs, not leaking confidential data.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale:
               "The scenario does not describe filling disks or crashing logging systems.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "Fake log entries do not directly grant higher privileges.",
@@ -2864,41 +2852,40 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing",
+            label: "S",
             correct: false,
             rationale:
               "The attacker is not impersonating the victim to the server; the victim's browser sends the real session.",
           },
           {
             id: "T",
-            label: "Tampering",
+            label: "T",
             correct: false,
             rationale:
               "The scenario focuses on reading authenticated responses, not modifying data.",
           },
           {
             id: "R",
-            label: "Repudiation",
+            label: "R",
             correct: false,
             rationale: "Audit denial is not the central failure.",
           },
           {
             id: "I",
-            label:
-              "Information disclosure  -  attacker reads authenticated API data",
+            label: "I",
             correct: true,
             rationale:
               "Credentialed CORS allows the attacker's origin to read responses meant only for the trusted frontend.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale: "No service disruption is described.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale:
               "The attacker reads victim data but does not gain a higher role.",
@@ -2930,40 +2917,40 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  anyone can claim any name/email",
+            label: "S",
             correct: true,
             rationale: "No identity proof; trivially impersonate someone.",
           },
           {
             id: "T",
-            label: "Tampering with stored data",
+            label: "T",
             correct: false,
             rationale:
               "Form data is write-once; nothing for the user to tamper with.",
           },
           {
             id: "R",
-            label: "Repudiation  -  actor is anonymous",
+            label: "R",
             correct: true,
             rationale:
               "Without authentication the system cannot attribute actions reliably.",
           },
           {
             id: "I",
-            label: "Information disclosure from the form",
+            label: "I",
             correct: false,
             rationale: "The form does not return data to the caller.",
           },
           {
             id: "D",
-            label: "Denial of service via spam flood",
+            label: "D",
             correct: true,
             rationale:
               "No CAPTCHA or rate limit: an attacker can swamp the inbox or drive cost.",
           },
           {
             id: "E",
-            label: "Elevation of privilege",
+            label: "E",
             correct: false,
             rationale: "There is no role boundary to cross.",
           },
@@ -2994,41 +2981,41 @@ Host: admin.example.com`,
         options: [
           {
             id: "S",
-            label: "Spoofing  -  a hostile pod can call svc-b as A",
+            label: "S",
             correct: true,
             rationale:
               "No peer authentication means any pod with network access is treated like A.",
           },
           {
             id: "T",
-            label: "Tampering  -  a man-in-the-middle modifies the body",
+            label: "T",
             correct: true,
             rationale:
               "Plain HTTP is malleable; integrity is not protected on the wire.",
           },
           {
             id: "R",
-            label: "Repudiation  -  shared service account",
+            label: "R",
             correct: true,
             rationale:
               "Without per-service identity the audit trail cannot pin actions on a specific caller.",
           },
           {
             id: "I",
-            label: "Information disclosure on the wire",
+            label: "I",
             correct: true,
             rationale:
               "Plain HTTP means anyone on-path or sniffing can read the payload.",
           },
           {
             id: "D",
-            label: "Denial of service",
+            label: "D",
             correct: false,
             rationale: "Not the primary failure mode in this scenario.",
           },
           {
             id: "E",
-            label: "Elevation of privilege via shared secrets",
+            label: "E",
             correct: true,
             rationale:
               "Shared secret access means compromising A yields B's secrets and vice versa.",

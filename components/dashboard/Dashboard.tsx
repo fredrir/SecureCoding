@@ -39,7 +39,16 @@ export function Dashboard() {
       counts[mode.id] = filtered.length;
     }
     return counts;
-  }, [settings.topicFilter, settings.difficultyFilter, settings.examYearFilter]);
+  }, [
+    settings.topicFilter,
+    settings.difficultyFilter,
+    settings.examYearFilter,
+  ]);
+
+  const filtersActive =
+    settings.topicFilter.length > 0 ||
+    settings.difficultyFilter.length > 0 ||
+    settings.examYearFilter.length > 0;
 
   return (
     <Stack gap="xl" maw={1200} mx="auto" w="100%">
@@ -57,7 +66,11 @@ export function Dashboard() {
 
       <FiltersBar />
 
-      <GameGrid modes={GAME_MODES} countsByMode={countsByMode} />
+      <GameGrid
+        modes={GAME_MODES}
+        countsByMode={countsByMode}
+        filtersActive={filtersActive}
+      />
     </Stack>
   );
 }

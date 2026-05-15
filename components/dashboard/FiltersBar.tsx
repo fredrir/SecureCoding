@@ -8,26 +8,50 @@ import {
   type Difficulty,
 } from "@/domain/difficulty";
 import { useSettings } from "@/state/useSettings";
-import { FlameIcon, GaugeIcon, TagIcon } from "@/components/common/Icon";
+import { FilterSection } from "@/components/common/FilterSection";
+import {
+  FilterIcon,
+  FlameIcon,
+  GaugeIcon,
+  TagIcon,
+} from "@/components/common/Icon";
 
 const TOPIC_COUNT = Object.keys(COURSE_TOPIC_META).length;
 const DIFFICULTY_COUNT = DIFFICULTIES.length;
 const EXAM_YEARS = ["2023", "2024", "2025"] as const;
+const EXAM_SPRINT_FILTER_COUNT = 3;
 
 export function FiltersBar() {
-  const { settings, setTopicFilter, setDifficultyFilter, setExamYearFilter } =
-    useSettings();
+  const {
+    settings,
+    setTopicFilter,
+    setDifficultyFilter,
+    setExamYearFilter,
+    setExamSprintFilter,
+  } = useSettings();
 
   const topicSelected = settings.topicFilter.length;
   const difficultySelected = settings.difficultyFilter.length;
   const yearSelected = settings.examYearFilter.length;
-  const totalSelected = topicSelected + difficultySelected + yearSelected;
+  const esf = settings.examSprintFilter;
+  const examSprintSelected = [
+    esf.caseOnly,
+    esf.unmodifiedOnly,
+    esf.codeOnly,
+  ].filter(Boolean).length;
+  const totalSelected =
+    topicSelected + difficultySelected + yearSelected + examSprintSelected;
   const hasAny = totalSelected > 0;
 
   const clearAll = () => {
     setTopicFilter([]);
     setDifficultyFilter([]);
     setExamYearFilter([]);
+    setExamSprintFilter({
+      caseOnly: false,
+      unmodifiedOnly: false,
+      codeOnly: false,
+    });
   };
 
   return (
@@ -120,6 +144,59 @@ export function FiltersBar() {
             </div>
           </Chip.Group>
         </FilterSection>
+
+        <FilterSection
+          icon={<FilterIcon size={14} />}
+          label="Exam Sprint"
+          selected={examSprintSelected}
+          total={EXAM_SPRINT_FILTER_COUNT}
+          onClear={
+            examSprintSelected > 0
+              ? () =>
+                  setExamSprintFilter({
+                    caseOnly: false,
+                    unmodifiedOnly: false,
+                    codeOnly: false,
+                  })
+              : undefined
+          }
+        >
+          <div className="flex flex-wrap gap-2">
+            <Chip
+              size="sm"
+              radius="sm"
+              variant="light"
+              color="blue"
+              checked={esf.caseOnly}
+              onChange={(v) => setExamSprintFilter({ ...esf, caseOnly: v })}
+            >
+              Case challenges
+            </Chip>
+            <Chip
+              size="sm"
+              radius="sm"
+              variant="light"
+              color="green"
+              checked={esf.unmodifiedOnly}
+              onChange={(v) =>
+                setExamSprintFilter({ ...esf, unmodifiedOnly: v })
+              }
+            >
+              Unmodified questions
+            </Chip>
+            <Chip
+              size="sm"
+              radius="sm"
+              variant="light"
+              color="violet"
+              checked={esf.codeOnly}
+              onChange={(v) => setExamSprintFilter({ ...esf, codeOnly: v })}
+            >
+              Code tasks
+            </Chip>
+          </div>
+        </FilterSection>
+
         <FilterSection
           icon={<GaugeIcon size={14} />}
           label="Difficulty"
@@ -150,17 +227,18 @@ export function FiltersBar() {
             </div>
           </Chip.Group>
         </FilterSection>
+
         <div className="flex w-full items-center justify-end">
           <button
             type="button"
             onClick={clearAll}
             disabled={!hasAny}
             aria-label="Clear all filters"
-            className={`group  inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-wider transition-colors  disabled:pointer-events-none disabled:opacity-50 ${hasAny ? "text-app-danger border-app-danger bg-app-danger-soft hover:border-app-danger/55 hover:bg-app-danger-soft/80 hover:text-app-danger" : "border-app-border bg-app-bg-elevated text-app-fg-muted "}`}
+            className={`group inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.7rem] uppercase tracking-wider transition-colors disabled:pointer-events-none disabled:opacity-50 ${hasAny ? "text-app-danger border-app-danger bg-app-danger-soft hover:border-app-danger/55 hover:bg-app-danger-soft/80 hover:text-app-danger" : "border-app-border bg-app-bg-elevated text-app-fg-muted"}`}
           >
             <span
               aria-hidden
-              className="inline-flex h-4 w-4 items-center justify-center rounded-sm  text-xs leading-none font-bold transition-colors "
+              className="inline-flex h-4 w-4 items-center justify-center rounded-sm text-xs leading-none font-bold transition-colors"
             >
               ×
             </span>
@@ -169,60 +247,5 @@ export function FiltersBar() {
         </div>
       </div>
     </section>
-  );
-}
-
-interface FilterSectionProps {
-  icon: React.ReactNode;
-  label: string;
-  selected: number;
-  total: number;
-  onClear?: () => void;
-  trailing?: React.ReactNode;
-  children: React.ReactNode;
-}
-
-function FilterSection({
-  icon,
-  label,
-  selected,
-  total,
-  onClear,
-  trailing,
-  children,
-}: FilterSectionProps) {
-  const countText =
-    selected === 0 ? `all · ${total}` : `${selected} / ${total}`;
-  const countActive = selected > 0;
-  return (
-    <div className="flex flex-col gap-2.5">
-      <div className="flex flex-wrap items-center gap-2.5">
-        <span className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-widest text-app-fg-muted">
-          <span
-            aria-hidden
-            className="inline-flex h-5 w-5 items-center justify-center rounded-md  text-app-blue"
-          >
-            {icon}
-          </span>
-          {label}
-        </span>
-        <span
-          className={`rounded border px-2 py-0.5 font-mono text-[0.7rem] tabular-nums tracking-wider ${
-            countActive
-              ? "border-app-accent/30 bg-app-accent-soft text-app-blue"
-              : "border-app-border bg-app-bg-elevated text-app-fg-subtle"
-          }`}
-        >
-          {countText}
-        </span>
-        <span
-          aria-hidden
-          className="flex-1 border-t border-dashed border-app-border"
-        />
-
-        {trailing}
-      </div>
-      {children}
-    </div>
   );
 }

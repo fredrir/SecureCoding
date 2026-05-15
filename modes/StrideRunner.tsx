@@ -120,7 +120,7 @@ export function StrideRunner({ challenges, examMode }: Props) {
                   multi
                   option={{
                     id: option.id,
-                    label: `${option.id} · ${option.label}`,
+                    label: option.label,
                     correct: option.correct,
                     rationale: option.rationale,
                   }}

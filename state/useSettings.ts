@@ -4,11 +4,18 @@ import { usePersistentState } from "./usePersistentState";
 import type { CourseTopic } from "@/domain/topic";
 import type { Difficulty } from "@/domain/difficulty";
 
+export interface ExamSprintFilter {
+  caseOnly: boolean;
+  unmodifiedOnly: boolean;
+  codeOnly: boolean;
+}
+
 export interface AppSettings {
   examMode: boolean;
   topicFilter: readonly CourseTopic[]; // empty = all
   difficultyFilter: readonly Difficulty[]; // empty = all
   examYearFilter: readonly string[]; // empty = all; e.g. ["2023", "2025"]
+  examSprintFilter: ExamSprintFilter;
 }
 
 const DEFAULTS: AppSettings = {
@@ -16,6 +23,7 @@ const DEFAULTS: AppSettings = {
   topicFilter: [],
   difficultyFilter: [],
   examYearFilter: [],
+  examSprintFilter: { caseOnly: false, unmodifiedOnly: false, codeOnly: false },
 };
 
 export function useSettings() {
@@ -38,6 +46,8 @@ export function useSettings() {
       setSettings((s) => ({ ...s, difficultyFilter })),
     setExamYearFilter: (examYearFilter: readonly string[]) =>
       setSettings((s) => ({ ...s, examYearFilter })),
+    setExamSprintFilter: (examSprintFilter: ExamSprintFilter) =>
+      setSettings((s) => ({ ...s, examSprintFilter })),
     reset,
   };
 }

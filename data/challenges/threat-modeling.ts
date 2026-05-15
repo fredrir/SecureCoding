@@ -30,10 +30,10 @@ export const threatModelingChallenges: readonly Challenge[] = [
       multipleChoice: {
         question: "Which STRIDE category does length-extension on a SHA-1 signed URL most directly enable?",
         options: [
-          { id: "a", text: "Tampering", correct: true, rationale: "An attacker forges a valid signature for a modified payload." },
-          { id: "b", text: "Repudiation", correct: false, rationale: "Repudiation concerns disputing actions, not modification." },
-          { id: "c", text: "Spoofing", correct: false, rationale: "Spoofing is identity, not message tampering." },
-          { id: "d", text: "Denial of Service", correct: false, rationale: "Not the failure mode here." },
+          { id: "a", text: "T", correct: true, rationale: "An attacker forges a valid signature for a modified payload." },
+          { id: "b", text: "R", correct: false, rationale: "Repudiation concerns disputing actions, not modification." },
+          { id: "c", text: "S", correct: false, rationale: "Spoofing is identity, not message tampering." },
+          { id: "d", text: "D", correct: false, rationale: "Not the failure mode here." },
         ],
       },
       explainPrompt:
