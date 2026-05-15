@@ -107,14 +107,6 @@ export function ExamSprintRunner({ challenges, examMode }: Props) {
         attempts={state.attempts}
         workspace={
           <Stack gap="md">
-            {caseDescription ? (
-              <CaseDescriptionPanel
-                description={caseDescription}
-                title={caseTitle}
-                isCase={isCase}
-                caseYear={caseYear}
-              />
-            ) : null}
             {questionText ? (
               <Paper
                 withBorder
@@ -122,9 +114,14 @@ export function ExamSprintRunner({ challenges, examMode }: Props) {
                 p="lg"
                 className="bg-app-surface border-app-border"
               >
-                <Text size="sm" fw={500} style={{ whiteSpace: "pre-wrap" }}>
-                  {questionText}
-                </Text>
+                <Stack gap="md">
+                  <div className="text-xs uppercase font-bold text-app-fg-muted tracking-wider">
+                    Question
+                  </div>
+                  <Text size="sm" fw={500} style={{ whiteSpace: "pre-wrap" }}>
+                    {questionText}
+                  </Text>
+                </Stack>
               </Paper>
             ) : null}
             {challenge?.codeSnippets ? (
@@ -136,10 +133,18 @@ export function ExamSprintRunner({ challenges, examMode }: Props) {
                 filename={challenge.filename}
               />
             ) : null}
+            {caseDescription ? (
+              <CaseDescriptionPanel
+                description={caseDescription}
+                title={caseTitle}
+                isCase={isCase}
+                caseYear={caseYear}
+              />
+            ) : null}
             <Group gap="xs">
               <Text size="xs" c="dimmed">
                 {isTextMode
-                  ? "Open question from a past exam. Write a concise answer."
+                  ? "Originally an open-answer question. Practice formulating your own answer, then check against the provided options."
                   : "Multiple choice from a past exam. Pick the best answer."}
               </Text>
               {mc?.modifiedFromOpenQuestion ? (
@@ -190,8 +195,6 @@ export function ExamSprintRunner({ challenges, examMode }: Props) {
 function CaseDescriptionPanel({
   description,
   title,
-  isCase,
-  caseYear,
 }: {
   description: string;
   title: string | undefined;
@@ -203,38 +206,43 @@ function CaseDescriptionPanel({
   return (
     <Paper withBorder radius="lg" p={0} className="overflow-hidden">
       <UnstyledButton
-        py="lg"
+        p="lg"
         onClick={toggle}
-        className="flex w-full transition-colors items-center hover:bg-app-accent-soft/60 justify-between px-4 py-3"
+        className=" w-full transition-colors hover:bg-app-accent-soft/60  px-4 "
       >
-        <Group gap="xs" className="border-t-0">
-          <span className="text-sm font-medium  text-app-fg">
-            {title ?? "Case Description"}
-          </span>
-        </Group>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden
-          style={{
-            transition: "transform 200ms",
-            transform: opened ? "rotate(180deg)" : "rotate(0deg)",
-            color: "var(--app-fg-subtle)",
-          }}
-        >
-          <path d="m6 9 6 6 6-6" />
-        </svg>
+        <Stack gap="md" className="text-left">
+          <div className="text-xs uppercase font-bold text-app-fg-muted tracking-wider">
+            Case
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <Group gap="xs" className="border-t-0">
+              <span className="text-sm font-medium  text-app-fg">
+                {title ?? "Case Description"}
+              </span>
+            </Group>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+              style={{
+                transition: "transform 200ms",
+                transform: opened ? "rotate(180deg)" : "rotate(0deg)",
+                color: "var(--app-fg-subtle)",
+              }}
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </div>
+        </Stack>
       </UnstyledButton>
-      <Collapse expanded={opened}>
-        <div className="px-4 pb-4">
-          <MarkdownRenderer>{description}</MarkdownRenderer>
-        </div>
+      <Collapse p="lg" pt={0} expanded={opened}>
+        <MarkdownRenderer>{description}</MarkdownRenderer>
       </Collapse>
     </Paper>
   );

@@ -3,9 +3,7 @@
  * Written in Markdown; image paths map to files under /public/cases/.
  */
 export const CASE_DESCRIPTIONS: Record<string, string> = {
-  "2023": `## Case: Video Recordings of Football Games
-
-A local (Norwegian) football club wants to use video recordings of their matches to analyse their play and stream to people not able to attend the games. The team has bought camera equipment and cloud storage from a UK supplier, and pays a monthly subscription fee for them to manage the video recordings. The club wants to offer these services to teams with players ranging from ages 14-17 (youth teams) and 18+ (adults).
+  "2023": `A local (Norwegian) football club wants to use video recordings of their matches to analyse their play and stream to people not able to attend the games. The team has bought camera equipment and cloud storage from a UK supplier, and pays a monthly subscription fee for them to manage the video recordings. The club wants to offer these services to teams with players ranging from ages 14-17 (youth teams) and 18+ (adults).
 
 ![System architecture overview](/cases/2023-architecture.png)
 
@@ -28,9 +26,7 @@ During the first meeting with the club you come up with the following business g
 - **BG5:** Allow consent to be withdrawn.
 - **BG6:** If the players are below 15 years of age, parents or guardians need to provide the consent.`,
 
-  "2024": `## Case: Risk Assessment of a Risk Assessment Tool for Air Traffic Management (ATM)
-
-![Case illustration](/cases/2024-illustration.png)
+  "2024": `![Case illustration](/cases/2024-illustration.png)
 
 SESAR Joint Undertaking defines, develops and deploys technologies to transform air traffic management (ATM) in Europe. These technologies are known as solutions and are developed in numerous projects under the SESAR JU programme. Solutions can be used to manage conventional aircrafts, drones, air taxis and vehicles flying at higher altitudes, and need to undergo risk assessments at various stages of their development lifecycle (i.e. concept development, lab experiments, prototypes in realistic environments, proven system in operation development).
 
@@ -50,9 +46,7 @@ You have been given the following business goals:
 
 ![Data flow diagram](/cases/2024-diagram-3.png)`,
 
-  "2025": `## Case: D.O.U.C.H.E. Cybersecurity Failure
-
-![Generic service architecture](/cases/2025-illustration.png)  
+  "2025": `![Generic service architecture](/cases/2025-illustration.png)  
 
 Government agencies handle sensitive information about citizens and critical operations that require robust security measures. Authentication and access control are fundamental aspects of secure software engineering, ensuring that only authorized personnel can access specific resources and perform certain actions.
 
